@@ -81,6 +81,12 @@ type Template = {
   repo_owner: string;
   repo_name: string;
   repo_ref: string;
+  /**
+   * In the catalog for the editor to fetch and build, but not a template
+   * anybody picks here - the empty base its from-scratch flow starts from,
+   * say. The editor's own gallery leaves the same entries off its grid.
+   */
+  omit_from_gallery?: boolean;
 };
 
 /**
@@ -97,7 +103,7 @@ const pointBrowseLinkAtEditor = () => {
 };
 
 /**
- * The editor's catalog, or null if it cannot be had.
+ * The templates a visitor can pick, or null if the catalog cannot be had.
  *
  * Separate from the mosaic itself because the mosaic has to hand its space
  * back on every way this can fail, and one caller checking one value is
@@ -110,7 +116,11 @@ const loadTemplates = async (): Promise<Template[] | null> => {
       return null;
     }
     const { templates } = (await response.json()) as { templates: Template[] };
-    return Array.isArray(templates) && templates.length > 0 ? templates : null;
+    if (!Array.isArray(templates)) {
+      return null;
+    }
+    const pickable = templates.filter((t) => !t.omit_from_gallery);
+    return pickable.length > 0 ? pickable : null;
   } catch (error) {
     // Degrading quietly is right for an unreachable editor: the section still
     // reads and the browse link still works. Saying so is right for everything
