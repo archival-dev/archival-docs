@@ -2553,6 +2553,21 @@ input:checked + .slider::before {
   line-height: 1.6;
 }
 
+/* The two ways to start from scratch, side by side. The CTAs centre themselves
+   with `margin: 0 auto`, which inside a flex row would eat the free space and
+   push them to opposite edges, so the row centres them instead. */
+.build-alt-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.build-alt-row > .build-alt-cta {
+  margin: 0;
+}
+
 /* A real <button> (it opens a dialog) wearing the outlined-CTA look. Flex with a
    1rem gap reproduces the manifesto link's icon-to-label spacing, which its
    background-image + padding-left achieves a different way. */
@@ -2563,6 +2578,15 @@ input:checked + .slider::before {
   background: none;
   color: var(--color-primary-cta-highlight);
   cursor: pointer;
+}
+
+/* .md a paints every link inside a docs page and outranks a bare class, so the
+   anchor form of the CTA restates its own look at the same specificity. */
+a.build-alt-cta,
+a.build-alt-cta:hover {
+  color: var(--color-primary-cta-highlight);
+  font-weight: var(--typo-body-weight);
+  text-decoration: none;
 }
 
 /* cursor: progress, matching what the button used to show: the disable lasts for

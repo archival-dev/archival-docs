@@ -297,6 +297,19 @@ const setup = () => {
   });
 };
 
+/**
+ * Send the scratch link to the editor this build targets.
+ *
+ * The markup carries the production editor, which is what a visitor with no JS
+ * needs; this is what makes local and staging reach their own. Deliberately
+ * outside setup(): the link is not part of the Claude flow and must not wait on
+ * Turnstile's script to arrive.
+ */
+const link = document.getElementById("build-it-here");
+if (link instanceof HTMLAnchorElement) {
+  link.href = `${EDITOR_URL}/new?scratch=1`;
+}
+
 // Turnstile's script is loaded async, so it may not have defined
 // window.turnstile yet; onloadTurnstileCallback is how it announces itself.
 (
