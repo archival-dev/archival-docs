@@ -1,0 +1,33 @@
+title = "Templates on the homepage"
+publish_date = "2026-08-31"
+summary = "The starter templates now scroll past on the homepage, so you can see what you're starting from before you sign up for anything."
+
+body = """
+The homepage used to describe the templates. Now it shows them: two rows of real sites drifting in opposite directions, pulled live from the editor's own catalog, so the wall is never out of date with what you'd actually get.
+
+Click any tile to open that template in the editor.
+"""
+
+[[media]]
+alt = "The template mosaic on the archival.dev homepage"
+
+[media.file]
+type = "image"
+
+[media.file.value]
+sha = ""
+display_type = "image"
+filename = ""
+mime = "image/*"
+
+[[media]]
+alt = "A starter template open in the archival editor"
+
+[media.file]
+type = "image"
+
+[media.file.value]
+sha = ""
+display_type = "image"
+filename = ""
+mime = "image/*"

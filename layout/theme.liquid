@@ -13,6 +13,8 @@
       {% assign title_suffix = "Archival Docs" %}
     {% elsif area == "cli" %}
       {% assign title_suffix = "Archival CLI" %}
+    {% elsif area == "updates" %}
+      {% assign title_suffix = "Archival Updates" %}
     {% else %}
       {% assign title_suffix = "Archival" %}
     {% endif %}
@@ -108,6 +110,12 @@
     <meta name="twitter:image" content="{{ site_url }}/img/og-image.png">
 
     <link rel="manifest" href="/site.webmanifest" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Archival Updates"
+      href="{{ site_url }}/updates.rss"
+    />
 
     <link
       rel="apple-touch-icon"
@@ -152,6 +160,9 @@
       </style>
     </noscript>
     <script type="module" src="/scripts/main.js"></script>
+    {% if area == "updates" %}
+      <script type="module" src="/scripts/updates.js"></script>
+    {% endif %}
   </head>
 
   <body class="overflow-auto h-auto">
@@ -208,6 +219,10 @@
           All rights reserved.
         </p>
         <p class="footer-legal">
+          <a href="/updates.html" data-umami-event="footer-updates">Updates</a>
+          |
+          <a href="/updates.rss" data-umami-event="footer-rss">RSS</a>
+          |
           <a href="/privacy.html" data-umami-event="footer-privacy">Privacy</a>
           |
           <a href="/terms-of-service.html" data-umami-event="footer-terms">Terms of Service</a>

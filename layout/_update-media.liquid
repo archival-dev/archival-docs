@@ -1,0 +1,239 @@
+{% comment %}
+  Media for an update. Each entry's `file` is a oneof holding either an image or
+  a video; entries with nothing attached yet are skipped, so a row added in the
+  editor but not filled in leaves no hole.
+
+  Every optional field is checked for existence before it is indexed: a field
+  left out of the object file is nil, and indexing nil is a build error rather
+  than an empty value.
+
+  Two or more entries render as a stack: one item in flow, the rest hidden, with
+  the offset cards behind drawn by CSS. Only the active item is in flow so the
+  frame takes that photo's own aspect ratio.
+{% endcomment %}
+{% assign media_count = 0 %}
+{% for item in media %}
+  {% if item.file %}
+    {% unless item.file.value.filename == blank %}
+      {% assign media_count = media_count | plus: 1 %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+
+{% if media_count > 0 %}
+  <div
+    class="update-media{% if media_count > 1 %} update-media--stack{% endif %}"
+    data-update-media
+    data-media-count="{{ media_count }}"
+  >
+    <div class="update-media-frame">
+      {% assign media_index = 0 %}
+      {% for item in media %}
+        {% assign has_file = false %}
+        {% if item.file %}
+          {% unless item.file.value.filename == blank %}
+            {% assign has_file = true %}
+          {% endunless %}
+        {% endif %}
+        {% if has_file %}
+          {% assign media_poster = "" %}
+          {% if item.poster %}
+            {% assign media_poster = item.poster %}
+          {% endif %}
+          {% assign media_w = 0 %}
+          {% assign media_h = 0 %}
+          {% if item.width %}
+            {% assign media_w = item.width | round %}
+          {% endif %}
+          {% if item.height %}
+            {% assign media_h = item.height | round %}
+          {% endif %}
+          {% assign has_size = false %}
+          {% if media_w > 0 and media_h > 0 %}
+            {% assign has_size = true %}
+          {% endif %}
+          {% assign media_alt = title %}
+          {% if item.alt %}
+            {% unless item.alt == blank %}
+              {% assign media_alt = item.alt %}
+            {% endunless %}
+          {% endif %}
+          <figure
+            class="update-media-item"
+            data-media-index="{{ media_index }}"
+            {% if media_index > 0 %}
+              hidden
+            {% endif %}
+            {% if has_size %}
+              style="--media-aspect: {{ media_w }} / {{ media_h }}"
+            {% endif %}
+          >
+            {% if item.file.type == "video" %}
+              <div class="update-player update-player--video" data-media-player>
+                <video
+                  class="update-player-surface"
+                  preload="metadata"
+                  playsinline
+                  {% unless media_poster == blank %}
+                    poster="{{ media_poster }}"
+                  {% endunless %}
+                  {% if has_size %}
+                    width="{{ media_w }}" height="{{ media_h }}"
+                  {% endif %}
+                >
+                  <source src="{{ item.file.value.url }}" type="{{ item.file.value.mime }}">
+                </video>
+                <button
+                  class="update-player-play"
+                  type="button"
+                  data-media-toggle
+                  aria-label="Play video"
+                >
+                  <svg
+                    class="update-player-icon-play"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M8 5v14l11-7z"></path>
+                  </svg>
+                  <svg
+                    class="update-player-icon-pause"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 5h4v14H6zM14 5h4v14h-4z"></path>
+                  </svg>
+                </button>
+                <div class="update-player-controls">
+                  <div class="update-player-scrub" data-media-scrub>
+                    <div class="update-player-progress" data-media-progress></div>
+                  </div>
+                  <span class="update-player-time" data-media-time>0:00</span>
+                  <button
+                    class="update-player-mute"
+                    type="button"
+                    data-media-mute
+                    aria-label="Mute"
+                  >
+                    <svg
+                      class="update-player-icon-sound"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                      <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+                    </svg>
+                    <svg
+                      class="update-player-icon-muted"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                      <line
+                        x1="22"
+                        y1="9"
+                        x2="16"
+                        y2="15"></line>
+                      <line
+                        x1="16"
+                        y1="9"
+                        x2="22"
+                        y2="15"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            {% else %}
+              <div class="update-player update-player--image">
+                <img
+                  class="update-player-surface"
+                  src="{{ item.file.value.url }}"
+                  alt="{{ media_alt | escape }}"
+                  {% if has_size %}
+                    width="{{ media_w }}" height="{{ media_h }}"
+                  {% endif %}
+                  loading="lazy"
+                  decoding="async"
+                >
+                <button
+                  class="update-player-expand"
+                  type="button"
+                  data-media-expand
+                  aria-label="View {{ media_alt | escape }} full size"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line
+                      x1="21"
+                      y1="3"
+                      x2="14"
+                      y2="10"></line>
+                    <line
+                      x1="3"
+                      y1="21"
+                      x2="10"
+                      y2="14"></line>
+                  </svg>
+                </button>
+              </div>
+            {% endif %}
+          </figure>
+          {% assign media_index = media_index | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if media_count > 1 %}
+      <div class="update-media-nav" data-media-nav>
+        <button
+          class="update-media-step"
+          type="button"
+          data-media-prev
+          aria-label="Previous photo"
+        >
+          ‹
+        </button>
+        <span class="update-media-count" data-media-position>1 / {{ media_count }}</span>
+        <button
+          class="update-media-step"
+          type="button"
+          data-media-next
+          aria-label="Next photo"
+        >
+          ›
+        </button>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

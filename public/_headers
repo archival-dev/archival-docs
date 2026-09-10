@@ -15,6 +15,12 @@
 /style/*
     Cache-Control: public, max-age=31536000, immutable
 
+# Feed readers reject a feed served as text/plain or application/octet-stream,
+# which is what a host that doesn't know the .rss extension will guess.
+/updates.rss
+    Content-Type: application/rss+xml; charset=utf-8
+    Cache-Control: public, max-age=3600
+
 # Apple requires this file be served as JSON, and it has no extension for the
 # static host to infer that from.
 /.well-known/apple-app-site-association

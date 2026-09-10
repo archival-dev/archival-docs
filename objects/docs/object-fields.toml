@@ -289,7 +289,9 @@ When rendering, a oneof exposes two properties: `type` (the selected option name
 {% endif %}
 ```
 
-Reach for a oneof when a field is genuinely “either/or” — for example content that may be an image *or* a video. If you instead want a repeating list of structured items, use [child fields](/docs/child-fields.html).
+Note that the doubled brackets are what separates a oneof from a [child field](/docs/child-fields.html): `[post.media]` defines a child, while `[[post.media]]` defines a oneof. They are one keystroke apart and mean entirely different things.
+
+Reach for a oneof when a field is genuinely “either/or” — for example content that may be an image *or* a video. If you instead want a repeating list of structured items, use [child fields](/docs/child-fields.html) — and for a repeating list whose entries are each either/or, [put a oneof inside the child](/docs/child-fields.html#A%20oneof%20inside%20a%20child).
 {% endraw %}
 """
 

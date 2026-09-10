@@ -1,0 +1,11 @@
+title = "Build an Archival site from Claude"
+publish_date = "2026-08-22"
+summary = "There is an MCP server at archival.dev/mcp. Point Claude at it and it can write, build, and publish a site to a preview URL."
+
+body = """
+Archival now speaks [MCP](https://modelcontextprotocol.io), so an assistant can author a site end to end without a checkout, a local toolchain, or a copy of the CLI. It writes the object files and templates, builds them against a pinned `archival` binary on our side, and hands back a preview URL you can look at and react to.
+
+Build errors come back as tool output, which means the assistant can fix its own templates instead of handing you a broken site.
+
+See [Building with Claude](/docs/building-with-claude.html) for setup.
+"""

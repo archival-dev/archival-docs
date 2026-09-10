@@ -1,0 +1,92 @@
+{%
+  layout 'theme' title: "Updates"
+  , area: "updates"
+  , description: "Updates from the Archival team."
+  , path: "updates"
+%}
+
+{% assign sorted_updates = objects.update | sort: "publish_date" | reverse %}
+
+<div class="updates-page">
+  <header class="updates-hero">
+    <p class="build-description">
+      Notes from the Archival team.
+      <a href="/updates.rss" data-umami-event="updates-rss-hero">Subscribe with RSS</a>.
+    </p>
+  </header>
+
+  <div class="updates-layout">
+    <div class="updates-list" data-updates-list>
+      {% for update in sorted_updates %}
+        {% assign update_slug = update.path | split: "/" | last %}
+        <article
+          class="update-card is-clamped"
+          id="update-{{ update_slug }}"
+          data-update-card
+          data-update-href="/{{ update.path }}.html"
+        >
+          {% render "update-byline", update: update %}
+
+          <h2 class="update-title">
+            <a
+              href="/{{ update.path }}.html"
+              data-umami-event="update-open"
+              data-umami-event-update="{{ update.title }}"
+            >
+              {{- update.title -}}
+            </a>
+          </h2>
+
+          {% render "update-media", media: update.media, title: update.title %}
+
+          <div class="update-body-frame">
+            <div class="md update-body" data-update-body>
+              {{ update.body }}
+            </div>
+          </div>
+
+          <a
+            class="update-more"
+            href="/{{ update.path }}.html"
+            data-update-more
+            data-umami-event="update-read-more"
+            data-umami-event-update="{{ update.title }}"
+          >
+            Read more →
+          </a>
+        </article>
+      {% endfor %}
+    </div>
+
+    {% comment %}
+      Dots are laid out evenly by CSS and repositioned by date once the script
+      runs, so the rail still reads as a timeline with scripting off.
+    {% endcomment %}
+    <nav class="updates-timeline" aria-label="Updates by date" data-updates-timeline>
+      <div class="updates-timeline-rail">
+        <span class="updates-timeline-line" aria-hidden="true"></span>
+        <span class="updates-timeline-fill" data-timeline-fill aria-hidden="true"></span>
+        <span class="updates-timeline-thumb" data-timeline-thumb aria-hidden="true"></span>
+        <ol class="updates-timeline-dots" data-timeline-dots>
+          {% for update in sorted_updates %}
+            {% assign update_slug = update.path | split: "/" | last %}
+            <li
+              class="updates-timeline-item"
+              data-timeline-item
+              data-timeline-date="{{ update.publish_date | date: '%s' }}"
+              data-timeline-target="update-{{ update_slug }}"
+            >
+              <a class="updates-timeline-dot" href="#update-{{ update_slug }}">
+                <span class="updates-timeline-mark" aria-hidden="true"></span>
+                <span class="updates-timeline-label">
+                  <span class="updates-timeline-date">{{ update.publish_date | date: "%b %-d, %Y" }}</span>
+                  <span class="updates-timeline-title">{{ update.title }}</span>
+                </span>
+              </a>
+            </li>
+          {% endfor %}
+        </ol>
+      </div>
+    </nav>
+  </div>
+</div>

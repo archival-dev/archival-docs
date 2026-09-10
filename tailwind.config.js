@@ -6,6 +6,7 @@ module.exports = {
       sm: "480px",
       md: "768px",
       lg: "976px",
+      navbar: "980px",
       xl: "1440px",
     },
     colors: {

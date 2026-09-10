@@ -12,6 +12,16 @@
     <loc>{{ site_url }}/manifesto</loc>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>{{ site_url }}/updates</loc>
+    <priority>0.7</priority>
+  </url>
+  {% for update in objects.update %}
+    <url>
+      <loc>{{ site_url }}/{{ update.path }}</loc>
+      <priority>0.5</priority>
+    </url>
+  {% endfor %}
   {% for doc in objects.docs %}
     <url>
       <loc>{{ site_url }}/{{ doc.path }}</loc>

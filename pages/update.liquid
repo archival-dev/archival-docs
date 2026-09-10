@@ -1,0 +1,70 @@
+{%
+  layout 'theme' title: update.title
+  , area: "updates"
+  , description: update.summary
+  , path: update.path
+%}
+
+{% assign sorted_updates = objects.update | sort: "publish_date" | reverse %}
+
+<div class="updates-page updates-page--detail">
+  <article class="update-detail">
+    <a class="update-back" href="/updates.html" data-umami-event="update-back">← All updates</a>
+
+    {% render "update-byline", update: update %}
+
+    <h1 class="update-detail-title">{{ update.title }}</h1>
+
+    {% unless update.summary == blank %}
+      <p class="update-detail-summary">{{ update.summary }}</p>
+    {% endunless %}
+
+    {% render "update-media", media: update.media, title: update.title %}
+
+    <div class="md update-detail-body">
+      {{ update.body }}
+    </div>
+
+    {% comment %}
+      Newer and older by publish date. The list is newest-first, so the entry
+      before this one is the newer of the two.
+    {% endcomment %}
+    {% assign seen_current = false %}
+    {% assign have_newer = false %}
+    {% assign have_older = false %}
+    {% for other in sorted_updates %}
+      {% if other.path == update.path %}
+        {% assign seen_current = true %}
+      {% elsif seen_current %}
+        {% unless have_older %}
+          {% assign older = other %}
+          {% assign have_older = true %}
+        {% endunless %}
+      {% else %}
+        {% assign newer = other %}
+        {% assign have_newer = true %}
+      {% endif %}
+    {% endfor %}
+
+    <div class="update-pager">
+      {% if have_newer %}
+        <a href="/{{ newer.path }}.html" class="update-pager-link" data-umami-event="update-newer">
+          <span class="update-pager-dir">← Newer</span>
+          <span class="update-pager-title">{{ newer.title }}</span>
+        </a>
+      {% else %}
+        <div></div>
+      {% endif %}
+      {% if have_older %}
+        <a
+          href="/{{ older.path }}.html"
+          class="update-pager-link update-pager-link--end"
+          data-umami-event="update-older"
+        >
+          <span class="update-pager-dir">Older →</span>
+          <span class="update-pager-title">{{ older.title }}</span>
+        </a>
+      {% endif %}
+    </div>
+  </article>
+</div>

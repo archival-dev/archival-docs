@@ -1,0 +1,37 @@
+{%- assign sorted_updates = objects.update | sort: "publish_date" | reverse -%}
+{%- assign latest = sorted_updates | first -%}
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Archival Updates</title>
+    <link>{{ site_url }}/updates</link>
+    <atom:link href="{{ site_url }}/updates.rss" rel="self" type="application/rss+xml" />
+    <description>Small notes on what changed in Archival.</description>
+    <language>en-us</language>
+    <lastBuildDate>{{ latest.publish_date | date: "%a, %d %b %Y %H:%M:%S %z" }}</lastBuildDate>
+    {%- comment %}
+      Bodies are written with site-relative links, which a feed reader has no
+      base to resolve against. Absolute them on the way out.
+    {%- endcomment %}
+    {%- assign href_prefix = 'href="' | append: site_url | append: "/" %}
+    {%- for update in sorted_updates %}
+    {%- assign update_author = objects.author | where: "key", update.author | first %}
+    {%- assign update_body = update.body | replace: 'href="/', href_prefix %}
+    <item>
+      <title>{{ update.title | escape }}</title>
+      <link>{{ site_url }}/{{ update.path }}</link>
+      <guid isPermaLink="true">{{ site_url }}/{{ update.path }}</guid>
+      <pubDate>{{ update.publish_date | date: "%a, %d %b %Y %H:%M:%S %z" }}</pubDate>
+      {%- if update_author %}
+      <dc:creator>{{ update_author.name | escape }}</dc:creator>
+      {%- endif %}
+      {%- unless update.summary == blank %}
+      <description>{{ update.summary | escape }}</description>
+      {%- endunless %}
+      <content:encoded><![CDATA[{{ update_body }}]]></content:encoded>
+    </item>
+    {%- endfor %}
+  </channel>
+
+
+</rss>

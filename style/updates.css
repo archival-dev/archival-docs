@@ -1,0 +1,686 @@
+/* Updates index and update detail pages. */
+
+.updates-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10rem 2rem 8rem;
+}
+
+.updates-hero {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.updates-hero .build-description {
+  margin-bottom: 0;
+}
+
+.updates-hero .build-description a {
+  color: var(--color-secondary-interactive);
+  font-weight: 700;
+}
+
+.updates-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 13rem;
+  gap: 3rem;
+  align-items: start;
+}
+
+.updates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 46rem;
+  margin-left: auto;
+}
+
+.update-card {
+  position: relative;
+  padding: 2rem;
+  border-radius: 1.25rem;
+  border: 1px solid var(--color-transparent-border);
+  background: rgba(20, 20, 20, 0.25);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  scroll-margin-top: 7rem;
+  transition:
+    border-color 0.3s ease-out,
+    box-shadow 0.3s ease-out;
+}
+
+.update-card:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+.update-byline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.update-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  border-radius: 999px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-transparent-border);
+}
+
+.update-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.update-avatar-initial {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.update-byline-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.update-author-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.update-byline-meta {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.update-byline-sep {
+  padding: 0 0.15rem;
+}
+
+.update-title {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: 1.875rem;
+  line-height: 1.1;
+  font-weight: 700;
+  font-feature-settings: "ss01" on;
+  margin: 0 0 1.25rem;
+}
+
+.update-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease-out;
+}
+
+.update-title a:hover {
+  color: var(--color-primary-cta-highlight);
+}
+
+/* The clamp is on the body alone. Media sits outside it and keeps its own
+   height, which is what lets a tall photo run past the card's text limit. */
+.update-body-frame {
+  position: relative;
+}
+
+.update-card.is-clamped .update-body {
+  max-height: var(--update-max-height, 15rem);
+  overflow: hidden;
+}
+
+.update-card.is-clamped .update-body-frame::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 6rem;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+  pointer-events: none;
+}
+
+.update-body p:not(:empty),
+.update-detail-body p:not(:empty) {
+  font-size: var(--typo-body-size);
+  line-height: 1.75;
+  margin: 0 0 1.25rem;
+}
+
+.update-body ul,
+.update-detail-body ul {
+  line-height: 1.75;
+  margin: 0 0 1.25rem;
+}
+
+/* The spacing has to be on the pre: preflight zeroes its margin, and the margin
+   markdown.css puts on the code inside it is on an inline box, so it does
+   nothing vertically. */
+.update-body pre,
+.update-detail-body pre {
+  margin: 0 0 1.25rem;
+  overflow-x: auto;
+}
+
+/* These pages don't load highlight.js, whose stylesheet is what makes a code
+   block a block on the docs pages. */
+.update-body pre code,
+.update-detail-body pre code {
+  display: block;
+  font-size: 0.875rem;
+  margin: 0;
+  padding: 1rem;
+}
+
+.update-body > *:last-child,
+.update-detail-body > *:last-child {
+  margin-bottom: 0;
+}
+
+.update-more {
+  display: none;
+  margin-top: 1.25rem;
+  font-weight: 700;
+  color: var(--color-secondary-interactive);
+  text-decoration: none;
+}
+
+.update-card.is-clamped .update-more {
+  display: inline-block;
+}
+
+.update-more:hover {
+  text-decoration: underline;
+}
+
+/* Media */
+
+.update-media {
+  margin: 0 0 1.5rem;
+}
+
+.update-media-item {
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.update-player {
+  position: relative;
+  border-radius: 0.9rem;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--color-transparent-border);
+  line-height: 0;
+}
+
+/* No max-height and no crop: a portrait photo runs taller than the card's text
+   limit rather than being cut to fit it. */
+.update-player-surface {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--media-aspect, auto);
+}
+
+.update-player-expand {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.5rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.update-player--image:hover .update-player-expand,
+.update-player-expand:focus-visible {
+  opacity: 1;
+}
+
+.update-player-play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 3.5rem;
+  height: 3.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  transition: opacity 0.2s ease-out;
+}
+
+.update-player--video.is-playing .update-player-play {
+  opacity: 0;
+}
+
+.update-player--video.is-playing:hover .update-player-play {
+  opacity: 1;
+}
+
+.update-player-icon-pause,
+.update-player--video.is-playing .update-player-icon-play {
+  display: none;
+}
+
+.update-player--video.is-playing .update-player-icon-pause {
+  display: block;
+}
+
+.update-player-icon-muted,
+.update-player--video.is-muted .update-player-icon-sound {
+  display: none;
+}
+
+.update-player--video.is-muted .update-player-icon-muted {
+  display: block;
+}
+
+.update-player-controls {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 0.75rem 0.6rem;
+  line-height: 1;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
+}
+
+.update-player--video:hover .update-player-controls,
+.update-player--video.is-playing .update-player-controls,
+.update-player--video:focus-within .update-player-controls {
+  opacity: 1;
+}
+
+.update-player-scrub {
+  flex: 1;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
+  overflow: hidden;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.update-player-progress {
+  height: 100%;
+  width: 0;
+  background: var(--color-secondary-interactive);
+}
+
+.update-player-time {
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.update-player-mute {
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Two or more photos read as a stack: one in the frame, the rest suggested by
+   the cards behind it. Only the visible one is in flow, so the frame still
+   takes the height of whichever photo is showing. */
+.update-media-frame {
+  position: relative;
+}
+
+.update-media--stack {
+  padding: 0 1.25rem 1.25rem 0;
+}
+
+.update-media--stack .update-media-frame::before,
+.update-media--stack .update-media-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 0.9rem;
+  border: 1px solid var(--color-transparent-border);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.update-media--stack .update-media-frame::before {
+  transform: translate(0.55rem, 0.55rem) rotate(0.5deg);
+}
+
+.update-media--stack .update-media-frame::after {
+  transform: translate(1.1rem, 1.1rem) rotate(-0.7deg);
+}
+
+.update-media-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.update-media-step {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--color-transparent-border);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  line-height: 1;
+  transition:
+    border-color 0.2s ease-out,
+    color 0.2s ease-out;
+}
+
+.update-media-step:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+}
+
+.update-media-count {
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.update-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 3rem;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(6px);
+}
+
+.update-lightbox[hidden] {
+  display: none;
+}
+
+.update-lightbox-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 0.5rem;
+}
+
+.update-lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 2.25rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+body.update-lightbox-open {
+  overflow: hidden;
+}
+
+/* Timeline */
+
+.updates-timeline {
+  position: sticky;
+  top: 9rem;
+  height: 60vh;
+}
+
+.updates-timeline-rail {
+  position: relative;
+  height: 100%;
+  touch-action: none;
+}
+
+.updates-timeline-line,
+.updates-timeline-fill {
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  width: 1px;
+}
+
+.updates-timeline-line {
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.updates-timeline-fill {
+  height: 0;
+  background: rgba(255, 255, 255, 0.4);
+  transition: height 0.25s ease-out;
+}
+
+.updates-timeline-thumb {
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  width: 0.9rem;
+  height: 2px;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  background: var(--color-primary-cta-highlight);
+  transition: top 0.25s ease-out;
+}
+
+.updates-timeline-dots {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Once the script has placed the dots by publish date they stop being an evenly
+   spaced list; before that, the flex column above is the fallback. */
+.updates-timeline.is-positioned .updates-timeline-dots {
+  display: block;
+}
+
+.updates-timeline.is-positioned .updates-timeline-item {
+  position: absolute;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.updates-timeline-dot {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.2rem 0;
+  text-decoration: none;
+}
+
+.updates-timeline-mark {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  margin-left: calc(0.5rem - 3px);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  transition:
+    transform 0.2s ease-out,
+    background-color 0.2s ease-out;
+}
+
+.updates-timeline-item.is-active .updates-timeline-mark,
+.updates-timeline-dot:hover .updates-timeline-mark {
+  background: var(--color-primary-cta-highlight);
+  transform: scale(1.45);
+}
+
+.updates-timeline-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+  opacity: 0;
+  transform: translateX(-0.25rem);
+  transition:
+    opacity 0.2s ease-out,
+    transform 0.2s ease-out;
+}
+
+.updates-timeline-item.is-active .updates-timeline-label,
+.updates-timeline-dot:hover .updates-timeline-label,
+.updates-timeline-dot:focus-visible .updates-timeline-label {
+  opacity: 1;
+  transform: none;
+}
+
+.updates-timeline-date {
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.updates-timeline-title {
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 11rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Detail page */
+
+.updates-page--detail {
+  max-width: 48rem;
+  padding-top: 9rem;
+}
+
+.update-back {
+  display: inline-block;
+  margin-bottom: 2.5rem;
+  font-weight: 700;
+  color: var(--color-secondary-interactive);
+  text-decoration: none;
+}
+
+.update-back:hover {
+  text-decoration: underline;
+}
+
+.update-detail-title {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: 3rem;
+  line-height: 1.05;
+  font-weight: 700;
+  font-feature-settings: "ss01" on;
+  margin: 1.5rem 0 1rem;
+}
+
+.update-detail-summary {
+  font-size: var(--typo-body-size-large);
+  line-height: 1.6;
+  color: var(--color-typography-secondary);
+  margin: 0 0 2.5rem;
+}
+
+.update-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-transparent-border);
+}
+
+.update-pager-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 18rem;
+  text-decoration: none;
+}
+
+.update-pager-link--end {
+  text-align: right;
+  margin-left: auto;
+}
+
+.update-pager-dir {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.update-pager-title {
+  font-weight: 700;
+  color: var(--color-secondary-interactive);
+}
+
+@media (max-width: 1100px) {
+  .updates-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .updates-list {
+    margin-inline: auto;
+  }
+
+  .updates-timeline {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .updates-page {
+    padding: 8rem 1.25rem 5rem;
+  }
+
+  .updates-hero {
+    margin-bottom: 3rem;
+  }
+
+  .update-card {
+    padding: 1.5rem;
+  }
+
+  .update-detail-title {
+    font-size: 2.25rem;
+  }
+
+  .update-pager {
+    flex-direction: column;
+  }
+
+  .update-pager-link--end {
+    text-align: left;
+    margin-left: 0;
+  }
+}

@@ -100,3 +100,30 @@ quote = "markdown"
 author = "string"
 role = "string"
 site_url = "string"
+
+[author]
+key = "string"
+name = "string"
+role = "string"
+photo = "image"
+
+[update]
+title = "string"
+publish_date = "date"
+# Must match a key from an author object. Empty is a team update.
+author = "string"
+summary = "string"
+body = "markdown"
+template = "update"
+
+[update.media]
+alt = "string"
+poster = "string"
+width = "number"
+height = "number"
+[[update.media.file]]
+name = "image"
+type = "image"
+[[update.media.file]]
+name = "video"
+type = "video"

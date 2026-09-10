@@ -1,0 +1,42 @@
+{% comment %}
+  Author is stored on the update as an author object's `key`, since archival has
+  no relation type. An update whose key matches nothing renders without a byline
+  rather than failing the build.
+{% endcomment %}
+{% assign byline_author = authors | where: "key", update.author | first %}
+{% unless byline_author %}
+  {% assign byline_author = authors | where: "key", "team" | first %}
+{% endunless %}
+
+<div class="update-byline">
+  {% assign byline_photo = "" %}
+  {% if byline_author.photo %}
+    {% assign byline_photo = byline_author.photo.url %}
+  {% endif %}
+  <div class="update-avatar">
+    {% if byline_photo == blank %}
+      <span class="update-avatar-initial" aria-hidden="true">{{ byline_author.name | slice: 0, 1 }}</span>
+    {% else %}
+      <img
+        src="{{ byline_photo }}"
+        alt="{{ byline_author.name }}"
+        width="40"
+        height="40"
+        loading="lazy"
+        decoding="async"
+      >
+    {% endif %}
+  </div>
+  <div class="update-byline-text">
+    <span class="update-author-name">{{ byline_author.name }}</span>
+    <span class="update-byline-meta">
+      {%- unless byline_author.role == blank -%}
+        {{ byline_author.role }}
+        <span class="update-byline-sep" aria-hidden="true">·</span>
+      {%- endunless -%}
+      <time datetime="{{ update.publish_date | date: '%Y-%m-%d' }}">
+        {{- update.publish_date | date: "%B %-d, %Y" -}}
+      </time>
+    </span>
+  </div>
+</div>

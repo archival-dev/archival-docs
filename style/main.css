@@ -3,6 +3,7 @@
 @import "tailwindcss/utilities";
 @import "./markdown.css";
 @import "./product.css";
+@import "./updates.css";
 
 :root {
   /* Colors */

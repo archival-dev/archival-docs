@@ -1,0 +1,14 @@
+title = "Editor autocompletion for object files"
+publish_date = "2026-06-14"
+author = "jesse"
+summary = "Archival's TOML schemas are published in the SchemaStore catalog, so your editor completes object definitions on its own."
+
+body = """
+Add the schema comment to the top of your `archival_objects.toml`:
+
+```toml
+#:schema https://archival.dev/schemas/archival_objects.schema.json
+```
+
+Your editor will complete field types, flag a definition that can't build, and explain the reserved keys inline. The same schemas are in the SchemaStore catalog, so most editors pick them up with no comment at all.
+"""
