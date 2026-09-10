@@ -6,6 +6,7 @@ window.addEventListener("load", () => {
   pointBrowseLinkAtEditor();
   void setupTemplateMosaic();
   // setupHeaderVideos();
+  setupHeroTitleTilt();
   setupMobileMenu();
   setupDocsMenu();
   setupQuickSearch();
@@ -623,6 +624,42 @@ const setupQuickSearch = async () => {
     });
   });
 };
+
+const setupHeroTitleTilt = () => {
+    const heroes = document.querySelectorAll('[data-tilt-hero]') as NodeListOf<HTMLElement>;
+    const heroMaxTilt = 12;
+    const heroPerspective = 1200;
+
+    heroes.forEach((hero) => {
+      function handleMouseMove(e: MouseEvent) {
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+
+        const rotateX = ((e.clientY - centerY) / centerY) * -heroMaxTilt;
+        const rotateY = ((e.clientX - centerX) / centerX) * heroMaxTilt;
+
+        // Update color gradient position
+        const percentX = (e.clientX / window.innerWidth) * 100;
+        const percentY = (e.clientY / window.innerHeight) * 100;
+        hero.style.setProperty('--hero-mouse-x', percentX + '%');
+        hero.style.setProperty('--hero-mouse-y', percentY + '%');
+
+        hero.style.transform = `perspective(${heroPerspective}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      }
+
+      function handleMouseLeave() {
+        hero.style.transition = 'transform 0.5s ease-out';
+        hero.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+        setTimeout(() => {
+          hero.style.transition = 'none';
+        }, 500);
+      }
+
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseleave', handleMouseLeave);
+    });
+
+}
 
 // const setupHeaderVideos = () => {
 //   const hi = document.getElementById("header-image") as HTMLDivElement;

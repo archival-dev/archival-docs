@@ -210,7 +210,7 @@
     ></script>
 
     {% unless nofooter %}
-      {% comment %} Footer {% endcomment %}
+      {% include "connect" %}
 
       <footer class="footer">
         <img src="/img/archival-mark.svg" class="footer-mark" width="96" height="96" />
@@ -219,6 +219,8 @@
           All rights reserved.
         </p>
         <p class="footer-legal">
+          <a href="/manifesto.html" data-umami-event="footer-rss">Manifesto</a>
+          |
           <a href="/updates.html" data-umami-event="footer-updates">Updates</a>
           |
           <a href="/updates.rss" data-umami-event="footer-rss">RSS</a>

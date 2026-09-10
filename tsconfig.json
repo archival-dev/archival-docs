@@ -2,14 +2,14 @@
   "compilerOptions": {
     /* Basic Options */
     "target": "esnext" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */,
-    "module": "ES2022" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
+    "module": "nodenext" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
     "lib": ["esnext", "dom"],
     "isolatedModules": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     /* Module Resolution Options */
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "esModuleInterop": true,
     /* Experimental Options */
     "skipLibCheck": true,
@@ -17,11 +17,10 @@
     "resolveJsonModule": true,
     "paths": {
       "three/addons/loaders/*": [
-        "node_modules/@types/three/examples/jsm/loaders/*"
+        "./node_modules/@types/three/examples/jsm/loaders/*"
       ],
-      "three/addons/math/*": ["node_modules/@types/three/examples/jsm/math/*"]
+      "three/addons/math/*": ["./node_modules/@types/three/examples/jsm/math/*"]
     },
-    "baseUrl": "./"
   },
   "include": ["define.d.ts", "src"]
 }

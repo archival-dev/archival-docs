@@ -1337,7 +1337,7 @@ h1.pricing-title {
 
 .lower-container {
   width: 100%;
-  padding: 12rem 0;
+  padding: 6rem 0 4rem 0;
   background: #2da082 url("/img/wave-pattern.svg") repeat-x top;
 
   .contact-container {

@@ -43,7 +43,7 @@
       <div class="hidden md:flex">⌘K</div>
     </button>
   </div>
-  <ul class="flex-shrink justify-end gap-8 items-center flex-nowrap whitespace-nowrap hidden lg:flex">
+  <ul class="flex-shrink justify-end gap-8 items-center flex-nowrap whitespace-nowrap hidden navbar:flex">
     {% comment %}
       The tour lives on the homepage now, so this item has no page of its own to
       match on. index.liquid scroll-spies it instead: active while the tour is
@@ -70,9 +70,12 @@
     <li class="nav-text {% if area == 'cli' %}nav-active{% endif %}">
       <a href="/{{ cli_link.path }}.html" data-umami-event="nav-cli">CLI</a>
     </li>
-    <li class="nav-text {% if area == 'manifesto' %}nav-active{% endif %}">
-      <a href="/manifesto.html" data-umami-event="nav-manifesto">Manifesto</a>
+    <li class="nav-text {% if area == 'updates' %}nav-active{% endif %}">
+      <a href="/updates.html" data-umami-event="nav-updates">Updates</a>
     </li>
+    {% comment %} <li class="nav-text {% if area == 'manifesto' %}nav-active{% endif %}">
+      <a href="/manifesto.html" data-umami-event="nav-manifesto">Manifesto</a>
+    </li> {% endcomment %}
     <li class="nav-text {% if area == 'pricing' %}nav-active{% endif %}">
       <a href="/pricing.html" data-umami-event="nav-pricing">Pricing</a>
     </li>
@@ -83,7 +86,7 @@
       <a href="https://editor.archival.dev/new" data-umami-event="nav-create">Create</a>
     </li>
   </ul>
-  <div class="lg:hidden flex items-center">
+  <div class="navbar:hidden flex items-center">
     <button>
       <div id="menu-closed">
         <svg
@@ -145,7 +148,7 @@
 </nav>
 <div
   id="mobile-menu"
-  class="hidden fixed backdrop-blur-md translate-y-full transition opacity-0 shadow-up w-full pb-10 px-4 bottom-0 z-40 text-xl rounded-lg lg:hidden max-h-full overflow-y-auto"
+  class="hidden fixed backdrop-blur-md translate-y-full transition opacity-0 shadow-up w-full pb-10 px-4 bottom-0 z-40 text-xl rounded-lg navbar:hidden max-h-full overflow-y-auto"
 >
   <ul class="flex flex-col">
     <li class="mobile-nav-item">
@@ -163,6 +166,9 @@
     {% assign cli_link = objects.cli | first %}
     <li class="mobile-nav-item">
       <a class="flex-1" href="/{{ cli_link.path }}.html" data-umami-event="mobile-nav-cli">CLI</a>
+    </li>
+    <li class="mobile-nav-item">
+      <a class="flex-1" href="/updates.html" data-umami-event="mobile-nav-updates">Updates</a>
     </li>
     <li class="mobile-nav-item">
       <a class="flex-1" href="/manifesto.html" data-umami-event="mobile-nav-manifesto">Manifesto</a>
