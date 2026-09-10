@@ -7,9 +7,11 @@ The optional `archival_editor.toml` file lets you customize how your site's cont
 This file is most useful when creating an archival template or for customizing the editing experience in the archival editor.
 
 Place `archival_editor.toml` in the root of your repo, alongside `archival_objects.toml` and `archival.toml`. The editor reads it automatically when your site loads, and re-reads it whenever the file changes.
+"""
 
-### Object Views
-
+[[sections]]
+title = "Object views"
+content = """
 The file configures **views** for your object types. A view controls which fields are shown as columns when you browse the list of objects of a given type in the editor.
 
 The top-level key of each entry is the name of an object type, exactly as it appears in `archival_objects.toml`. Under each object type you define one or more `views` as a TOML array of tables:
@@ -72,4 +74,81 @@ secondary = "title"
 ```
 
 See [Object Fields](/docs/object-fields.html) for the field types you can reference, [Validators](/docs/validators.html) for constraining what they may contain, and [Custom Editors](/docs/custom-editors.html) for customizing how individual fields are edited.
+"""
+
+[[sections]]
+title = "Shortcuts"
+content = """
+A shortcut puts one list a single tap away from anywhere in the editor. Name the lists that get added to often — posts, updates, photos — and every editor screen grows a button in its bottom right corner that opens a composer for a new entry, with a publish button that writes and deploys it in one step.
+
+Shortcuts are an array of tables at the top level of the file, alongside your object types:
+
+```toml
+[[shortcuts]]
+name = "New Post"
+path = "post"
+
+[[shortcuts]]
+name = "Site Update"
+path = "homepage.updates"
+```
+
+Each entry takes:
+
+- `path` (required) — the list a new entry joins. See addressing a list, below.
+- `name` (optional) — the label on the button and in the shortcut menu. Left out, the last segment of `path` is used with dashes and underscores turned into spaces and each word capitalized, so `post` reads "Post" and `press_releases` reads "Press Releases".
+
+`shortcuts` is reserved at the top level of this file, so an object type named `shortcuts` cannot be configured here.
+
+### Addressing a list
+
+`path` addresses a list the way the editor addresses one everywhere else: the object type, then the filename when that type holds many objects, then the child lists to descend into, with the index of the entry you descend through between them. Segments are separated by dots, and an index counts from zero.
+
+```toml
+[[shortcuts]]
+path = "post"                              # a new post
+
+[[shortcuts]]
+path = "homepage.updates"                  # a new update on the homepage
+
+[[shortcuts]]
+path = "post.hello-world.sections"         # a new section on the "hello-world" post
+
+[[shortcuts]]
+path = "post.hello-world.sections.0.links" # a new link on that post's first section
+```
+
+An object your site has exactly one of stores its content in a file named after the type, so there is no filename to give: `homepage.updates`, not `homepage.homepage.updates`. Pointing a shortcut at such an object on its own is refused, since it already holds the one file it will ever have.
+
+Every step is checked against what your site actually contains. A type you have since removed, an index past the end of a list, or a path that stops at a single entry rather than a list resolves to nothing, and that shortcut simply does not appear. Correcting the path brings it back, along with any drafts saved under it.
+"""
+
+[[sections]]
+title = "Drafts"
+content = """
+The composer saves what you write as you write it. A draft is kept on your device until you publish or discard it, so closing the editor and coming back tomorrow reopens it exactly as you left it.
+
+Drafts are never written into your site's files. An unpublished draft is not a pending change, it does not show up in your unsynced changes, and publishing your site any other way leaves it alone.
+
+The shortcut button carries a badge counting the drafts you have saved. Pressing it opens a menu of every shortcut you configured and every draft you have going, so you can start something new or pick up where you left off. With a single shortcut configured and nothing saved, pressing the button skips the menu and starts a draft immediately.
+
+Inside the composer:
+
+- **Save** closes the composer and keeps the draft.
+- **Cancel** throws it away, asking first if anything has been filled in.
+- **Publish** adds the entry to your site and deploys it. It stays disabled until at least one field has something in it.
+
+With more than one draft saved, the composer pages between them: swipe left or right on a touch screen, or use the arrows and dots below the fields.
+
+### What publishing writes
+
+The commit message is written for you, as `Add <shortcut name>: <title>`. The title is the first field the draft has text in — the `primary` field of the list's first view when one is configured, and otherwise the first string or markdown field the type declares.
+
+A new object is filed under that same text, lowercased and hyphenated, with a number appended if the name is already taken. A draft with no text anywhere is filed under the name of its type.
+
+Publishing a draft publishes your site, so anything else you had left unsynced is deployed along with it.
+
+### Changing a schema under an open draft
+
+A draft can outlive the shape it was started in. Every time one is opened it is reconciled against the current object definition: a field the type no longer declares is dropped, a field whose type has changed to one the saved value cannot fit is dropped with it, and a child list you have added since appears empty. Everything still valid is preserved, so editing your schema never costs you a draft outright.
 """
