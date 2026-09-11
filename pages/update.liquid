@@ -6,6 +6,7 @@
 %}
 
 {% assign sorted_updates = objects.update | sort: "publish_date" | reverse %}
+{% assign update_slug = update.path | split: "/" | last %}
 
 <div class="updates-page updates-page--detail">
   <article class="update-detail">
@@ -24,6 +25,69 @@
     <div class="md update-detail-body">
       {{ update.body }}
     </div>
+
+    {% comment %}
+      The thread itself is fetched from the comments val once this section
+      nears the viewport, so an update that is only read costs no request.
+    {% endcomment %}
+    <section class="update-comments" id="comments" data-comments data-comments-slug="{{ update_slug }}">
+      <h2 class="comments-title">Comments<span class="comments-count" data-comments-total></span></h2>
+      <p class="comments-prompt">Add something we missed, ask a question, or disagree. Just be cool.</p>
+
+      <p class="comments-status" data-comments-status role="status" aria-live="polite">Loading comments…</p>
+
+      <ol class="comments-list" data-comments-list></ol>
+
+      <form class="comment-form" data-comment-form hidden>
+        <div class="comment-form-identity">
+          <span class="comment-avatar comment-avatar--you is-empty" data-comment-you aria-hidden="true">?</span>
+          <label class="sr-only" for="comment-name">Your name</label>
+          <input
+            class="comment-name"
+            id="comment-name"
+            data-comment-name
+            type="text"
+            maxlength="60"
+            autocomplete="name"
+            placeholder="Your name"
+            required
+          >
+        </div>
+
+        <p class="comment-replying" data-comment-reply-to hidden>
+          Replying to <span data-comment-reply-name></span>
+          <button type="button" class="comment-reply-cancel" data-comment-reply-cancel>Cancel</button>
+        </p>
+
+        <div class="comment-form-send">
+          <label class="sr-only" for="comment-body">Leave a comment</label>
+          <textarea
+            class="comment-input"
+            id="comment-body"
+            data-comment-body
+            rows="1"
+            maxlength="2000"
+            placeholder="Leave a comment"
+            required
+          ></textarea>
+          <button
+            class="comment-post"
+            type="submit"
+            data-comment-post
+            data-umami-event="update-comment-post"
+          >
+            Post
+          </button>
+        </div>
+
+        <div class="comment-turnstile" data-comment-turnstile></div>
+        <p class="comment-error" data-comment-error role="alert"></p>
+      </form>
+
+      <noscript>
+        <p class="comments-status">Comments need JavaScript. The rest of this page doesn't.</p>
+      </noscript>
+    </section>
 
     {% comment %}
       Newer and older by publish date. The list is newest-first, so the entry

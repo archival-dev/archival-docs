@@ -1,6 +1,8 @@
 // Behavior for the updates index and the update detail pages. Loaded only on
 // those pages (see the area check in layout/theme.liquid).
 
+import { setupCommentCounts, setupCommentThread } from "./comments";
+
 /**
  * Reveal "Read more" only on cards whose body is actually cut off. The markup
  * ships clamped so the link is present without scripting; this releases the
@@ -368,4 +370,6 @@ window.addEventListener("load", () => {
   setupVideoPlayers();
   setupLightbox();
   setupTimeline();
+  setupCommentCounts();
+  setupCommentThread();
 });
