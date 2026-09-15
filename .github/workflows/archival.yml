@@ -18,28 +18,3 @@ jobs:
     steps:
       - name: Archival Build
         uses: archival-dev/archival@main
-  publish-pages:
-    runs-on: ubuntu-latest
-    environment: archival.dev
-    permissions:
-      contents: read
-      deployments: write
-    name: Publish to Cloudflare Pages
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install development tools
-        uses: taiki-e/install-action@v2.16.0
-        with:
-          tool: cargo-binstall
-      - name: Install Dependencies
-        run: cargo binstall --no-confirm archival
-      - name: Install Dependencies
-        run: npm ci
-      - name: Build
-        run: npm run build
-      - name: Deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages deploy dist --project-name=archival
