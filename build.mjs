@@ -22,11 +22,21 @@ const EDITOR_URL = dev
   : staging
     ? "https://editor.archival-staging.dev"
     : "https://editor.archival.dev";
+// The Val Town val in valtown/comments.ts. Override with COMMENTS_URL to point
+// a build at a val of your own.
+const COMMENTS_URL =
+  process.env.COMMENTS_URL ??
+  (dev || staging
+    ? "https://archival-update-comments.web.val.run"
+    : "https://archival-update-comments.web.val.run");
 const TURNSTILE_SITE_KEY = dev
   ? "1x00000000000000000000AA"
   : staging
     ? "0x4AAAAAAEZffDvzgSX4xffU"
     : "0x4AAAAAAEZfb1ZNwVKPq0Eq";
+const COMMENTS_TURNSTILE_SITE_KEY = dev
+  ? "1x00000000000000000000AA"
+  : "0x4AAAAAAE2bl5C1gBUENCco";
 
 const ctx = await esbuild.context({
   entryPoints: {
@@ -43,6 +53,8 @@ const ctx = await esbuild.context({
     EDITOR_URL: `"${EDITOR_URL}"`,
     API_URL: `"${API_URL}"`,
     TURNSTILE_SITE_KEY: `"${TURNSTILE_SITE_KEY}"`,
+    COMMENTS_URL: `"${COMMENTS_URL}"`,
+    COMMENTS_TURNSTILE_SITE_KEY: `"${COMMENTS_TURNSTILE_SITE_KEY}"`,
   },
   format: "esm",
   target: "es2022",

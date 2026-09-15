@@ -644,6 +644,305 @@ body.update-lightbox-open {
   color: var(--color-secondary-interactive);
 }
 
+/* Comments */
+
+.update-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.update-more {
+  margin-top: 0;
+}
+
+.update-comment-count {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+}
+
+/* An author display rule outranks the user agent's [hidden], so a count the
+   script left unfilled needs this to stay out of the card. */
+.update-comment-count[hidden] {
+  display: none;
+}
+
+.update-comment-count::before {
+  content: "";
+  width: 0.9rem;
+  height: 0.9rem;
+  background: currentColor;
+  /* Speech bubble. */
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1.5c3.6 0 6.5 2.4 6.5 5.4S11.6 12.3 8 12.3c-.6 0-1.2-.1-1.7-.2l-3.6 1.9.9-2.9C2.3 10.1 1.5 8.6 1.5 6.9c0-3 2.9-5.4 6.5-5.4Z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+.update-comment-count:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.update-comments {
+  margin-top: 4rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--color-transparent-border);
+  scroll-margin-top: 7rem;
+}
+
+.comments-title {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-feature-settings: "ss01" on;
+  margin: 0;
+}
+
+.comments-count {
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.comments-prompt {
+  margin: 0.5rem 0 2rem;
+  color: var(--color-typography-secondary);
+}
+
+.comments-status {
+  margin: 0 0 1.5rem;
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.comments-status:empty {
+  display: none;
+}
+
+.comments-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.comment-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.comment-avatar {
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: hsl(var(--comment-hue, 0) 45% 38%);
+}
+
+.comment-author {
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.comment-date {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.comment-bubble {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.75rem 1.1rem;
+  border-radius: 1.1rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  /* Comments arrive as plain text, and the line breaks in them are the only
+     formatting a commenter gets. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* A reply from the team, mirrored to the other side of the thread. */
+.comment.is-team > .comment-head {
+  flex-direction: row-reverse;
+}
+
+.comment.is-team {
+  text-align: right;
+}
+
+.comment.is-team > .comment-bubble {
+  text-align: left;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.comment-reply {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.2s ease-out;
+}
+
+.comment-reply:hover {
+  color: var(--color-secondary-interactive);
+}
+
+.comment-replies {
+  list-style: none;
+  margin: 1.25rem 0 0 1.5rem;
+  padding: 0 0 0 1.5rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.comment-replies:empty {
+  display: none;
+}
+
+/* Composer */
+
+.comment-form {
+  margin-top: 2.5rem;
+}
+
+.comment-form.is-replying {
+  margin: 1.25rem 0 0 3rem;
+}
+
+.comment-form-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.comment-avatar--you {
+  background: hsl(var(--comment-hue, 0) 45% 38%);
+}
+
+.comment-avatar.is-empty {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.comment-name {
+  flex: 1;
+  min-width: 0;
+  max-width: 14rem;
+  padding: 0.35rem 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: inherit;
+  background: none;
+  border: none;
+  border-bottom: 1px solid transparent;
+}
+
+.comment-name::placeholder {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.comment-name:focus {
+  outline: none;
+  border-bottom-color: var(--color-transparent-border);
+}
+
+.comment-replying {
+  margin: 0 0 0.75rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.comment-replying span {
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.comment-reply-cancel {
+  margin-left: 0.5rem;
+  color: var(--color-secondary-interactive);
+}
+
+.comment-form-send {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.comment-input {
+  flex: 1;
+  min-width: 0;
+  max-height: 12rem;
+  padding: 0.75rem 1.1rem;
+  border-radius: 1.1rem;
+  border: 1px solid var(--color-transparent-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font: inherit;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  resize: none;
+}
+
+.comment-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.comment-post {
+  flex: none;
+  padding: 0.75rem 1.25rem;
+  font-weight: 700;
+  color: var(--color-secondary-interactive);
+}
+
+.comment-post:disabled {
+  opacity: 0.5;
+}
+
+.comment-turnstile {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.comment-turnstile:empty {
+  display: none;
+}
+
+.comment-error {
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-primary-cta-highlight);
+}
+
+.comment-error:empty {
+  display: none;
+}
+
 @media (max-width: 1100px) {
   .updates-layout {
     grid-template-columns: minmax(0, 1fr);
@@ -677,6 +976,15 @@ body.update-lightbox-open {
 
   .update-pager {
     flex-direction: column;
+  }
+
+  .comment-replies {
+    margin-left: 0;
+    padding-left: 1rem;
+  }
+
+  .comment-form.is-replying {
+    margin-left: 1rem;
   }
 
   .update-pager-link--end {

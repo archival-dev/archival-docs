@@ -45,15 +45,31 @@
             </div>
           </div>
 
-          <a
-            class="update-more"
-            href="/{{ update.path }}.html"
-            data-update-more
-            data-umami-event="update-read-more"
-            data-umami-event-update="{{ update.title }}"
-          >
-            Read more →
-          </a>
+          <div class="update-card-footer">
+            <a
+              class="update-more"
+              href="/{{ update.path }}.html"
+              data-update-more
+              data-umami-event="update-read-more"
+              data-umami-event-update="{{ update.title }}"
+            >
+              Read more →
+            </a>
+
+            {% comment %}
+              Filled in from one batched request to the comments val, and left
+              out entirely for an update nobody has commented on.
+            {% endcomment %}
+            <a
+              class="update-comment-count"
+              href="/{{ update.path }}.html#comments"
+              data-comment-count
+              data-comment-slug="{{ update_slug }}"
+              data-umami-event="update-comments"
+              data-umami-event-update="{{ update.title }}"
+              hidden
+            ></a>
+          </div>
         </article>
       {% endfor %}
     </div>
