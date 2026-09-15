@@ -3,7 +3,7 @@ publish_date = 2026-09-14T00:00:00.0
 author = "jesse"
 summary = "Addressing objects by their name now supported"
 body = """
-Archival 0.22.0 is released, with a few small quality of life fixes as we push towards 1.0
+{% raw %}Archival 0.22.0 is released, with a few small quality of life fixes as we push towards 1.0
 
 <br />
 
@@ -15,6 +15,6 @@ Archival 0.22.0 is released, with a few small quality of life fixes as we push t
 
 It felt non-intuitive that we couldn't address objects by their slug, since we have root object access that way. This enables things like `{{ posts.something.name }}` where something is the object file at `objects/post/something.toml` - note that if the slug has dashes, you have to use bracket syntax `["my-post"]`, which shouldn't be a surprise but is worth noting. This is especially useful when looking up fields, since that used to be:
 
-`{{sample_menus | where: "slug", "lunch" | map: "url" | first }}` to get the URL, which not only is hard to read but has to map the whole array. That now condenses to `{{ sample_menus.lunch.url }}`, which I'd hope would be the first thing you'd think of.
+`{{sample_menus | where: "slug", "lunch" | map: "url" | first }}` to get the URL, which not only is hard to read but has to map the whole array. That now condenses to `{{ sample_menus.lunch.url }}`, which I'd hope would be the first thing you'd think of.{% endraw %}
 """
 media = []
