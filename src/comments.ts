@@ -381,7 +381,7 @@ export const setupCommentThread = () => {
     }).then(() => {
       widgetId ??=
         turnstile()?.render(challenge, {
-          sitekey: TURNSTILE_SITE_KEY,
+          sitekey: COMMENTS_TURNSTILE_SITE_KEY,
           action: TURNSTILE_ACTION,
           execution: "execute",
           appearance: "interaction-only",

@@ -26,13 +26,9 @@
       {{ update.body }}
     </div>
 
-    {% comment %}
-      The thread itself is fetched from the comments val once this section
-      nears the viewport, so an update that is only read costs no request.
-    {% endcomment %}
     <section class="update-comments" id="comments" data-comments data-comments-slug="{{ update_slug }}">
       <h2 class="comments-title">Comments<span class="comments-count" data-comments-total></span></h2>
-      <p class="comments-prompt">Add something we missed, ask a question, or disagree. Just be cool.</p>
+      <p class="comments-prompt">Add your thoughts</p>
 
       <p class="comments-status" data-comments-status role="status" aria-live="polite">Loading comments…</p>
 
@@ -85,7 +81,7 @@
       </form>
 
       <noscript>
-        <p class="comments-status">Comments need JavaScript. The rest of this page doesn't.</p>
+        <p class="comments-status">Comments need JavaScript.</p>
       </noscript>
     </section>
 
