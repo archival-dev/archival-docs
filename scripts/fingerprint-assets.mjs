@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 // Renames the built CSS and JS to include a hash of their own contents, then
-// repoints the emitted HTML at the new names. Runs as `build:fingerprint`, which
-// must stay last in `npm run build` - it rewrites what `build:site`, `build:js`
-// and `tailwind` produced, so all three have to have run.
+// repoints the emitted HTML at the new names. Runs as archival's `postbuild`
+// hook, after `archival build`: any later build re-renders the HTML with the
+// plain names, which no longer exist once this has renamed the files.
 //
 // The problem it solves: the filenames were fixed, so a deploy changed what
 // /style/main.css contained without changing its URL. A browser holding the old

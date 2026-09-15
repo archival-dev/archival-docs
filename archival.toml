@@ -1,2 +1,3 @@
 prebuild = ["npm ci", "npm run build"]
+postbuild = ["npm run build:fingerprint"]
 site_url = "https://archival.dev"

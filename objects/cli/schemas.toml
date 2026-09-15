@@ -1,4 +1,4 @@
-order = 10
+order = 11
 command = "archival schemas"
 description = "Generate JSON Schema files from your site's object definitions, for editor autocomplete, CI validation, and structured LLM outputs."
 content = """

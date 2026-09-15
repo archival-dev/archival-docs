@@ -1,4 +1,4 @@
-order = 8
+order = 9
 command = "archival upload"
 description = "Upload a file to archival's CDN and store the resulting metadata in a local object field."
 content = """
