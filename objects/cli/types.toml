@@ -1,4 +1,4 @@
-order = 12
+order = 11
 command = "archival types"
 description = "Generate TypeScript definitions for a site's objects, describing them the way a template — or a carrier — sees them."
 content = """

@@ -15,7 +15,7 @@ If you created your site through [editor.archival.dev](https://editor.archival.d
 title = "Deploying with the archival GitHub Action"
 content = """
 {% raw %}
-If you manage your site in your own GitHub repository and want archival to host it, use the archival GitHub Action. It installs archival, runs your `prebuild` commands, builds the site, runs your `postbuild` commands, and syncs the result to archival’s hosting:
+If you manage your site in your own GitHub repository and want archival to host it, use the archival GitHub Action. It installs archival, runs your `prebuild` commands, builds the site, and syncs the result to archival’s hosting:
 
 ```yaml
 # .github/workflows/archival.yml

@@ -1,4 +1,4 @@
-order = 8
+order = 7
 command = "archival objects"
 description = "List the objects defined in a site, in a debug-friendly format, mainly useful when troubleshooting a build issue."
 content = """

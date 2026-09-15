@@ -10,7 +10,7 @@ flags = "-h, --help"
 description = "print help for this command."
 [[arguments]]
 arg = "<field>"
-description = "a field to print [possible values: upload_prefix, archival_version, site_url, site_name, object_definition_file, objects_dir, prebuild, postbuild, pages_dir, build_dir, static_dir, schemas_dir, layout_dir, uploads_url, editor_types, metadata]"
+description = "a field to print [possible values: upload_prefix, archival_version, site_url, site_name, object_definition_file, objects_dir, prebuild, pages_dir, build_dir, static_dir, schemas_dir, layout_dir, uploads_url, editor_types, metadata]"
 [[arguments]]
 arg = "[path/to/archival-site]"
 description = "optionally specify a path to an archival site. By default will run in the current working directory. "
