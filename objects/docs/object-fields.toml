@@ -163,7 +163,7 @@ archival renders markdown with raw/unsafe HTML *enabled* — any HTML you write 
 
 **A note on liquid**
 
-Liquid you write inside a markdown field is *rendered*, not printed — as it is in every other field type. See [liquid in field values](#liquid%20in%20field%20values) below for how that works, how to escape it, and the one markdown-specific gotcha (use single quotes for liquid string literals here).
+Liquid you write inside a markdown field is *rendered*, not printed — as it is in every other field type. Code is the exception: liquid inside an inline code span, or inside a fenced or indented code block, is written out exactly as you authored it, so a code sample stays a sample. See [liquid in field values](#liquid%20in%20field%20values) below for how rendering works, how to escape it everywhere else, and the one markdown-specific gotcha (use single quotes for liquid string literals here).
 """
 
 
@@ -390,7 +390,20 @@ There are some subtleties to be aware of:
 ```html
 {{ post.date | date: '%Y' }}
 ```
-{% endraw %}**Escaping.** To keep liquid syntax literal in a field value, wrap it in a raw tag — which is why the examples throughout these docs are written that way:
+
+**In markdown fields, code is never liquid.** An inline code span and a fenced or indented code block are samples, not statements, so archival writes their liquid out as authored instead of rendering it — you don't need a raw tag to document liquid in a markdown field:
+
+````markdown
+Write `{{ site_url }}` to print the site url:
+
+```html
+{% for post in posts %}{{ post.title }}{% endfor %}
+```
+````
+
+Both of those reach the page as the text you typed. This covers markdown's own code only — a `<code>` tag you write out as HTML is not markdown code, and liquid inside one still renders.{% endraw %}
+
+**Escaping.** Outside markdown code, keeping liquid syntax literal in a field value takes a raw tag — which is why the examples throughout these docs are written that way:
 
 ```html
 {{ '{% raw %}' }}
