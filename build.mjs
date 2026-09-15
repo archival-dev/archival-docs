@@ -26,9 +26,7 @@ const EDITOR_URL = dev
 // a build at a val of your own.
 const COMMENTS_URL =
   process.env.COMMENTS_URL ??
-  (dev || staging
-    ? "https://archival-update-comments.web.val.run"
-    : "https://archival-update-comments.web.val.run");
+  "https://archival--a1ef3c9ab12011f1a0c41607ee4eb77e.web.val.run";
 const TURNSTILE_SITE_KEY = dev
   ? "1x00000000000000000000AA"
   : staging
