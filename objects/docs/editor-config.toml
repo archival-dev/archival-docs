@@ -7,6 +7,8 @@ The optional `archival_editor.toml` file lets you customize how your site's cont
 This file is most useful when creating an archival template or for customizing the editing experience in the archival editor.
 
 Place `archival_editor.toml` in the root of your repo, alongside `archival_objects.toml` and `archival.toml`. The editor reads it automatically when your site loads, and re-reads it whenever the file changes.
+
+It is also where you turn on [ActivityPub](#ActivityPub), which publishes your content to Mastodon and the rest of the fediverse whenever your site deploys.
 """
 
 [[sections]]
@@ -151,4 +153,80 @@ Publishing a draft publishes your site, so anything else you had left unsynced i
 ### Changing a schema under an open draft
 
 A draft can outlive the shape it was started in. Every time one is opened it is reconciled against the current object definition: a field the type no longer declares is dropped, a field whose type has changed to one the saved value cannot fit is dropped with it, and a child list you have added since appears empty. Everything still valid is preserved, so editing your schema never costs you a draft outright.
+"""
+
+[[sections]]
+title = "ActivityPub"
+content = """
+An `activitypub` section turns your site into an account people can follow from Mastodon, Threads, Ghost, and anything else that speaks [ActivityPub](https://www.w3.org/TR/activitypub/). Every object you map becomes a post on that account, and each time your site deploys, the people following it see what you added, changed, or removed.
+
+```toml
+[activitypub]
+username = "blog"
+
+[activitypub.actor]
+object = "site"
+name = "title"
+summary = "bio"
+icon = "logo"
+
+[activitypub.objects.post]
+name = "title"
+content = "body"
+published = "published_at"
+image = "cover"
+```
+
+With this file, a site at `example.com` is followed as `@blog@example.com`.
+
+Every value in the section other than `username` and `type` names a field of your object, exactly as it appears in `archival_objects.toml`. Nothing you write here is itself published: what goes out is whatever your content says.
+
+`activitypub` is reserved at the top level of this file, so an object type named `activitypub` cannot be configured here.
+
+### The account
+
+- `username` (optional) — the part of the handle before your domain. It may hold letters, numbers, underscores, dots and dashes. Left out, the first part of your site's domain is used, with anything else turned into underscores, so `my-site.com` is followed as `@my_site@my-site.com`.
+
+The handle is always on your site's primary domain. Changing that domain later leaves existing followers following an account that no longer answers, so settle on a domain before you start federating.
+
+`[activitypub.actor]` is optional, and sets the profile other servers show for the account. `object` is required, and names an object your site has exactly one of — a site settings or about object is the usual choice. The rest name its fields:
+
+- `name` — the display name. A `string`, `markdown` or `enum` field. Left out, the `site_name` in `archival.toml` is used, and failing that the domain.
+- `summary` — the bio. A `string`, `markdown` or `enum` field.
+- `icon` — the avatar. An `image` field.
+- `image` — the header image. An `image` field.
+
+### Posts
+
+Each table under `activitypub.objects` is keyed by an object type your site has many of, and every object of that type is published:
+
+- `type` (optional) — `"Article"` (the default) or `"Note"`. An article is a piece of writing with a title. A note is a short post like a status update, and is shown in full wherever it is read.
+- `name` — the title. A `string`, `markdown` or `enum` field.
+- `content` — the body. A `string`, `markdown` or `enum` field. Markdown is rendered to HTML.
+- `summary` — a `string`, `markdown` or `enum` field. Mastodon shows a summary as a content warning, hiding the post behind it until it is opened, so only map one you mean that way.
+- `published` — when the post was published. A `date` field. Left out, or left empty on an object, the post is dated when it was first federated.
+- `updated` — when the post last changed. A `date` field. Left out, an edited post is dated by the deploy that changed it.
+- `image` — an `image` field, attached to the post. The image's description is used as its alt text.
+
+Each type must map at least one of `content` or `name`. Fields you do not map are never published, and a `secret` field cannot be mapped at all.
+
+When an object type has a [page template](/docs/page-templates.html), each post links to its page, and pasting that page's address into Mastodon's search finds the post.
+
+### When things are published
+
+Publishing happens when your site deploys, however the change reached it — from the editor, a shortcut, or a git push. Nothing is sent while you are still editing.
+
+- **Added objects** are posted, **changed objects** are updated, and **removed objects** are deleted from the servers that received them.
+- **The first deploy with `activitypub` configured sends nothing** to anyone. Your existing content is published to the account so it can be browsed and found, but it will not arrive in anyone's timeline as though it were new.
+- **A single deploy delivers at most 10 new posts and 20 updates**, the most recent first, so importing a backlog does not flood your followers. Everything else is still published and can be found on the account. Deletions are always delivered.
+
+If the section names a field your object does not have, or one whose type cannot fill it, that deploy publishes nothing to the fediverse until the mapping is corrected. Your site itself still deploys as usual.
+
+### Turning it off
+
+Removing the `activitypub` section and deploying stops the account from answering. Its followers and posts are kept, and adding the section back resumes it where it left off. The same happens while a site's subscription is cancelled: the account stops answering, and the next deploy after it is reactivated brings it back.
+
+While a site federates, Archival answers `/.well-known/webfinger` and requests for ActivityPub documents on its behalf, and reserves the paths under `/_archival/ap/`.
+
+Replies, likes, and boosts your posts receive are not yet shown on your site.
 """
