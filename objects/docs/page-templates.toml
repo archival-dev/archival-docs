@@ -2,14 +2,19 @@ order = 5
 title = "Page Templates"
 include_in_llm_docs = true
 description = """
-Page templates go in your `pages` directory (or whatever you’ve defined as the `pages_dir` in your `archival.toml`), and are `.liquid` files. There are two kinds.
+Page templates go in your `pages` directory (or whatever you’ve defined as the `pages_dir` in your `archival.toml`), and are `.liquid` files. There are two kinds: a template that renders one page, and a template that renders a page for every object of a type.
+"""
 
-## One page per file
+[[sections]]
+title = "One page per file"
+content = """
+A template that no object type names renders once, to the same path in your build: `pages/index.liquid` becomes `dist/index.html`, and `pages/about.liquid` becomes `dist/about.html`. A listing page - a blog index, a menu, a portfolio grid - is one of these, reaching the objects it lists through their pluralized accessor (see [Template Variables](/docs/template-variables.html)).
+"""
 
-A template that no object type names renders once, to the same path in your build: `pages/index.liquid` becomes `dist/index.html`, and `pages/about.liquid` becomes `dist/about.html`. A listing page - a blog index, a menu, a portfolio grid - is one of these, reaching the objects it lists through their pluralized accessor.
-
-## One page per object
-
+[[sections]]
+title = "One page per object"
+content = """
+{% raw %}
 To give every object of a type its own page - each post, poem, project, product or event - name a template in the type's definition in `archival_objects.toml`:
 
 ```toml
@@ -22,7 +27,7 @@ template = "post"
 
 `template` is the one key in a definition whose value is not a field type: it names a file in `pages`, without its extension. With this definition, `pages/post.liquid` is rendered once for each file in `objects/post`, and the object being rendered is available under the type's name:
 
-```liquid
+```html
 <article>
   <h1>{{ post.title }}</h1>
   {{ post.content }}
@@ -33,15 +38,18 @@ Each page is built to a folder named after the object type, with a file named af
 
 Link to these pages with each object's `path`, which is `<object-type>/<filename>`:
 
-```liquid
+```html
 {% for post in posts %}
   <a href="/{{ post.path }}.html">{{ post.title }}</a>
 {% endfor %}
 ```
 
-There is no other way to generate pages from objects. A file named after a route parameter, such as `pages/post/[slug].liquid`, is an ordinary page with that literal name, and writing one `.liquid` file per object duplicates content the object already holds. The template's name does not have to match the type's - `template = "article"` renders `pages/article.liquid` - but the pages are still built under the type's folder.
+This is the only way pages are generated from objects. A file named like a route parameter, such as `pages/post/[slug].liquid`, is an ordinary page built under that literal name, and writing one `.liquid` file per object duplicates content the object already holds. The template's name does not have to match the type's - `template = "article"` renders `pages/article.liquid` - but the pages are still built under the type's folder.
+{% endraw %}
+"""
 
-## Render passes
-
+[[sections]]
+title = "Render passes"
+content = """
 In some cases (specifically liquid variables inside archival variables), a page will have multiple render passes: if the output still contains liquid syntax after the template renders, archival renders it a second time. This should be invisible except if you want a template to emit literal liquid, because a plain raw tag won’t survive it. See [liquid in field values](/docs/object-fields.html#liquid%20in%20field%20values).
 """
