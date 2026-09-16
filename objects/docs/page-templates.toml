@@ -2,19 +2,46 @@ order = 5
 title = "Page Templates"
 include_in_llm_docs = true
 description = """
-Page templates go in your `pages` directory (or whatever you’ve defined as the `pages_dir` in your `archival.toml`), and are `.liquid` files.
+Page templates go in your `pages` directory (or whatever you’ve defined as the `pages_dir` in your `archival.toml`), and are `.liquid` files. There are two kinds.
 
-Most pages will just render an `.html` file when built, at the root of your site. For instance, `pages/index.liquid` will become `dist/index.html` when built.
+## One page per file
 
-If you define a `template` field on an object type, you can use a template for each object, which will then be rendered at a subpath of the object’s name. For instance, this `archival_objects.toml` definition:
+A template that no object type names renders once, to the same path in your build: `pages/index.liquid` becomes `dist/index.html`, and `pages/about.liquid` becomes `dist/about.html`. A listing page - a blog index, a menu, a portfolio grid - is one of these, reaching the objects it lists through their pluralized accessor.
+
+## One page per object
+
+To give every object of a type its own page - each post, poem, project, product or event - name a template in the type's definition in `archival_objects.toml`:
 
 ```toml
 [post]
 title = "string"
+date = "date"
+content = "markdown"
 template = "post"
 ```
 
-Would expect you to create a file called `pages/post.liquid`. Instead of this file being built to `dist/index.html` , it will generate a folder at `dist/post`, containing `.html` files for each of the objects in `objects/post`. The names of these html files will correspond to the names of the posts. For instance, `objects/post/01-21-2024-my-great-post.toml` will be rendered to `dist/post/01-21-2024-my-great-post.html` using the `pages/post.liquid` template. `dist/post.html` will not be generated.
+`template` is the one key in a definition whose value is not a field type: it names a file in `pages`, without its extension. With this definition, `pages/post.liquid` is rendered once for each file in `objects/post`, and the object being rendered is available under the type's name:
+
+```liquid
+<article>
+  <h1>{{ post.title }}</h1>
+  {{ post.content }}
+</article>
+```
+
+Each page is built to a folder named after the object type, with a file named after the object's file: `objects/post/my-great-post.toml` becomes `dist/post/my-great-post.html`. `pages/post.liquid` does not also build a `dist/post.html`.
+
+Link to these pages with each object's `path`, which is `<object-type>/<filename>`:
+
+```liquid
+{% for post in posts %}
+  <a href="/{{ post.path }}.html">{{ post.title }}</a>
+{% endfor %}
+```
+
+There is no other way to generate pages from objects. A file named after a route parameter, such as `pages/post/[slug].liquid`, is an ordinary page with that literal name, and writing one `.liquid` file per object duplicates content the object already holds. The template's name does not have to match the type's - `template = "article"` renders `pages/article.liquid` - but the pages are still built under the type's folder.
+
+## Render passes
 
 In some cases (specifically liquid variables inside archival variables), a page will have multiple render passes: if the output still contains liquid syntax after the template renders, archival renders it a second time. This should be invisible except if you want a template to emit literal liquid, because a plain raw tag won’t survive it. See [liquid in field values](/docs/object-fields.html#liquid%20in%20field%20values).
 """
