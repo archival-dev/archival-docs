@@ -171,6 +171,7 @@ summary = "bio"
 icon = "logo"
 
 [activitypub.objects.post]
+when = "federate"
 name = "title"
 content = "body"
 published = "published_at"
@@ -198,8 +199,9 @@ The handle is always on your site's primary domain. Changing that domain later l
 
 ### Posts
 
-Each table under `activitypub.objects` is keyed by an object type your site has many of, and every object of that type is published:
+Each table under `activitypub.objects` is keyed by an object type your site has many of, and every object of that type is published unless `when` says otherwise:
 
+- `when` (optional) — a `boolean` field deciding which objects are published. Only objects where it is true are federated, and one whose field turns false is deleted from the servers that received it. Left out, every object of the type is published.
 - `type` (optional) — `"Article"` (the default) or `"Note"`. An article is a piece of writing with a title. A note is a short post like a status update, and is shown in full wherever it is read.
 - `name` — the title. A `string`, `markdown` or `enum` field.
 - `content` — the body. A `string`, `markdown` or `enum` field. Markdown is rendered to HTML.
@@ -210,13 +212,15 @@ Each table under `activitypub.objects` is keyed by an object type your site has 
 
 Each type must map at least one of `content` or `name`. Fields you do not map are never published, and a `secret` field cannot be mapped at all.
 
+If your site keeps drafts — objects it holds but does not show — map `when` to the field that decides, or they are published along with everything else. An object that does not set the field at all counts as false, so adding a field and mapping it publishes nothing until you turn it on object by object.
+
 When an object type has a [page template](/docs/page-templates.html), each post links to its page, and pasting that page's address into Mastodon's search finds the post.
 
 ### When things are published
 
 Publishing happens when your site deploys, however the change reached it — from the editor, a shortcut, or a git push. Nothing is sent while you are still editing.
 
-- **Added objects** are posted, **changed objects** are updated, and **removed objects** are deleted from the servers that received them.
+- **Added objects** are posted, **changed objects** are updated, and **removed objects** are deleted from the servers that received them. An object whose `when` field turns false is deleted the same way.
 - **The first deploy with `activitypub` configured sends nothing** to anyone. Your existing content is published to the account so it can be browsed and found, but it will not arrive in anyone's timeline as though it were new.
 - **A single deploy delivers at most 10 new posts and 20 updates**, the most recent first, so importing a backlog does not flood your followers. Everything else is still published and can be found on the account. Deletions are always delivered.
 
