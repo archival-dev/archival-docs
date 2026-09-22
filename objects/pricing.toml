@@ -6,7 +6,7 @@ usage_limits = """
 To make sure archival is affordable for everyone, we pass through costs beyond what most sites will ever need:
 
 - 100 deploys/mo for free, $0.06 per deploy after that
-- 250k requests/mo for free, $0.50 per 100k requests after that
+- 1mm requests/mo for free, $0.50 per 1mm requests after that
 - 20GB upload storage for free, $0.10/GB/mo after that
 - 1mm upload downloads/mo for free, $0.50 per 1mm downloads after that
 - $5.00 of AI usage/mo for free on Pro, billed at cost after that
