@@ -62,10 +62,13 @@ The package exports the whole contract, so you can name any part of it explicitl
 | `CarrierParams` | The first argument: a `URLSearchParams`. |
 | `CarrierBody` | The second argument: parsed JSON, a form body, text, or `null`. |
 | `CarrierObjects` / `SiteObjects` | The third argument: your site's objects merged with the vars archival injects. |
-| `CarrierEnv` | Just the injected vars — `SITE_URL` and `UPLOADS`. |
+| `CarrierEnv` | Just the injected vars — `SITE_URL`, `UPLOADS` and `EMAIL`. |
 | `CarrierUploads` | The `UPLOADS` var: `list()` and `get()`. |
 | `CarrierUpload` | One upload's body and metadata, as `get()` resolves it. |
 | `CarrierUploadEntry` | A `{ sha, filename }` pair, as `list()` returns them. |
+| `CarrierEmail` | The `EMAIL` var: `send()`. |
+| `CarrierEmailMessage` | What `send()` takes: `from`, `to`, `subject`, `text`, `html` and `replyTo`. |
+| `CarrierEmailReceipt` | What `send()` resolves to: the `id` of the send and the `from` it resolved to. |
 | `CarrierFormBody` | A parsed form submission — `{ [key: string]: string \\| Blob }`. |
 | `CarrierJsonValue` | Any value that survives a JSON round trip. |
 | `CarrierResponse` | What a carrier may return. |
@@ -164,10 +167,11 @@ The values match what a liquid template sees:
 
 - **`SITE_URL`** — the full URL of your site (e.g. `https://yoursite.com`). Use it to build absolute URLs for redirects and links rather than hard-coding your domain.
 - **`UPLOADS`** — the files uploaded to your site, readable at request time. See [Reading uploads](#Reading%20uploads).
+- **`EMAIL`** — sends mail from your site's own email addresses. See [Sending email](#Sending%20email).
 
 A few things worth knowing:
 
-- Objects are **embedded at deploy time**, so a carrier sees a snapshot from the build it was deployed with, not live content. Publishing your site redeploys its carriers with fresh values. (`UPLOADS` is the exception — it reads your files when the request runs.)
+- Objects are **embedded at deploy time**, so a carrier sees a snapshot from the build it was deployed with, not live content. Publishing your site redeploys its carriers with fresh values. (`UPLOADS` and `EMAIL` are the exceptions — they act when the request runs.)
 - The tree is **deeply frozen**, so one request can't mutate what the next request sees.
 - Because they're embedded, there's an upper bound on how large a site's objects can be (5MB serialized). A site over that fails its carrier deploy rather than silently shipping a carrier with missing data.
 """
@@ -220,6 +224,42 @@ const carrier: Carrier = async (params, body, objects) => {
 ```
 
 Bear in mind that a file which is already referenced by a published object is served from the CDN too, at its own `url` — reading it through a carrier doesn't hide it. Gating only means something for files nothing on your site links to.
+"""
+
+[[sections]]
+title = "Sending email"
+content = """
+`objects.EMAIL.send` sends mail from one of your site's own email addresses, so a carrier can confirm a form submission or tell you about an order from an address your visitors recognize. It needs a plan that includes email and at least one address on one of your site's domains — add those under Email in the site's settings in the editor.
+
+```ts
+const carrier: Carrier = async (params, body, objects) => {
+  if (!body || typeof body.email !== "string") {
+    throw new Error("Method Not Allowed");
+  }
+  await objects.EMAIL.send({
+    to: body.email,
+    subject: "Thanks for getting in touch",
+    text: "We got your message and will reply within a day.",
+  });
+  return "redirect:/thanks";
+};
+```
+
+| Field | |
+| --- | --- |
+| `from` | One of your site's addresses. Defaults to the first address on your site's primary domain. A copy of every message lands in that address's Sent folder. |
+| `to` | A single address, or up to ten. |
+| `subject` | The subject line. |
+| `text`, `html` | The body — at least one is required, and both may be given. |
+| `replyTo` | Where replies go, when not `from`. |
+
+`send` resolves once archival has accepted the message, with an `id` for its logs and the `from` it resolved to. Delivery happens afterwards; if it fails, the site's owner is emailed about it. `send` rejects when the message is not accepted: the site has no email, `from` is not one of its addresses, a recipient is malformed, or the site has used its hourly allowance (100 messages).
+
+A few things worth knowing:
+
+- A domain whose mail is received by another service — Google Workspace, say — can still send. Its addresses are sending-only: nothing arrives in them, and a carrier can't send *to* an address on such a domain, since that mail would never reach the service that receives it.
+- `EMAIL` only works in a deployed carrier. In a preview or a local run, `send` throws.
+- A carrier is reachable by anyone, so treat what a request asks you to send with care. A `to` taken straight from an untrusted body sends mail to whoever the request names; the recipient cap and the hourly allowance limit how far that goes, but validating the request is what keeps your site from being used as a relay.
 """
 
 [[sections]]
