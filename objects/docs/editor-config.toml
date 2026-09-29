@@ -192,6 +192,7 @@ Every value in the section other than `username`, `domain`, `type` and the actor
 
 - `username` (optional) — the part of the handle before the domain. It may hold letters, numbers and underscores, with dots and dashes allowed between them, up to 64 characters. Left out, the first part of the account's domain is used, with anything else turned into underscores, so `my-site.com` is followed as `@my_site@my-site.com`. A domain that starts with `www` gives you `@www`, so set a username if yours does.
 - `domain` (optional) — which of your site's domains the account lives on. It is the part of the handle after the username, and every post's address is written against it. Give a bare hostname such as `example.com`, with no `https://`, port or path. It must be one of your site's own domains. Left out, your site's primary domain is used. That is normally the domain the site was created with, not a custom domain you added later, so a site that started on an `onarchival.dev` address federates from that address unless you set this.
+- `follow` (optional) — accounts your site follows, up to 20, each a handle such as `@user@example.com` or the https address of an account. Each deploy follows every account newly on the list and unfollows every one taken off it. Your site does not show posts from the accounts it follows: following is how you opt in to services that ask for it, such as the [Bluesky bridge](#bluesky). An account that cannot be found is tried again on the next deploy, and does not hold up publishing.
 
 Settle on a domain before you start federating. If the account's domain changes afterwards — by setting or changing `domain`, or by renaming or removing your primary domain while `domain` is left out — it is published as a new account, and the followers you already have are not carried over.
 
@@ -201,6 +202,17 @@ Settle on a domain before you start federating. If the account's domain changes 
 - `summary` — the bio. A `string`, `markdown` or `enum` field.
 - `icon` — the avatar. An `image` field.
 - `image` — the header image. An `image` field.
+
+### Bluesky
+
+[Bridgy Fed](https://fed.brid.gy) bridges fediverse accounts into Bluesky, and your site opts in by following its bot:
+
+```toml
+[activitypub]
+follow = ["@bsky.brid.gy@bsky.brid.gy"]
+```
+
+Bridgy Fed only bridges an account with a profile picture, so map the actor's `icon` first. Once the bot follows your site back, new posts appear on Bluesky from `@<username>.<domain>.ap.brid.gy`, so `@blog@example.com` becomes `@blog.example.com.ap.brid.gy`. Posts older than two weeks are not bridged, and taking the bot off the list stops bridging.
 
 ### Posts
 
@@ -230,11 +242,11 @@ Publishing happens when your site deploys, however the change reached it — fro
 - **The first deploy with `activitypub` configured sends nothing** to anyone. Your existing content is published to the account so it can be browsed and found, but it will not arrive in anyone's timeline as though it were new.
 - **A single deploy delivers at most 10 new posts and 20 updates**, choosing the posts with the latest `published` dates, so importing a backlog does not flood your followers. Everything else is still published and can be found on the account. Deletions, and changes to the account's profile, are always delivered.
 
-Any mistake in the section stops publishing: a setting it does not recognise, a `username` that is not allowed or a `domain` that is not one of your site's domains, an object your site does not have (or a list where a single object is expected, or the reverse), or a field your object does not have or whose type cannot fill it. That deploy publishes nothing to the fediverse, and neither does any later one until you correct it. An account that is already federating keeps showing what it last published. One that has not federated yet, or that you are turning back on, stays unreachable. Your site itself still deploys as usual. Nothing in the editor reports these mistakes yet, so if new posts stop arriving, check the section against `archival_objects.toml`.
+Any mistake in the section stops publishing: a setting it does not recognise, a `username` that is not allowed or a `domain` that is not one of your site's domains, a `follow` entry that is not an account, an object your site does not have (or a list where a single object is expected, or the reverse), or a field your object does not have or whose type cannot fill it. That deploy publishes nothing to the fediverse, and neither does any later one until you correct it. An account that is already federating keeps showing what it last published. One that has not federated yet, or that you are turning back on, stays unreachable. Your site itself still deploys as usual. Nothing in the editor reports these mistakes yet, so if new posts stop arriving, check the section against `archival_objects.toml`.
 
 ### Turning it off
 
-Removing the `activitypub` section and deploying stops the account from answering. Its followers and posts are kept, and adding the section back resumes it where it left off. The same happens while a site's subscription is cancelled: the account stops answering, and the next deploy after it is reactivated brings it back.
+Removing the `activitypub` section and deploying stops the account from answering. Its followers, posts and the accounts it follows are kept, and adding the section back resumes it where it left off. The same happens while a site's subscription is cancelled: the account stops answering, and the next deploy after it is reactivated brings it back.
 
 Archival reserves the paths under `/_archival/ap/` on every site it hosts, whether or not the site federates, so your site cannot serve its own files there. While a site federates, Archival also answers `/.well-known/webfinger` for its account and requests for ActivityPub documents on its behalf. Any of those requests it does not recognise is passed on to your site.
 
