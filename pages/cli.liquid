@@ -6,7 +6,7 @@
   , nofooter: true
 %}
 
-<div class="docs-container mb-20 md:mb-0 md:mt-20 flex flex-1 gap-4 min-h-full w-full md:max-w-[1200px] pt-32 pb-32">
+<div class="docs-container mb-20 md:mb-0 md:mt-20 flex flex-1 gap-4 min-h-full w-full md:max-w-[1200px] pt-32">
   <div id="docs-sidebar" class="z-10 w-64 hidden flex-col font-bold md:flex">
     {% for doc in objects.cli %}
       <a
@@ -20,7 +20,7 @@
     {% endfor %}
   </div>
 
-  <div id="cli" class="z-20 w-full min-h-full flex justify-center">
+  <div id="cli" class="z-20 w-full min-h-full flex justify-center md:pb-32">
     <div class="md w-full max-w-screen-md flex flex-col gap-4">
       <h1 class="cli-header">
         <a

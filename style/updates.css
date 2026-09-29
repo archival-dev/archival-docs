@@ -21,6 +21,11 @@
   font-weight: 700;
 }
 
+.updates-handle {
+  white-space: nowrap;
+  user-select: all;
+}
+
 .updates-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 13rem;

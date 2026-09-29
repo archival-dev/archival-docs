@@ -1866,7 +1866,6 @@ h1.pricing-title {
   position: sticky;
   top: 100px;
   overflow-y: auto;
-  overscroll-behavior: contain;
 }
 
 /* Scrollable nav surfaces keep their scrollbars hidden */
@@ -1975,7 +1974,7 @@ h1.pricing-title {
   }
 
   .docs-container {
-    padding: 8rem 4rem;
+    padding: 8rem 4rem 0;
   }
 
   .hero-message {
