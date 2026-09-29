@@ -5,6 +5,7 @@ path = "update"
 [activitypub]
 domain = "archival.dev"
 username = "archival"
+follow = ["@bsky.brid.gy@bsky.brid.gy"]
 
 [activitypub.actor]
 object = "home"
