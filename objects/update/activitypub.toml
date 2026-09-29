@@ -1,0 +1,21 @@
+order = 0
+title = "We're Federated!"
+publish_date = 2026-09-29T00:00:00.0
+author = "Jesse"
+summary = "Archival updates are now published via activitypub, available everywhere at @archival@archival.dev"
+body = '''
+Archival recently got the ability to really easily add activitypub to a site. As you can see on this site's [public github repo,](https://github.com/archival-dev/archival-docs/blob/main/archival_editor.toml) you can simply map an object type (or ask task mode to do it for you) to the activitypub fields, and we'll automatically detect this and set up the webfinger endpoint and the other activitypub endpoints needed to federate your posts to various platforms.
+
+For instance, with just [this config](https://github.com/archival-dev/archival-docs/commit/3b633d7dbf680b7ad081e71ff12362b90bdd49b1), this post and the other updates can now be read via rss and on various federated social feeds. For instance:
+
+* **Mastodon**: <https://mastodon.social/@archival@archival.dev>
+* **Flipboard's Mastodon server**: <https://flipboard.social/@archival@archival.dev>
+* **Medium's Mastodon server (me.dm)**: <https://me.dm/@archival@archival.dev>
+* **Vivaldi Social**: <https://social.vivaldi.net/@archival@archival.dev>
+* **Newsmast**: <https://newsmast.social/@archival@archival.dev>
+* **Misskey**: <https://misskey.io/@archival@archival.dev>
+
+These all will now sync up with the updates on this site, along with hundreds more.\
+Want to own your data and still have social links to follow and share? Now you can on Archival!
+'''
+media = []

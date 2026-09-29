@@ -4,9 +4,9 @@ description = """
 Archival is the simplest way to build an easy-to-maintain website for your business, product, or brand.
 """
 header_alt = "archival.dev"
-personas_title = "What Can Archival do for Me?"
 manifesto_link_title = "Read the archival manifesto"
 videos_title = "Show Me How It Works"
+personas_title = "What Can Archival do for Me?"
 contact_title = "Connect With Us"
 pricing_title = "Pricing"
 pricing_content = """
@@ -19,41 +19,48 @@ If you're interested in hiring our team to build something custom for you, host 
 discord_url = "https://discord.gg/Q9Cj6bWTbW"
 
 [header]
-sha = ""
 display_type = "image"
 filename = ""
+sha = ""
 mime = "image/*"
 
+[logo]
+display_type = "image"
+filename = "logo-stroke-padded.png"
+sha = "b6913c0aab026e22eb8755d0a0f2c09376422f7dc153f5b7195e2ffdd06c249c"
+mime = "image/png"
+name = "logo-stroke-padded.png"
+
 [[sections]]
-title = "Content First"
 content = """
 Content-first websites: fast, inexpensive, flexible, and future-proof. The Archival editor handles your domain, DNS, deploys, and content for a single monthly price, and gets you online in minutes.
 """
+title = "Content First"
 
 [[sections]]
-title = "Built to Last"
 content = """
 Websites shouldn't rot. Every change to yours is tracked, so you can rebuild it as it was at any point in its history, revert edits from the distant past, and see exactly who made them.
 """
+title = "Built to Last"
 
 [[sections]]
-title = "Totally Yours"
 content = """
 Start from a beautiful starter site, then customize it in ways big platforms like Squarespace can't. You build with AI and web standards, not platform code or clunky css fields, and editing stays simple.
 """
+title = "Totally Yours"
 
 [[sections]]
-title = "Platform Free"
 content = """
 You own your entire website and data, and we can never change or take it away. No expensive databases, no limiting templates, just a site that becomes uniquely yours over time.
 """
+title = "Platform Free"
 
 [[videos]]
-title = "Launch a Podcast in less than 10 minutes"
 poster = "/img/video-poster.jpg"
+title = "Launch a Podcast in less than 10 minutes"
 
 [videos.video]
 display_type = "video"
-sha = ""
 filename = ""
+sha = ""
 mime = "video/*"
