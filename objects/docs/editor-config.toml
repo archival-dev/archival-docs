@@ -176,7 +176,6 @@ icon = "logo"
 [activitypub.objects.post]
 when = "federate"
 name = "title"
-summary = "excerpt"
 content = "body"
 published = "published_at"
 image = "cover"
@@ -222,7 +221,7 @@ The section must map at least one object type under `activitypub.objects`. Each 
 - `type` (optional) — `"Article"` (the default) or `"Note"`. An article is a piece of writing with a title. Mastodon never shows an article's body: it shows the title, the summary and a link to the post, with the post's image or, when it has none, a preview of the linked page. Servers such as Misskey show the whole article. A note is a short post like a status update, and is shown in full wherever it is read. A note has no title: its `name` is published only when it has no `content`, and then as its body, in plain text.
 - `name` — the title. A `string`, `markdown` or `enum` field.
 - `content` — the body. A `string`, `markdown` or `enum` field. Markdown is rendered to HTML.
-- `summary` — a `string`, `markdown` or `enum` field. On an article it is the teaser, and an article without one appears on Mastodon as just its title and a link. Some other servers, such as Misskey and GoToSocial, show an article's summary as a content warning with the body behind it. On a note, Mastodon and most other servers show the summary as a content warning, hiding the post until it is opened, so only map one on a note you mean that way.
+- `summary` — a `string`, `markdown` or `enum` field. Mastodon shows an article's summary as a teaser under its title, but Misskey, GoToSocial and many other servers show it as a content warning with the body hidden behind it, and on a note Mastodon and most other servers do the same. Only map it when you mean it as a warning. An article without one still gets a teaser on Mastodon from the preview of the page it links to, so set an `og:description` on that page instead.
 - `published` — when the post was published. A `date` field. Left out, or left empty on an object, the post is dated when it was first federated.
 - `updated` — when the post last changed. A `date` field. Left out, an edited post is dated by the deploy that changed it.
 - `image` — an `image` field, attached to the post. The image's description is used as its alt text.
