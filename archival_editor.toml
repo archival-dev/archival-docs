@@ -1,3 +1,17 @@
 [[shortcuts]]
 name = "Post Update"
 path = "update"
+
+[activitypub]
+domain = "archival.dev"
+username = "archival"
+
+[activitypub.actor]
+object = "home"
+summary = "description"
+icon = "logo"
+
+[activitypub.objects.update]
+name = "title"
+content = "body"
+published = "publish_date"

@@ -9,9 +9,11 @@
 
 <div class="updates-page">
   <header class="updates-hero">
+    {% comment %} The handle is set by [activitypub] in archival_editor.toml. {% endcomment %}
     <p class="build-description">
       Notes from the Archival team.
-      <a href="/updates.rss" data-umami-event="updates-rss-hero">Subscribe with RSS</a>.
+      <a href="/updates.rss" data-umami-event="updates-rss-hero">Subscribe with RSS</a>,
+      or follow <span class="updates-handle">@archival@archival.dev</span> from Mastodon.
     </p>
   </header>
 

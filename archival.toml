@@ -1,2 +1,3 @@
 prebuild = ["npm ci", "npm run build"]
 site_url = "https://archival.dev"
+site_name = "Archival"
