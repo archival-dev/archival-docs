@@ -7,3 +7,12 @@
 # rather than 301/302: MCP is a POST protocol and most clients rewrite a
 # redirected POST into a GET, which would break every install that typed this.
 /mcp    https://api.archival.dev/mcp    308
+
+# Docs and CLI pages are rendered per object, so the section roots have no page
+# of their own. Keep these pointed at the lowest-order object of each type.
+/docs         /docs/getting-started    301
+/docs/        /docs/getting-started    301
+/docs.html    /docs/getting-started    301
+/cli          /cli/build               301
+/cli/         /cli/build               301
+/cli.html     /cli/build               301
