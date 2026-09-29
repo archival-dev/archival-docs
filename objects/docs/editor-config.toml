@@ -160,9 +160,12 @@ title = "ActivityPub"
 content = """
 An `activitypub` section turns your site into an account people can follow from Mastodon, Threads, Ghost, and anything else that speaks [ActivityPub](https://www.w3.org/TR/activitypub/). Every object you map becomes a post on that account, and each time your site deploys, the people following it see what you added, changed, or removed.
 
+ActivityPub is part of Archival's hosting. Publishing runs when Archival deploys your site, so a site you build with the CLI and host elsewhere does not federate.
+
 ```toml
 [activitypub]
 username = "blog"
+domain = "example.com"
 
 [activitypub.actor]
 object = "site"
@@ -173,6 +176,7 @@ icon = "logo"
 [activitypub.objects.post]
 when = "federate"
 name = "title"
+summary = "excerpt"
 content = "body"
 published = "published_at"
 image = "cover"
@@ -180,15 +184,16 @@ image = "cover"
 
 With this file, a site at `example.com` is followed as `@blog@example.com`.
 
-Every value in the section other than `username` and `type` names a field of your object, exactly as it appears in `archival_objects.toml`. Nothing you write here is itself published: what goes out is whatever your content says.
+Every value in the section other than `username`, `domain`, `type` and the actor's `object` names a field of your object, exactly as it appears in `archival_objects.toml`. Nothing you write here is itself published: what goes out is whatever your content says.
 
 `activitypub` is reserved at the top level of this file, so an object type named `activitypub` cannot be configured here.
 
 ### The account
 
-- `username` (optional) — the part of the handle before your domain. It may hold letters, numbers, underscores, dots and dashes. Left out, the first part of your site's domain is used, with anything else turned into underscores, so `my-site.com` is followed as `@my_site@my-site.com`.
+- `username` (optional) — the part of the handle before the domain. It may hold letters, numbers and underscores, with dots and dashes allowed between them, up to 64 characters. Left out, the first part of the account's domain is used, with anything else turned into underscores, so `my-site.com` is followed as `@my_site@my-site.com`. A domain that starts with `www` gives you `@www`, so set a username if yours does.
+- `domain` (optional) — which of your site's domains the account lives on. It is the part of the handle after the username, and every post's address is written against it. Give a bare hostname such as `example.com`, with no `https://`, port or path. It must be one of your site's own domains. Left out, your site's primary domain is used. That is normally the domain the site was created with, not a custom domain you added later, so a site that started on an `onarchival.dev` address federates from that address unless you set this.
 
-The handle is always on your site's primary domain. Changing that domain later leaves existing followers following an account that no longer answers, so settle on a domain before you start federating.
+Settle on a domain before you start federating. If the account's domain changes afterwards — by setting or changing `domain`, or by renaming or removing your primary domain while `domain` is left out — it is published as a new account, and the followers you already have are not carried over.
 
 `[activitypub.actor]` is optional, and sets the profile other servers show for the account. `object` is required, and names an object your site has exactly one of — a site settings or about object is the usual choice. The rest name its fields:
 
@@ -199,20 +204,20 @@ The handle is always on your site's primary domain. Changing that domain later l
 
 ### Posts
 
-Each table under `activitypub.objects` is keyed by an object type your site has many of, and every object of that type is published unless `when` says otherwise:
+The section must map at least one object type under `activitypub.objects`. Each table there is keyed by an object type your site has many of, and every object of that type is published unless `when` says otherwise:
 
 - `when` (optional) — a `boolean` field deciding which objects are published. Only objects where it is true are federated, and one whose field turns false is deleted from the servers that received it. Left out, every object of the type is published.
-- `type` (optional) — `"Article"` (the default) or `"Note"`. An article is a piece of writing with a title. A note is a short post like a status update, and is shown in full wherever it is read.
+- `type` (optional) — `"Article"` (the default) or `"Note"`. An article is a piece of writing with a title. Mastodon never shows an article's body: it shows the title, the summary and a link to the post, with the post's image or, when it has none, a preview of the linked page. Servers such as Misskey show the whole article. A note is a short post like a status update, and is shown in full wherever it is read. A note has no title: its `name` is published only when it has no `content`, and then as its body, in plain text.
 - `name` — the title. A `string`, `markdown` or `enum` field.
 - `content` — the body. A `string`, `markdown` or `enum` field. Markdown is rendered to HTML.
-- `summary` — a `string`, `markdown` or `enum` field. Mastodon shows a summary as a content warning, hiding the post behind it until it is opened, so only map one you mean that way.
+- `summary` — a `string`, `markdown` or `enum` field. On an article it is the teaser, and an article without one appears on Mastodon as just its title and a link. Some other servers, such as Misskey and GoToSocial, show an article's summary as a content warning with the body behind it. On a note, Mastodon and most other servers show the summary as a content warning, hiding the post until it is opened, so only map one on a note you mean that way.
 - `published` — when the post was published. A `date` field. Left out, or left empty on an object, the post is dated when it was first federated.
 - `updated` — when the post last changed. A `date` field. Left out, an edited post is dated by the deploy that changed it.
 - `image` — an `image` field, attached to the post. The image's description is used as its alt text.
 
-Each type must map at least one of `content` or `name`. Fields you do not map are never published, and a `secret` field cannot be mapped at all.
+Each type must map at least one of `content` or `name`. Fields you do not map are never published, and a `secret` field cannot be mapped at all. `name` and `summary` are sent as written rather than rendered from markdown, so keep them to plain text.
 
-If your site keeps drafts — objects it holds but does not show — map `when` to the field that decides, or they are published along with everything else. An object that does not set the field at all counts as false, so adding a field and mapping it publishes nothing until you turn it on object by object.
+If your site keeps drafts — objects it holds but does not show — map `when` to the field that decides, or they are published along with everything else. An object that does not set the field at all counts as false. On a type that is not federating yet, adding a field and mapping it publishes nothing until you turn it on object by object. On a type that is already federating, every post where the field is not true is deleted from the servers that received it, so set it to true on the posts you want to keep in the same deploy that adds `when`.
 
 When an object type has a [page template](/docs/page-templates.html), each post links to its page, and pasting that page's address into Mastodon's search finds the post.
 
@@ -220,17 +225,18 @@ When an object type has a [page template](/docs/page-templates.html), each post 
 
 Publishing happens when your site deploys, however the change reached it — from the editor, a shortcut, or a git push. Nothing is sent while you are still editing.
 
-- **Added objects** are posted, **changed objects** are updated, and **removed objects** are deleted from the servers that received them. An object whose `when` field turns false is deleted the same way.
+- **Added objects** are posted, **changed objects** are updated, and **removed objects** are deleted from the servers that received them. An object whose `when` field turns false is deleted the same way, and so is every object of a type you remove from `activitypub.objects`, as long as another type is still mapped.
+- **An object only counts as changed when its post would come out different.** Editing a field you have not mapped sends nothing, and changing this section re-renders every post and updates each one that comes out different. Renaming an object's file deletes its post and publishes a new one.
 - **The first deploy with `activitypub` configured sends nothing** to anyone. Your existing content is published to the account so it can be browsed and found, but it will not arrive in anyone's timeline as though it were new.
-- **A single deploy delivers at most 10 new posts and 20 updates**, the most recent first, so importing a backlog does not flood your followers. Everything else is still published and can be found on the account. Deletions are always delivered.
+- **A single deploy delivers at most 10 new posts and 20 updates**, choosing the posts with the latest `published` dates, so importing a backlog does not flood your followers. Everything else is still published and can be found on the account. Deletions, and changes to the account's profile, are always delivered.
 
-If the section names a field your object does not have, or one whose type cannot fill it, that deploy publishes nothing to the fediverse until the mapping is corrected. Your site itself still deploys as usual.
+Any mistake in the section stops publishing: a setting it does not recognise, a `username` that is not allowed or a `domain` that is not one of your site's domains, an object your site does not have (or a list where a single object is expected, or the reverse), or a field your object does not have or whose type cannot fill it. That deploy publishes nothing to the fediverse, and neither does any later one until you correct it. An account that is already federating keeps showing what it last published. One that has not federated yet, or that you are turning back on, stays unreachable. Your site itself still deploys as usual. Nothing in the editor reports these mistakes yet, so if new posts stop arriving, check the section against `archival_objects.toml`.
 
 ### Turning it off
 
 Removing the `activitypub` section and deploying stops the account from answering. Its followers and posts are kept, and adding the section back resumes it where it left off. The same happens while a site's subscription is cancelled: the account stops answering, and the next deploy after it is reactivated brings it back.
 
-While a site federates, Archival answers `/.well-known/webfinger` and requests for ActivityPub documents on its behalf, and reserves the paths under `/_archival/ap/`.
+Archival reserves the paths under `/_archival/ap/` on every site it hosts, whether or not the site federates, so your site cannot serve its own files there. While a site federates, Archival also answers `/.well-known/webfinger` for its account and requests for ActivityPub documents on its behalf. Any of those requests it does not recognise is passed on to your site.
 
 Replies, likes, and boosts your posts receive are not yet shown on your site.
 """

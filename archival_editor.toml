@@ -13,5 +13,6 @@ icon = "logo"
 
 [activitypub.objects.update]
 name = "title"
+summary = "summary"
 content = "body"
 published = "publish_date"
