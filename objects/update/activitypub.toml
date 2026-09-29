@@ -8,12 +8,16 @@ Archival recently got the ability to really easily add activitypub to a site. As
 
 For instance, with just [this config](https://github.com/archival-dev/archival-docs/commit/3b633d7dbf680b7ad081e71ff12362b90bdd49b1), this post and the other updates can now be read via rss and on various federated social feeds. For instance:
 
-* **Mastodon**: <https://mastodon.social/@archival@archival.dev>
-* **Flipboard's Mastodon server**: <https://flipboard.social/@archival@archival.dev>
-* **Medium's Mastodon server (me.dm)**: <https://me.dm/@archival@archival.dev>
-* **Vivaldi Social**: <https://social.vivaldi.net/@archival@archival.dev>
-* **Newsmast**: <https://newsmast.social/@archival@archival.dev>
-* **Misskey**: <https://misskey.io/@archival@archival.dev>
+* **Threads:** <https://www.threads.com/fediverse_profile/@archival@archival.dev>
+* **Bluesky (via Bridgy Fed):** <https://bsky.app/profile/did:plc:4jojyrkht5grnmg4qpyn5xia>
+* **Flipboard (Surf):** <https://surf.social/feed/mastodon%2Fuser%2F%40archival%40archival.dev>
+* **Mastodon:** <https://mastodon.social/@archival@archival.dev>
+* **Misskey:** <https://misskey.io/@archival@archival.dev>
+* **NodeBB forums:** <https://community.nodebb.org/user/archival@archival.dev/posts>
+* **Pleroma:** <https://devs.live/users/BAuWz6JLzYsTWLiakS>
+* **Akkoma:** <https://fe.disroot.org/@archival@archival.dev>
+* **Sharkey:** <https://blahaj.zone/@archival@archival.dev>
+* **Micro.blog:** <https://micro.blog/archival@archival.dev>
 
 These all will now sync up with the updates on this site, along with hundreds more.\
 Want to own your data and still have social links to follow and share? Now you can on Archival!
