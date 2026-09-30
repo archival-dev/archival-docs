@@ -247,7 +247,7 @@ Any mistake in the section stops publishing: a setting it does not recognise, a 
 
 Removing the `activitypub` section and deploying stops the account from answering. Its followers, posts and the accounts it follows are kept, and adding the section back resumes it where it left off. The same happens while a site's subscription is cancelled: the account stops answering, and the next deploy after it is reactivated brings it back.
 
-Archival reserves the paths under `/_archival/ap/` on every site it hosts, whether or not the site federates, so your site cannot serve its own files there. While a site federates, Archival also answers `/.well-known/webfinger` for its account and requests for ActivityPub documents on its behalf. Any of those requests it does not recognise is passed on to your site.
+Archival reserves the paths under `/_archival/ap/` on every site it hosts, whether or not the site federates, so your site cannot serve its own files there. While a site federates, Archival also answers `/.well-known/webfinger` for its account and requests for ActivityPub documents on its behalf. It answers `/.well-known/nodeinfo`, `/api/v1/instance` and `/api/v2/instance` as well, describing the site as a single-account server. Any of those requests it does not recognise is passed on to your site.
 
 Replies, likes, and boosts your posts receive are not yet shown on your site.
 """
