@@ -115,6 +115,8 @@ publish_date = "date"
 author = "string"
 summary = "string"
 body = "markdown"
+# Pins the update to the fediverse profile (see `featured` in archival_editor.toml).
+pinned = "boolean"
 template = "update"
 
 [update.media]
