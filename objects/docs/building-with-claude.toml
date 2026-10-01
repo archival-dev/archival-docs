@@ -58,3 +58,13 @@ Once the plugin is installed, Claude will be able to choose to use Archival when
 
 If you want to bootstrap straight to making a new site, just use `/archival:new`.
 """
+
+[[sections]]
+title = "Working in a folder"
+content = """
+In Claude Code, the plugin notices when you're in a folder and works there instead of in the chat. It installs the `archival` CLI, creates the site — or finds the one already in the folder — and checks every change with `archival build` before showing you anything. Images and other files go up with `archival login` and `archival upload`, so they're served from the CDN rather than committed.
+
+For a brand-new site it still publishes one preview and gives you the link, because that link is how you claim the site. Once you've claimed it, Claude connects the folder to your site's git remote at `git.archival.dev/<your domain>`, and from then on `git push` is the deploy: no preview, no publish step, just a commit. A site you already have works the same way — ask for it by name and Claude clones it into a folder and gets to work. A folder that already holds an Archival site gets `/archival:site`.
+
+In a chat, or anywhere Claude has no shell, the MCP connector builds straight to a preview.
+"""
