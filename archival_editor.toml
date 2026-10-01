@@ -13,6 +13,7 @@ summary = "description"
 icon = "logo"
 
 [activitypub.objects.update]
+featured = "pinned"
 name = "title"
 content = "body"
 published = "publish_date"
