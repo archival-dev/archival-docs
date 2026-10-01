@@ -175,6 +175,7 @@ icon = "logo"
 
 [activitypub.objects.post]
 when = "federate"
+featured = "pinned"
 name = "title"
 content = "body"
 published = "published_at"
@@ -183,7 +184,7 @@ image = "cover"
 
 With this file, a site at `example.com` is followed as `@blog@example.com`.
 
-Every value in the section other than `username`, `domain`, `type` and the actor's `object` names a field of your object, exactly as it appears in `archival_objects.toml`. Nothing you write here is itself published: what goes out is whatever your content says.
+Every value in the section other than `username`, `domain`, `follow`, `type` and the actor's `object` names a field of your object, exactly as it appears in `archival_objects.toml`. Nothing you write here is itself published: what goes out is whatever your content says.
 
 `activitypub` is reserved at the top level of this file, so an object type named `activitypub` cannot be configured here.
 
@@ -211,13 +212,14 @@ Settle on a domain before you start federating. If the account's domain changes 
 follow = ["@bsky.brid.gy@bsky.brid.gy"]
 ```
 
-Bridgy Fed only bridges an account with a profile picture, so map the actor's `icon` first. Once the bot follows your site back, new posts appear on Bluesky from `@<username>.<domain>.ap.brid.gy`, so `@blog@example.com` becomes `@blog.example.com.ap.brid.gy`. Posts older than two weeks are not bridged, and taking the bot off the list stops bridging.
+Bridgy Fed only bridges an account with a profile picture, so map the actor's `icon` first. Once the bot follows your site back, new posts appear on Bluesky from `@<username>.<domain>.ap.brid.gy`, so `@blog@example.com` becomes `@blog.example.com.ap.brid.gy`. Posts older than two weeks are not bridged, apart from the newest [featured](#posts) post, which becomes the account's pinned post. Taking the bot off the list stops bridging.
 
 ### Posts
 
 The section must map at least one object type under `activitypub.objects`. Each table there is keyed by an object type your site has many of, and every object of that type is published unless `when` says otherwise:
 
 - `when` (optional) — a `boolean` field deciding which objects are published. Only objects where it is true are federated, and one whose field turns false is deleted from the servers that received it. Left out, every object of the type is published.
+- `featured` (optional) — a `boolean` field choosing the account's featured posts: the five newest posts where it is true, by `published` date, across every type you map. Mastodon, Pleroma, Akkoma and GoToSocial show them as pinned posts on the account's profile, and Bluesky, through [Bridgy Fed](#bluesky), pins the newest one. Misskey, Sharkey and Iceshrimp pin only notes, so featured articles are not pinned there. Featuring or unfeaturing a post updates the account's profile, not the post. Left out, none of the type's posts are featured.
 - `type` (optional) — `"Article"` (the default) or `"Note"`. An article is a piece of writing with a title. Mastodon never shows an article's body: it shows the title, the summary and a link to the post, with the post's image or, when it has none, a preview of the linked page. Servers such as Misskey show the whole article. A note is a short post like a status update, and is shown in full wherever it is read. A note has no title: its `name` is published only when it has no `content`, and then as its body, in plain text.
 - `name` — the title. A `string`, `markdown` or `enum` field.
 - `content` — the body. A `string`, `markdown` or `enum` field. Markdown is rendered to HTML.
@@ -238,10 +240,11 @@ Publishing happens when your site deploys, however the change reached it — fro
 
 - **Added objects** are posted, **changed objects** are updated, and **removed objects** are deleted from the servers that received them. An object whose `when` field turns false is deleted the same way, and so is every object of a type you remove from `activitypub.objects`, as long as another type is still mapped.
 - **An object only counts as changed when its post would come out different.** Editing a field you have not mapped sends nothing, and changing this section re-renders every post and updates each one that comes out different. Renaming an object's file deletes its post and publishes a new one.
-- **The first deploy with `activitypub` configured sends nothing** to anyone. Your existing content is published to the account so it can be browsed and found, but it will not arrive in anyone's timeline as though it were new.
-- **A single deploy delivers at most 10 new posts and 20 updates**, choosing the posts with the latest `published` dates, so importing a backlog does not flood your followers. Everything else is still published and can be found on the account. Deletions, and changes to the account's profile, are always delivered.
+- **The first deploy with `activitypub` configured sends nothing** to anyone. Your existing content is published to the account, but it will not arrive in anyone's timeline as though it were new.
+- **Servers that discover the account do not pull in its older posts.** They show the featured posts they can pin, and each post delivered after someone there follows it. Any other post with a page can still be found by pasting the page's address into their search.
+- **A single deploy delivers at most 10 new posts and 20 updates**, choosing the posts with the latest `published` dates, so importing a backlog does not flood your followers. Every other new post is still published, and one with a page can be found by the page's address. A server that already has a post keeps the version it last received. Deletions, and changes to the account's profile or to which posts are featured, are always delivered.
 
-Any mistake in the section stops publishing: a setting it does not recognise, a `username` that is not allowed or a `domain` that is not one of your site's domains, a `follow` entry that is not an account, an object your site does not have (or a list where a single object is expected, or the reverse), or a field your object does not have or whose type cannot fill it. That deploy publishes nothing to the fediverse, and neither does any later one until you correct it. An account that is already federating keeps showing what it last published. One that has not federated yet, or that you are turning back on, stays unreachable. Your site itself still deploys as usual. Nothing in the editor reports these mistakes yet, so if new posts stop arriving, check the section against `archival_objects.toml`.
+Any mistake in the section stops publishing: a setting it does not recognise, a `username` that is not allowed or a `domain` that is not one of your site's domains, a `follow` entry that is not an account, an object your site does not have (or a list where a single object is expected, or the reverse), or a field your object does not have or whose type cannot fill it (such as a `when` or `featured` field that is not a `boolean`). That deploy publishes nothing to the fediverse, and neither does any later one until you correct it. An account that is already federating keeps showing what it last published. One that has not federated yet, or that you are turning back on, stays unreachable. Your site itself still deploys as usual. Nothing in the editor reports these mistakes yet, so if new posts stop arriving, check the section against `archival_objects.toml`.
 
 ### Turning it off
 
