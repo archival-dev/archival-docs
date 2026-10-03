@@ -51,7 +51,7 @@ That's deliberate: a typo can't quietly ship a key into your HTML, and the build
 
 In the archival editor, a secret field is masked until you reveal it, and list views never show it.
 
-**A secret is not encrypted.** It's written to your object's toml file as plain text, which means it's committed to your repo and lives in your git history like any other value. `secret` keeps a value out of your *built site*, not out of your *repo*. If a value must not exist in your git history at all, don't put it in an object — keep it in your carrier's own deployment configuration.
+**archival does not encrypt a secret; the archival editor does.** To `archival` on your machine a secret is a string in your object's toml file, committed to your repo like any other value: the type keeps it out of your *built site*, not out of your *repo*. A secret set through the archival editor, on a site archival deploys, is stored encrypted in the repo and decrypted for your carriers. See [Secrets](/docs/secrets.html) for how that works and exactly when it applies. Outside those cases, if a value must not exist in your git history at all, don't put it in an object — keep it in your carrier's own deployment configuration.
 {% endraw %}
 """
 

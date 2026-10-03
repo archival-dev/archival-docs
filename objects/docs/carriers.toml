@@ -327,5 +327,5 @@ const carrier: Carrier = async (params, body, objects) => {
 };
 ```
 
-Remember that a secret is stored as plain text in your repo — it keeps a value out of your *built site*, not out of your git history. See [`secret`](/docs/object-fields.html#secret) for the full picture.
+A secret set through the archival editor is stored encrypted in your repo, and archival decrypts it when it deploys your carriers, so `objects` always holds the value you typed. A secret you write into an object file by hand is committed as plain text. See [Secrets](/docs/secrets.html) for when each applies.
 """
