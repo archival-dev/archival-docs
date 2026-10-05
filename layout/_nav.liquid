@@ -4,7 +4,7 @@
   class="z-50 w-full py-5 fixed flex justify-between font-bold gap-4 backdrop-blur-md bottom-auto top-0 shadow-lg inset-x-0"
 >
   <div id="logo" class="">
-    <a href="/" class="flex gap-2 items-center" data-umami-event="nav-logo">
+    <a href="/" class="flex gap-2 items-center" data-rybbit-event="nav-logo">
       <div class="logo-icon w-[179px] h-[33px] relative">
         <div class="gray">
           {% include "logo-svg-2", size: "32" %}
@@ -58,32 +58,32 @@
       {% endcomment %}
       <a
         href="{% if area == 'home' %}#product{% else %}/#product{% endif %}"
-        data-umami-event="nav-product"
+        data-rybbit-event="nav-product"
         >Product</a
       >
     </li>
     {% assign docs_link = objects.docs | first %}
     <li class="nav-text {% if area == 'docs' %}nav-active{% endif %}">
-      <a href="/{{ docs_link.path }}.html" data-umami-event="nav-docs">Docs</a>
+      <a href="/{{ docs_link.path }}.html" data-rybbit-event="nav-docs">Docs</a>
     </li>
     {% assign cli_link = objects.cli | first %}
     <li class="nav-text {% if area == 'cli' %}nav-active{% endif %}">
-      <a href="/{{ cli_link.path }}.html" data-umami-event="nav-cli">CLI</a>
+      <a href="/{{ cli_link.path }}.html" data-rybbit-event="nav-cli">CLI</a>
     </li>
     <li class="nav-text {% if area == 'updates' %}nav-active{% endif %}">
-      <a href="/updates.html" data-umami-event="nav-updates">Updates</a>
+      <a href="/updates.html" data-rybbit-event="nav-updates">Updates</a>
     </li>
     {% comment %} <li class="nav-text {% if area == 'manifesto' %}nav-active{% endif %}">
-      <a href="/manifesto.html" data-umami-event="nav-manifesto">Manifesto</a>
+      <a href="/manifesto.html" data-rybbit-event="nav-manifesto">Manifesto</a>
     </li> {% endcomment %}
     <li class="nav-text {% if area == 'pricing' %}nav-active{% endif %}">
-      <a href="/pricing.html" data-umami-event="nav-pricing">Pricing</a>
+      <a href="/pricing.html" data-rybbit-event="nav-pricing">Pricing</a>
     </li>
     <li class="nav-text">
-      <a href="https://editor.archival.dev" data-umami-event="nav-dashboard">Dashboard</a>
+      <a href="https://editor.archival.dev" data-rybbit-event="nav-dashboard">Dashboard</a>
     </li>
     <li class="nav-text-cta">
-      <a href="https://editor.archival.dev/new" data-umami-event="nav-create">Create</a>
+      <a href="https://editor.archival.dev/new" data-rybbit-event="nav-create">Create</a>
     </li>
   </ul>
   <div class="navbar:hidden flex items-center">
@@ -155,32 +155,32 @@
       <a
         class="flex-1"
         href="{% if area == 'home' %}#product{% else %}/#product{% endif %}"
-        data-umami-event="mobile-nav-product"
+        data-rybbit-event="mobile-nav-product"
         >Product</a
       >
     </li>
     {% assign docs_link = objects.docs | first %}
     <li class="mobile-nav-item">
-      <a class="flex-1" href="/{{ docs_link.path }}.html" data-umami-event="mobile-nav-docs">Docs</a>
+      <a class="flex-1" href="/{{ docs_link.path }}.html" data-rybbit-event="mobile-nav-docs">Docs</a>
     </li>
     {% assign cli_link = objects.cli | first %}
     <li class="mobile-nav-item">
-      <a class="flex-1" href="/{{ cli_link.path }}.html" data-umami-event="mobile-nav-cli">CLI</a>
+      <a class="flex-1" href="/{{ cli_link.path }}.html" data-rybbit-event="mobile-nav-cli">CLI</a>
     </li>
     <li class="mobile-nav-item">
-      <a class="flex-1" href="/updates.html" data-umami-event="mobile-nav-updates">Updates</a>
+      <a class="flex-1" href="/updates.html" data-rybbit-event="mobile-nav-updates">Updates</a>
     </li>
     <li class="mobile-nav-item">
-      <a class="flex-1" href="/manifesto.html" data-umami-event="mobile-nav-manifesto">Manifesto</a>
+      <a class="flex-1" href="/manifesto.html" data-rybbit-event="mobile-nav-manifesto">Manifesto</a>
     </li>
     <li class="mobile-nav-item">
-      <a class="flex-1" href="/pricing.html" data-umami-event="mobile-nav-pricing">Pricing</a>
+      <a class="flex-1" href="/pricing.html" data-rybbit-event="mobile-nav-pricing">Pricing</a>
     </li>
     <li class="mobile-nav-item">
-      <a class="flex-1" href="https://editor.archival.dev" data-umami-event="mobile-nav-dashboard">Editor</a>
+      <a class="flex-1" href="https://editor.archival.dev" data-rybbit-event="mobile-nav-dashboard">Editor</a>
     </li>
     <li class="mobile-nav-item mobile-nav-item-cta">
-      <a class="flex-1" href="https://editor.archival.dev/new" data-umami-event="mobile-nav-create">Create</a>
+      <a class="flex-1" href="https://editor.archival.dev/new" data-rybbit-event="mobile-nav-create">Create</a>
     </li>
   </ul>
 </div>

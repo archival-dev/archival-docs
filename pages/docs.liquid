@@ -14,8 +14,8 @@
         <a
           href="/{{doc.path}}.html"
           class="px-4 py-2 my-2 backdrop-blur-md side-nav-item {% if docs.path == doc.path %}side-nav-item-active{% endif %}"
-          data-umami-event="docs-sidebar-nav"
-          data-umami-event-doc="{{ doc.title }}"
+          data-rybbit-event="docs-sidebar-nav"
+          data-rybbit-prop-doc="{{ doc.title }}"
         >
           <h3>{{ doc.title }}</h3>
         </a>
@@ -26,8 +26,8 @@
                 <a
                   href="#{{ section.title | url_encode }}"
                   class="side-nav-subitem"
-                  data-umami-event="docs-sidebar-section"
-                  data-umami-event-section="{{ section.title }}"
+                  data-rybbit-event="docs-sidebar-section"
+                  data-rybbit-prop-section="{{ section.title }}"
                 >
                   {{- section.title -}}
                 </a>
@@ -63,8 +63,8 @@
           href="#{{section.title | url_encode }}"
           id="{{section.title | url_encode }}"
           class="docs-section-anchor"
-          data-umami-event="docs-section-anchor"
-          data-umami-event-section="{{ section.title }}"
+          data-rybbit-event="docs-section-anchor"
+          data-rybbit-prop-section="{{ section.title }}"
         >
           <h2>{{ section.title }}</h2>
         </a>
@@ -89,14 +89,14 @@
           {% endif %}
         {% endfor %}
         {% if prev %}
-          <a href="/{{ prev.path }}.html" data-umami-event="docs-prev" data-umami-event-doc="{{ prev.title }}">
+          <a href="/{{ prev.path }}.html" data-rybbit-event="docs-prev" data-rybbit-prop-doc="{{ prev.title }}">
             <div id="prev" class="">← {{ prev.title }}</div>
           </a>
         {% else %}
           <div></div>
         {% endif %}
         {% if next %}
-          <a href="/{{ next.path }}.html" data-umami-event="docs-next" data-umami-event-doc="{{ next.title }}">
+          <a href="/{{ next.path }}.html" data-rybbit-event="docs-next" data-rybbit-prop-doc="{{ next.title }}">
             <div id="next" class="">{{ next.title }} →</div>
           </a>
         {% endif %}

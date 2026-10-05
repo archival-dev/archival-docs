@@ -2,6 +2,8 @@
 // Town val in valtown/comments.ts. Counts on the feed come from one batched
 // request; a thread is only fetched once its section nears the viewport.
 
+import { track } from "./analytics";
+
 interface Comment {
   id: number;
   parentId: number | null;
@@ -346,9 +348,7 @@ export const setupCommentThread = () => {
       store.set(NAME_KEY, nameField.value.trim());
       bodyField.value = "";
       growBody();
-      (
-        window as unknown as { umami?: { track: (event: string) => void } }
-      ).umami?.track("update-comment-post");
+      track("update-comment-post");
     } catch (thrown) {
       error.textContent =
         thrown instanceof Error

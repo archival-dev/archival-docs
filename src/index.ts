@@ -1,8 +1,5 @@
 import "./ad-click";
-
-declare const umami:
-  | { track: (event: string, data?: Record<string, string | number>) => void }
-  | undefined;
+import { track } from "./analytics";
 
 window.addEventListener("load", () => {
   pointBrowseLinkAtEditor();
@@ -156,7 +153,7 @@ const setupTemplateMosaic = async () => {
     const el = document.createElement("a");
     el.className = "template-tile";
     el.href = `${EDITOR_URL}/new?template=${encodeURIComponent(templateId(template))}`;
-    el.setAttribute("data-umami-event", "hero-template-pick");
+    el.setAttribute("data-rybbit-event", "hero-template-pick");
 
     const shot = document.createElement("span");
     shot.className = "template-tile-shot";
@@ -439,7 +436,7 @@ const setupMobileMenu = () => {
     }, 25);
   };
   closedMenu?.addEventListener("click", () => {
-    if (typeof umami !== "undefined") umami.track("mobile-menu-open");
+    track("mobile-menu-open");
     toggleMenu(true);
   });
   openMenu?.addEventListener("click", () => {

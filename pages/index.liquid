@@ -97,7 +97,7 @@
     id="browse-templates"
     class="browse-templates"
     href="https://editor.archival.dev/new"
-    data-umami-event="hero-browse-templates"
+    data-rybbit-event="hero-browse-templates"
   >
     <span>Browse all templates</span>
     <span class="browse-templates-arrow" aria-hidden="true">&rarr;</span>
@@ -874,20 +874,9 @@
 
     function takeOver(links, getTargetY, url) {
       links.forEach(function (link) {
-        // umami (public/umami.js) installs a capture-phase listener on document:
-        // for any <a data-umami-event> it calls preventDefault itself, awaits its
-        // tracking request, then assigns location.href — a script-initiated
-        // navigation ours cannot cancel, and the reason clicking these used to
-        // stall and then snap. Take the attribute off and report the event here,
-        // so the analytics still land and the navigation stays ours. Anything
-        // still carrying the attribute (every other page) is untouched.
-        var event = link.getAttribute('data-umami-event');
-        if (event) link.removeAttribute('data-umami-event');
-
         link.addEventListener('click', function (e) {
           if (!plainClick(e)) return;
           e.preventDefault();
-          if (event && typeof umami !== 'undefined') umami.track(event);
           closeMobileMenu();
           history.replaceState(null, '', url);
           scrollToY(getTargetY());

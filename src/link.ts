@@ -2,6 +2,8 @@
 // lands here, clears Turnstile, and approves. The agent never sees a credential
 // it did not earn, and the human check stays in a real browser.
 
+import { track } from "./analytics";
+
 declare global {
   interface Window {
     turnstile?: {
@@ -20,7 +22,6 @@ declare global {
       execute(container: HTMLElement | string): void;
       reset(widgetId: string): void;
     };
-    umami?: { track: (event: string) => void };
   }
 }
 
@@ -107,7 +108,7 @@ const setup = () => {
     }
     status.textContent = "";
     approve.disabled = true;
-    window.umami?.track("link-approve");
+    track("link-approve");
     window.turnstile.execute(el("link-turnstile"));
   });
 };

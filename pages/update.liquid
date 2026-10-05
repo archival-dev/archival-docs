@@ -10,7 +10,7 @@
 
 <div class="updates-page updates-page--detail">
   <article class="update-detail">
-    <a class="update-back" href="/updates.html" data-umami-event="update-back">← All updates</a>
+    <a class="update-back" href="/updates.html" data-rybbit-event="update-back">← All updates</a>
 
     {% render "update-byline", update: update %}
 
@@ -70,7 +70,6 @@
             class="comment-post"
             type="submit"
             data-comment-post
-            data-umami-event="update-comment-post"
           >
             Post
           </button>
@@ -108,7 +107,7 @@
 
     <div class="update-pager">
       {% if have_newer %}
-        <a href="/{{ newer.path }}.html" class="update-pager-link" data-umami-event="update-newer">
+        <a href="/{{ newer.path }}.html" class="update-pager-link" data-rybbit-event="update-newer">
           <span class="update-pager-dir">← Newer</span>
           <span class="update-pager-title">{{ newer.title }}</span>
         </a>
@@ -119,7 +118,7 @@
         <a
           href="/{{ older.path }}.html"
           class="update-pager-link update-pager-link--end"
-          data-umami-event="update-older"
+          data-rybbit-event="update-older"
         >
           <span class="update-pager-dir">Older →</span>
           <span class="update-pager-title">{{ older.title }}</span>

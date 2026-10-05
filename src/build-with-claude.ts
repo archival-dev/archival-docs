@@ -3,6 +3,8 @@
 // scoped to it. The session rides into the conversation inside the prompt; the
 // publish token it stands for never leaves the API.
 
+import { track } from "./analytics";
+
 declare global {
   interface Window {
     turnstile?: {
@@ -21,7 +23,6 @@ declare global {
       execute(container: HTMLElement | string): void;
       reset(widgetId: string): void;
     };
-    umami?: { track: (event: string) => void };
   }
 }
 
@@ -291,7 +292,7 @@ const setup = () => {
     running = true;
     error.hidden = true;
     openClaude.disabled = true;
-    window.umami?.track("bwc-start");
+    track("bwc-start");
     // execute() is documented against the container, not the widget id.
     window.turnstile.execute(el("bwc-turnstile"));
   });

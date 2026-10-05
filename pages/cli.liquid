@@ -12,8 +12,8 @@
       <a
         href="/{{doc.path}}.html"
         class="px-4 py-2 my-2 backdrop-blur-md side-nav-item {% if cli.command == doc.command %}side-nav-item-active{% endif %}"
-        data-umami-event="cli-sidebar-nav"
-        data-umami-event-command="{{ doc.command }}"
+        data-rybbit-event="cli-sidebar-nav"
+        data-rybbit-prop-command="{{ doc.command }}"
       >
         <h3>{{ doc.command }}</h3>
       </a>
@@ -66,14 +66,14 @@
           {% endif %}
         {% endfor %}
         {% if prev %}
-          <a href="/{{ prev.path }}.html" data-umami-event="cli-prev" data-umami-event-command="{{ prev.command }}">
+          <a href="/{{ prev.path }}.html" data-rybbit-event="cli-prev" data-rybbit-prop-command="{{ prev.command }}">
             <div id="prev" class="">← {{ prev.command }}</div>
           </a>
         {% else %}
           <div></div>
         {% endif %}
         {% if next %}
-          <a href="/{{ next.path }}.html" data-umami-event="cli-next" data-umami-event-command="{{ next.command }}">
+          <a href="/{{ next.path }}.html" data-rybbit-event="cli-next" data-rybbit-prop-command="{{ next.command }}">
             <div id="next" class="">{{ next.command }} →</div>
           </a>
         {% endif %}

@@ -12,7 +12,7 @@
     {% comment %} The handle is set by [activitypub] in archival_editor.toml. {% endcomment %}
     <p class="build-description">
       Notes from the Archival team.
-      <a href="/updates.rss" data-umami-event="updates-rss-hero">Subscribe with RSS</a>,
+      <a href="/updates.rss" data-rybbit-event="updates-rss-hero">Subscribe with RSS</a>,
       or follow <span class="updates-handle">@archival@archival.dev</span> from Mastodon.
     </p>
   </header>
@@ -32,8 +32,8 @@
           <h2 class="update-title">
             <a
               href="/{{ update.path }}.html"
-              data-umami-event="update-open"
-              data-umami-event-update="{{ update.title }}"
+              data-rybbit-event="update-open"
+              data-rybbit-prop-update="{{ update.title }}"
             >
               {{- update.title -}}
             </a>
@@ -52,8 +52,8 @@
               class="update-more"
               href="/{{ update.path }}.html"
               data-update-more
-              data-umami-event="update-read-more"
-              data-umami-event-update="{{ update.title }}"
+              data-rybbit-event="update-read-more"
+              data-rybbit-prop-update="{{ update.title }}"
             >
               Read more →
             </a>
@@ -67,8 +67,8 @@
               href="/{{ update.path }}.html#comments"
               data-comment-count
               data-comment-slug="{{ update_slug }}"
-              data-umami-event="update-comments"
-              data-umami-event-update="{{ update.title }}"
+              data-rybbit-event="update-comments"
+              data-rybbit-prop-update="{{ update.title }}"
               hidden
             ></a>
           </div>
