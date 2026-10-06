@@ -2,3 +2,4 @@ prebuild = ["npm ci", "npm run build"]
 site_url = "https://archival.dev"
 site_name = "Archival"
 upload_prefix = "1517d9f0bcbb0d138c430b320f4c407e2f72652c6131b0650d0733f40de2f599/"
+scripts_dir = false
