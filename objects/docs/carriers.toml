@@ -4,7 +4,7 @@ include_in_llm_docs = true
 description = """
 Occasionally your website will need to do something using privileged keys (e.g. submit a form, call third party APIs, etc) - carriers are small javascript or typescript functions that can be used to abstract these calls so you don't leak your keys. They "carry information" to your website, should you need to use information not available at build time or via simple scripting.
 
-Carriers are serverless and are deployed automatically whenever your site builds. Nothing a carrier holds in memory outlives the request; what it needs to keep goes in its site's database (see [Storing data](#Storing%20data)).
+Carriers are serverless and are deployed automatically whenever your site builds. They run on the same edge as your site in v8 isolates so they're really fast, and they can store small amounts of information permanently if you need state.
 
 Once deployed, a carrier is reachable at `/carriers/<carrier-name>` on your site. For example, a carrier in `carriers/submit-form/` is served at `https://yoursite.com/carriers/submit-form`.
 """
@@ -64,13 +64,15 @@ The package exports the whole contract, so you can name any part of it explicitl
 | `CarrierParams` | The first argument: a `URLSearchParams`. |
 | `CarrierBody` | The second argument: parsed JSON, a form body, text, or `null`. |
 | `CarrierObjects` / `SiteObjects` | The third argument: your site's objects. |
-| `CarrierSite` | The fourth argument: your site's `url`, `uploads`, `email` and `sql`. |
+| `CarrierSite` | The fourth argument: your site's `url`, `uploads`, `email`, `sql` and `activitypub`. |
 | `CarrierUploads` | `site.uploads`: `list()` and `get()`. |
 | `CarrierUpload` | One upload's body and metadata, as `get()` resolves it. |
 | `CarrierUploadEntry` | A `{ sha, filename }` pair, as `list()` returns them. |
 | `CarrierEmail` | `site.email`: `send()`. |
 | `CarrierSql` | `site.sql`: `exec()` and `transaction()`. |
 | `CarrierSqlRow` | One row a query returns, keyed by column name. |
+| `CarrierActivityPub` | `site.activitypub`: `account()`, `followers()`, `counts()`, `likes()`, `boosts()` and `replies()`. |
+| `CarrierReply` | One reply to a post, as `replies()` lists them. |
 | `CarrierEmailMessage` | What `send()` takes: `from`, `to`, `subject`, `text`, `html` and `replyTo`. |
 | `CarrierEmailReceipt` | What `send()` resolves to: the `id` of the send and the `from` it resolved to. |
 | `CarrierFormBody` | A parsed form submission — `{ [key: string]: string \\| Blob }`. |
@@ -169,7 +171,7 @@ export default async function (params, body, objects, site) {
   - `application/x-www-form-urlencoded`, `multipart/form-data`, or `application/form` → an object of the form fields (file fields arrive as a `Blob`)
   - anything else → the raw request text
 - **`objects`** — your site's objects (see below).
-- **`site`** — what archival gives a carrier besides: your site's `url`, its `uploads`, its `email` and its database, `sql` (see below).
+- **`site`** — a simple object for interacting with data: your site's `url`, `uploads`, `email`, `sql`, and `activitypub` (if enabled).
 
 The function's return value determines the HTTP response:
 
@@ -221,10 +223,11 @@ The values match what a liquid template sees:
 - **`site.uploads`** — the files uploaded to your site, readable at request time. See [Reading uploads](#Reading%20uploads).
 - **`site.email`** — sends mail from your site's own email addresses. See [Sending email](#Sending%20email).
 - **`site.sql`** — your site's own SQLite database. See [Storing data](#Storing%20data).
+- **`site.activitypub`** — your site's fediverse followers, and the likes, boosts and replies its posts have had. See [Reading the fediverse](#Reading%20the%20fediverse).
 
 A few things worth knowing:
 
-- Objects are **embedded at deploy time**, so a carrier sees a snapshot from the build it was deployed with, not live content. Publishing your site redeploys its carriers with fresh values. (`site.uploads`, `site.email` and `site.sql` act when the request runs.)
+- Objects are **embedded at deploy time**, so a carrier sees a snapshot from the build it was deployed with, not live content. Publishing your site redeploys its carriers with fresh values. (`site.uploads`, `site.email`, `site.sql` and `site.activitypub` act when the request runs.)
 - The tree is **deeply frozen**, so one request can't mutate what the next request sees.
 - Because they're embedded, there's an upper bound on how large a site's objects can be (5MB serialized). A site over that fails its carrier deploy rather than silently shipping a carrier with missing data.
 """
@@ -318,7 +321,7 @@ A few things worth knowing:
 [[sections]]
 title = "Storing data"
 content = """
-`site.sql` is your site's own SQLite database. Every carrier on the site shares it, and it keeps what it holds between requests and deploys — so a carrier can collect form submissions, count votes, or remember anything that isn't content you edit.
+`site.sql` is your site's own SQLite database. Every carrier on the site shares it, and it keeps what it holds between requests and deploys — so a carrier can permanently store small pieces of information that are live and interactive.
 
 ```ts
 const carrier: Carrier = async (params, body, objects, site) => {
@@ -350,12 +353,23 @@ await site.sql.transaction([
 
 Strings, numbers and `null` are stored as they are, booleans as `1` and `0`, and bytes (`Uint8Array`, `ArrayBuffer`) as blobs, which read back as a `Uint8Array`.
 
-Each site's database has limits, and a call that would go past one rejects:
+Every plan includes, each billing period:
 
-| Limit | |
+| Usage | Included | Past it, at cost |
+| --- | --- | --- |
+| Calls | 360,000 | $0.45 per 1,000,000 |
+| Rows read | 360,000,000 | $0.01 per 10,000,000 |
+| Rows written | 360,000 | $0.01 per 10,000 |
+| Storage | 50 MB | $0.02 per 100 MB a month |
+
+Usage past an allowance is added to your site's next invoice, as its own line. With "Bill me for usage beyond my plan" turned off in your site's settings, the database refuses instead once an allowance is spent, until the period resets: every call for calls and rows read, writes for rows written, and growth for storage. Your site's usage panel shows where each one stands. A scan reads every row it passes, so index the columns your queries filter on.
+
+Whatever the billing, these stop a runaway carrier, and a call that would go past one rejects:
+
+| Ceiling | |
 | --- | --- |
-| Requests | 5,000 calls an hour. |
-| Rows read | 5,000,000 an hour. A scan reads every row it passes, so index the columns your queries filter on. |
+| Calls | 5,000 an hour. |
+| Rows read | 5,000,000 an hour. |
 | Rows written | 5,000 an hour. A call that would pass it is rolled back. |
 | Size | 500 MB. A call that would grow the database past it is rolled back; deleting rows always works. |
 | One call | 100 statements, and 5 MB of rows back. |
@@ -364,6 +378,98 @@ A few things worth knowing:
 
 - `site.sql` only works in a deployed carrier. In the preview in the Archival app and under `archival run`, it rejects.
 - A carrier is reachable by anyone, so whatever a request can make it write, anyone can. Validate what you store, and bind values with `?` rather than building SQL from a request.
+"""
+
+[[sections]]
+title = "Reading the fediverse"
+content = """
+A site with an [`activitypub` section](/docs/editor-config.html#ActivityPub) is an account people follow from Mastodon, Threads and the rest of the fediverse, and its posts collect likes, boosts and replies there. Archival keeps all of it, and `site.activitypub` reads it, so a carrier can show a post's replies under it on your own site:
+
+```ts
+const carrier: Carrier = async (params, body, objects, site) => {
+  const post = objects.post.find((p) => p.path === params.get("post"));
+  if (!post) {
+    return "redirect:/404";
+  }
+  const [counts] = await site.activitypub.counts([post]);
+  const replies = await site.activitypub.replies(post, { limit: 50 });
+  return { counts, replies: replies.items };
+};
+```
+
+A post is one of your objects, or its `path` (`"post/hello-world"`) — the same object you mapped under `activitypub.objects`.
+
+| Method | Resolves to |
+| --- | --- |
+| `account()` | Your site's own account, or `null` when it doesn't federate: `{ handle, id, url, followers, following, posts }`. `handle` is what people search for to follow it (`@blog@example.com`), and the three counts are its followers, the accounts it follows that have accepted, and its published posts. |
+| `counts(posts)` | `{ likes, boosts, replies }` for each of up to 100 posts, in the order given. `replies` counts the whole thread. |
+| `followers(page?)` | A page of `{ account, followedAt }`, newest first. |
+| `likes(post, page?)` | A page of `{ account, at }`, most recent first. |
+| `boosts(post, page?)` | A page of `{ account, at }`, most recent first. |
+| `replies(post, page?)` | A page of replies in the order they arrived — every reply in the post's thread, including replies to replies. |
+
+A page is `{ items, total, next }`. `total` counts every item on every page, and passing `next` back as `cursor` reads the following page; it is `null` on the last one:
+
+```ts
+let page = await site.activitypub.followers({ limit: 100 });
+const all = [...page.items];
+while (page.next) {
+  page = await site.activitypub.followers({ limit: 100, cursor: page.next });
+  all.push(...page.items);
+}
+```
+
+`limit` is up to 100, and 20 when you leave it out. Times (`followedAt`, `at`, `published`, `updated`) are ISO 8601 strings.
+
+### Accounts
+
+Every follower, like, boost and reply carries the `account` it came from, as its own profile last described it:
+
+| Field | |
+| --- | --- |
+| `id` | The account's ActivityPub id, which never changes. Use it to tell accounts apart. |
+| `handle` | `@name@host`. |
+| `name` | The display name, as plain text. |
+| `url` | The account's profile page. |
+| `icon` | The avatar image's address. |
+
+Everything but `id` can be `null`, when the account's profile doesn't say. Profiles refresh whenever the account interacts with your site again.
+
+### Replies
+
+Each reply is:
+
+| Field | |
+| --- | --- |
+| `id` | The reply's ActivityPub id. |
+| `url` | The reply's page on its author's server, or `null`. |
+| `inReplyTo` | The `id` of what it answers: your post, or another reply in the thread. |
+| `account` | Who wrote it. |
+| `content` | The reply as HTML (see below). |
+| `summary` | Its content warning, as plain text, or `null`. |
+| `sensitive` | Whether its author marked it sensitive. |
+| `attachments` | Images and other media: `{ url, mediaType, description }`, with `description` as the alt text. |
+| `published` | When it was written. |
+| `updated` | When its author last edited it, or `null`. |
+
+Replies come in the order they arrived, so a thread reads top to bottom. To nest it, group them by `inReplyTo`: the ones whose `inReplyTo` isn't another reply's `id` answer the post itself.
+
+`content` is reduced to paragraphs, line breaks, emphasis, lists, quotes, code and links before it is kept — what Mastodon keeps of a post from another server — so it can go into your page as HTML. Every link is an http or https address, marked `rel="nofollow noopener noreferrer"`. `name`, `handle` and `summary` are plain text written by whoever owns the account, so escape them like any other text.
+
+### What is kept
+
+- **Replies are kept only when they are public** — what Mastodon calls public or unlisted. A followers-only reply or a direct message never reaches a carrier. A reply counts when it answers one of your published posts, or a reply already kept in that post's thread.
+- **Edits, deletes and undos apply as they arrive.** An edited reply reads as edited, a deleted one is gone, and taking back a like or a boost removes it. When an account is deleted, everything it did on your site goes with it.
+- **Only your published posts collect likes and boosts.** One that is no longer federated — removed, or its `when` field turned false — stops collecting new ones, but what it already has is kept, and comes back with it.
+- **A follower can have only an `id` for a while.** When Archival hasn't read a follower's profile yet, a later deploy fills it in, a few dozen followers at a time.
+
+A few things worth knowing:
+
+- Reads happen when the request runs, so a reply shows up as soon as its server delivers it, without redeploying.
+- There is no moderation: any public reply from any account is kept. A carrier that shows replies can leave some out — for instance accounts or servers you list in a [secret](/docs/secrets.html) or a setting.
+- Showing who follows you is your choice to make. Your account itself publishes only how many followers it has, so someone following it may not expect to appear on your website.
+- A site that doesn't federate — including while its `activitypub` section is removed or its subscription is cancelled — and every preview and `archival run`, reads as having no account and nothing on any list. A carrier that shows replies works everywhere without special cases.
+- A method rejects, with the reason, when it is given something that isn't a post, more than 100 posts, or a `limit` over 100.
 """
 
 [[sections]]

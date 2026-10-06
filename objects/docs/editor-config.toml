@@ -246,11 +246,15 @@ Publishing happens when your site deploys, however the change reached it — fro
 
 Any mistake in the section stops publishing: a setting it does not recognise, a `username` that is not allowed or a `domain` that is not one of your site's domains, a `follow` entry that is not an account, an object your site does not have (or a list where a single object is expected, or the reverse), or a field your object does not have or whose type cannot fill it (such as a `when` or `featured` field that is not a `boolean`). That deploy publishes nothing to the fediverse, and neither does any later one until you correct it. An account that is already federating keeps showing what it last published. One that has not federated yet, or that you are turning back on, stays unreachable. Your site itself still deploys as usual. Nothing in the editor reports these mistakes yet, so if new posts stop arriving, check the section against `archival_objects.toml`.
 
+### Followers, likes, boosts and replies
+
+Archival keeps what the fediverse does with your account: who follows it, and the likes, boosts and public replies its posts get, including replies to those replies. Followers-only replies and direct messages are not kept. Edits, deletions and taken-back likes apply as they arrive, and an account that is deleted takes everything it did with it.
+
+Your pages are built before any of that happens, so they cannot show it. A [carrier](/docs/carriers.html) can: `site.activitypub` reads each post's likes, boosts and replies when a visitor asks, so a post's page can fetch them and show the conversation under it. See [Reading the fediverse](/docs/carriers.html#Reading%20the%20fediverse).
+
 ### Turning it off
 
-Removing the `activitypub` section and deploying stops the account from answering. Its followers, posts and the accounts it follows are kept, and adding the section back resumes it where it left off. The same happens while a site's subscription is cancelled: the account stops answering, and the next deploy after it is reactivated brings it back.
+Removing the `activitypub` section and deploying stops the account from answering. Its followers, posts, the accounts it follows and the likes, boosts and replies it has received are kept, and adding the section back resumes it where it left off. While it is off, a carrier reads the account as not federating, with nothing on any list. The same happens while a site's subscription is cancelled: the account stops answering, and the next deploy after it is reactivated brings it back.
 
 Archival reserves the paths under `/_archival/ap/` on every site it hosts, whether or not the site federates, so your site cannot serve its own files there. While a site federates, Archival also answers `/.well-known/webfinger` for its account and requests for ActivityPub documents on its behalf. It answers `/.well-known/nodeinfo`, `/api/v1/instance` and `/api/v2/instance` as well, describing the site as a single-account server. Any of those requests it does not recognise is passed on to your site.
-
-Replies, likes, and boosts your posts receive are not yet shown on your site.
 """

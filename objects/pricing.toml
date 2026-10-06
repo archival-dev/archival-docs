@@ -10,6 +10,7 @@ To make sure archival is affordable for everyone, we pass through costs beyond w
 - 20GB upload storage for free, $0.10/GB/mo after that
 - 1mm upload downloads/mo for free, $0.50 per 1mm downloads after that
 - $5.00 of AI usage/mo for free on Pro, billed at cost after that
+- SQL Storage: 360k calls, 360mm rows read, 360k rows written and 50MB of storage/mo for free, billed at cost after that
 """
 
 [[tiers]]
