@@ -51,6 +51,7 @@ features = """
 - Yearly domain renewal (registered with us, limit $40/yr)
 - Granular edit history
 - AI-assisted automatic site updates
+- SQL storage for your carriers
 - All our roadmap features, forever
 """
 
