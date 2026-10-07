@@ -47,5 +47,11 @@ A JSON file (e.g. `posts.json.liquid`) might look like this:
 	]
 }
 ```
+
+### Sitemaps and robots.txt
+
+When `site_url` is set in `archival.toml`, `archival build` writes a `sitemap.xml` listing every page and templated object it built, except the 404 page, at its URL without `.html`. It also writes a `robots.txt` that allows all crawlers and names that sitemap.
+
+A page of your own replaces either one: `pages/sitemap.xml.liquid` or `pages/robots.txt.liquid`, or a file with the same name in your static directory. Write your own sitemap when some pages shouldn't be listed, such as a thank-you page marked `noindex`. Set `sitemap = false` in `archival.toml` to turn both defaults off.
 {% endraw %}
 """
