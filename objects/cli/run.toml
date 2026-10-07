@@ -2,7 +2,9 @@ order = 1
 command = "archival run"
 description = "Run a local static server that watches your archival site and automatically rebuilds it whenever files change."
 content = """
-This command runs a local static server and watches your archival site for changes. The site will be automatically rebuilt whenever files change.
+This command runs a local static server and watches your archival site for changes. The site will be automatically rebuilt whenever files change, including [scripts](/docs/scripts.html): saving a `.ts` file in `scripts/` rebuilds it, and a script that fails to compile prints its error while the server keeps serving its last working version.
+
+If your site has [carriers](/docs/carriers.html), `archival run` serves them too, at `/carriers/<carrier-name>`, and picks up a carrier as soon as you add or change it. This needs Node 22.13 or later; see [Running carriers locally](/docs/carriers.html#Running%20carriers%20locally).
 
 > Note that this command should never be used to serve a website in production. Archival generates static websites, so to serve an archival site, just run `archival build` and run a static web server that points to the `dist` folder, or upload that `dist` folder to a static host (or use the archival editor to automate this process).
 >
@@ -17,6 +19,18 @@ description = "disable the static server and only watch and rebuild on file chan
 [[options]]
 flags = "-u, --upload-prefix <prefix>"
 description = "override the upload prefix. If no archival.toml is present, this is required."
+[[options]]
+flags = "--no-carriers"
+description = "don't serve the carriers in this site's carriers/ directory."
+[[options]]
+flags = "--carriers-port <port>"
+description = "choose the port your carriers' Node process listens on. By default it uses any free port."
+[[options]]
+flags = "--carriers-inspect"
+description = "run your carriers under node --inspect, so a debugger can attach."
+[[options]]
+flags = "--site-url <url>"
+description = "override the site.url your carriers see. Defaults to this server's address."
 [[options]]
 flags = "-h, --help"
 description = "print help for this command."

@@ -1,0 +1,157 @@
+order = 10
+title = "Scripts"
+include_in_llm_docs = true
+description = """
+Browser scripts live in a top-level `scripts/` directory, and archival builds them into `/js/` on your site. TypeScript files have their types stripped and JavaScript files are copied as they are, so there is **no build step to set up**: no `prebuild`, no node, and no `package.json`.
+
+Because this is part of archival itself, scripts build the same way in `archival build`, in `archival run` (which rebuilds a script as soon as you save it), and when archival builds and deploys your site.
+"""
+
+[[sections]]
+title = "Folder structure"
+content = """
+Every script keeps its path, with `scripts/` replaced by `/js/` and `.ts` replaced by `.js`:
+
+```
+scripts/
+  main.ts              -> /js/main.js
+  lib/format.ts        -> /js/lib/format.js
+  worker.mts           -> /js/worker.mjs
+  vendor/confetti.js   -> /js/vendor/confetti.js   (copied as is)
+  globals.d.ts         (declarations only, not built)
+```
+
+| In `scripts/` | Built to |
+| --- | --- |
+| `.ts` / `.mts` | `.js` / `.mjs`, with types stripped |
+| `.js` / `.mjs` | the same name, copied unchanged |
+| `.d.ts` / `.d.mts` | nothing — declarations are for your editor |
+| anything else | nothing — put stylesheets, images and data in `public/` |
+
+Dotfiles and anything inside a `node_modules` folder are skipped. If there's no `scripts/` directory, nothing happens.
+"""
+
+[[sections]]
+title = "Loading scripts"
+content = """
+Scripts are built as ES modules, so load them with `type="module"`, usually from a layout:
+
+```html
+<script type="module" src="/js/main.js"></script>
+```
+
+Modules load each other by relative path. You can name the file you wrote or the file it builds to: archival rewrites `./format.ts` to `./format.js` in a relative import, so both of these load the same module:
+
+```ts
+import { formatDate } from "./lib/format.ts";
+import { formatDate } from "./lib/format.js";
+```
+
+This covers `import`, `export … from` and `import("./lazy.ts")` with a string literal.
+
+Nothing is bundled. Each file becomes one module, and the browser follows the imports. That means a bare specifier like `import confetti from "canvas-confetti"` is left alone and will not resolve in the browser. To use a package, import it from a URL (for example, a CDN that serves ES modules), map it with an [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap), or copy its ES module build into `scripts/vendor/`.
+"""
+
+[[sections]]
+title = "TypeScript support"
+content = """
+Types are removed rather than compiled. This is the same rule Node applies to `.ts` files, and the same toolchain [carriers](/docs/carriers.html) use, so code can move between the two. Because types become whitespace, every line and column in the built file matches your source, so browser errors and stack traces point at the right place without source maps.
+
+The few TypeScript features that generate code aren't supported: `enum`, `namespace` and constructor parameter properties. Anything that isn't a type, such as a decorator, is left in the output as written. An import used only for types should say `import type`.
+
+archival strips types but does not check them. To type-check, run `tsc --noEmit` yourself (for instance in CI). A `tsconfig.json` like this makes your editor follow the same rules archival does:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["scripts"]
+}
+```
+
+`allowImportingTsExtensions` is only needed if you import files as `./format.ts`.
+"""
+
+[[sections]]
+title = "Errors"
+content = """
+A script that doesn't compile is reported with its location:
+
+```
+1 script failed to compile:
+scripts/main.ts:12:1: TypeScript enum is not supported in strip-only mode
+(set scripts_dir = false in archival.toml to turn off script compilation)
+```
+
+- `archival build` writes everything else in `public/` and `scripts/`, then exits non-zero. With `--skip-failures` it prints the error as a warning and goes on to build your pages.
+- `archival run` prints the error and keeps serving. The broken script keeps its last version that compiled until you fix it.
+"""
+
+[[sections]]
+title = "Configuration"
+content = """
+Both settings are optional, and go in `archival.toml`:
+
+- `scripts_dir`: the directory scripts are built from. Default `scripts`. Set it to `false` to turn script building off.
+- `scripts_build_dir`: where built scripts go, relative to your `build_dir`. Default `js`. An empty string builds them into the root of `build_dir`. It can't point outside `build_dir`.
+
+For example, to build `src/` into the root of your site:
+
+```toml
+scripts_dir = "src"
+scripts_build_dir = ""
+```
+
+Here `src/scripts/main.ts` is served at `/scripts/main.js`.
+
+A built script and a file in `public/` can't build to the same path; archival stops with an error naming both. A built script does take precedence over a page that renders to the same path, the same way a file in `public/` does.
+"""
+
+[[sections]]
+title = "Passing site data to scripts"
+content = """
+{% raw %}
+A script can import a module that a page renders, which is a simple way to hand it values from your site. Render the module from `pages/`:
+
+```js
+// pages/js/config.js.liquid
+export const SITE_URL = "{{ site_url }}";
+```
+
+Then declare it next to the script that imports it, so TypeScript knows its shape. The declaration is not built:
+
+```ts
+// scripts/config.d.ts
+export declare const SITE_URL: string;
+```
+
+```ts
+// scripts/main.ts
+import { SITE_URL } from "./config.js";
+```
+{% endraw %}
+"""
+
+[[sections]]
+title = "Moving off a prebuild step"
+content = """
+If your site already compiles TypeScript with a `prebuild` command (for instance a `build.mjs` that writes into `public/`), you can usually replace it:
+
+1. Point `scripts_dir` at your source directory, and set `scripts_build_dir` so the URLs stay the same.
+2. Remove the build command from `prebuild`, and the script and any packages it needed from `package.json`.
+3. Delete the generated files from `public/`. A generated file left behind at a path a script now builds to stops the build with an error, rather than quietly serving the stale copy.
+
+If your build bundles npm packages or uses TypeScript features that generate code, keep your existing build and set `scripts_dir = false` if it reads from `scripts/`.
+
+**If `scripts/` already holds tooling**: many projects keep node or shell scripts for maintenance tasks in a `scripts/` folder. Any `.js`, `.mjs` or `.ts` files there will be built and published under `/js/`. Move them somewhere else (for example `tools/`), or set `scripts_dir = false`.
+"""

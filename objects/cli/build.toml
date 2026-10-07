@@ -2,7 +2,7 @@ order = 0
 command = "archival build"
 description = "Build your archival site into static files, ready to deploy to any host."
 content = """
-Build an archival site - this will generate a static site inside a directory (dist unless you have overridden it in archival.toml).
+Build an archival site - this will generate a static site inside a directory (dist unless you have overridden it in archival.toml). This copies `public/`, builds your [scripts](/docs/scripts.html) into `dist/js/`, and renders your pages.
 """
 
 [[options]]
@@ -10,7 +10,7 @@ flags = "-b, --build-dir <path>"
 description = "override the directory to build to. Defaults to the manifest's build_dir (dist)."
 [[options]]
 flags = "-s, --skip-failures"
-description = "if a page fails to build, continue building the other pages and skip the failing one, rather than erroring early. Useful in CI when you'd rather ship a partial build than nothing."
+description = "if a page or script fails to build, continue building everything else and skip the failing one, rather than erroring early. Useful in CI when you'd rather ship a partial build than nothing."
 [[options]]
 flags = "-u, --upload-prefix <prefix>"
 description = "override the upload prefix. If no archival.toml is present, this is required."
