@@ -28,6 +28,7 @@ poster = "string"
 title_line_1 = "string"
 title_line_2 = "string"
 tagline = "string"
+usage_summary = "string"
 usage_limits = "markdown"
 
 [pricing.tiers]

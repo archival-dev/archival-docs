@@ -115,14 +115,19 @@
     </div>
 
     {% if pricing.usage_limits %}
-      <button
-        type="button"
-        class="pricing-limits-trigger"
-        popovertarget="pricing-limits"
-        data-rybbit-event="pricing-limits"
-      >
-        Usage limits
-      </button>
+      <div class="pricing-usage">
+        {% if pricing.usage_summary %}
+          <p class="pricing-usage-summary">{{ pricing.usage_summary }}</p>
+        {% endif %}
+        <button
+          type="button"
+          class="pricing-limits-trigger"
+          popovertarget="pricing-limits"
+          data-rybbit-event="pricing-limits"
+        >
+          Usage limits
+        </button>
+      </div>
       <div id="pricing-limits" class="pricing-limits-popover" popover>
         <div class="pricing-limits-header">
           <h2 class="pricing-limits-title">Usage limits</h2>

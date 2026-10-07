@@ -73,7 +73,7 @@ The package exports the whole contract, so you can name any part of it explicitl
 | `CarrierEmail` | `site.email`: `send()`. |
 | `CarrierSql` | `site.sql`: `exec()` and `transaction()`. |
 | `CarrierSqlRow` | One row a query returns, keyed by column name. |
-| `CarrierActivityPub` | `site.activitypub`: `account()`, `followers()`, `counts()`, `likes()`, `boosts()` and `replies()`. |
+| `CarrierActivityPub` | `site.activitypub`: `account()`, `followers()`, `counts()`, `likes()`, `boosts()`, `replies()` and `setLocalLikes()`. |
 | `CarrierReply` | One reply to a post, as `replies()` lists them. |
 | `CarrierEmailMessage` | What `send()` takes: `from`, `to`, `subject`, `text`, `html` and `replyTo`. |
 | `CarrierEmailReceipt` | What `send()` resolves to: the `id` of the send and the `from` it resolved to. |
@@ -476,6 +476,7 @@ A post is one of your objects, or its `path` (`"post/hello-world"`) — the same
 | `likes(post, page?)` | A page of `{ account, at }`, most recent first. |
 | `boosts(post, page?)` | A page of `{ account, at }`, most recent first. |
 | `replies(post, page?)` | A page of replies in the order they arrived — every reply in the post's thread, including replies to replies. |
+| `setLocalLikes(post, likes)` | Nothing. Records how many likes the post has on your own site, as described below. |
 
 A page is `{ items, total, next }`. `total` counts every item on every page, and passing `next` back as `cursor` reads the following page; it is `null` on the last one:
 
@@ -489,6 +490,16 @@ while (page.next) {
 ```
 
 `limit` is up to 100, and 20 when you leave it out. Times (`followedAt`, `at`, `published`, `updated`) are ISO 8601 strings.
+
+### Counting your own likes
+
+When your site has a like button of its own, the fediverse can count those likes too. Keep the count wherever your button stores it, and pass the whole of it to `setLocalLikes` each time it changes:
+
+```ts
+await site.activitypub.setLocalLikes(post, likes);
+```
+
+Mastodon and other servers show the post's fediverse likes plus yours the next time they fetch it. `counts()` and `likes()` still read only the fediverse's. A site that doesn't federate keeps nothing.
 
 ### Accounts
 
