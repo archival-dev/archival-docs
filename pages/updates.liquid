@@ -25,13 +25,13 @@
           class="update-card is-clamped"
           id="update-{{ update_slug }}"
           data-update-card
-          data-update-href="/{{ update.path }}.html"
+          data-update-href="/{{ update.path }}"
         >
           {% render "update-byline", update: update %}
 
           <h2 class="update-title">
             <a
-              href="/{{ update.path }}.html"
+              href="/{{ update.path }}"
               data-rybbit-event="update-open"
               data-rybbit-prop-update="{{ update.title }}"
             >
@@ -50,7 +50,7 @@
           <div class="update-card-footer">
             <a
               class="update-more"
-              href="/{{ update.path }}.html"
+              href="/{{ update.path }}"
               data-update-more
               data-rybbit-event="update-read-more"
               data-rybbit-prop-update="{{ update.title }}"
@@ -64,7 +64,7 @@
             {% endcomment %}
             <a
               class="update-comment-count"
-              href="/{{ update.path }}.html#comments"
+              href="/{{ update.path }}#comments"
               data-comment-count
               data-comment-slug="{{ update_slug }}"
               data-rybbit-event="update-comments"

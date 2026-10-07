@@ -19,7 +19,7 @@ type = "string"
 validate = ['^\d{2}/\d{2}/\d{4}$']
 ```
 
-Once defined, use that type name anywhere a field type is expected in your [object definition file](/docs/concepts.html):
+Once defined, use that type name anywhere a field type is expected in your [object definition file](/docs/concepts):
 
 ```toml
 [post]
@@ -56,7 +56,7 @@ Paths are dot-separated, and a numeric segment is read as an array index — `co
 
 Path validators are only allowed on the nested types: `meta`, `upload`, `image`, `video`, and `audio`. Using one on any other type is a manifest error.
 
-For the [file types](/docs/object-fields.html), the available keys are the ones archival stores: `sha`, `filename`, `name`, `description`, `mime`, and `display_type`. So restricting an upload to PDFs looks like this:
+For the [file types](/docs/object-fields), the available keys are the ones archival stores: `sha`, `filename`, `name`, `description`, `mime`, and `display_type`. So restricting an upload to PDFs looks like this:
 
 ```toml
 [editor_types.pdf]
@@ -102,7 +102,7 @@ Two things worth planning around:
 - Adding a validator to a type that already has values won't tell you which existing objects violate it. Check those yourself before relying on the constraint.
 - Templates should still be written defensively. A validator makes a shape likely, not guaranteed — it's often more appropriate to make your liquid resilient to a range of values than to assume validation held.
 
-For a constraint you want checked structurally rather than by pattern, use an [enum](/docs/object-fields.html): enum values are checked when the object file is parsed, and an object with a value outside the list is reported as an invalid file and left out of the build.
+For a constraint you want checked structurally rather than by pattern, use an [enum](/docs/object-fields): enum values are checked when the object file is parsed, and an object with a value outside the list is reported as an invalid file and left out of the build.
 '''
 
 [[sections]]
@@ -119,5 +119,5 @@ path = "mime"
 validate = '^application/pdf$'
 ```
 
-See [Custom Editors](/docs/custom-editors.html) for building the editor itself.
+See [Custom Editors](/docs/custom-editors) for building the editor itself.
 '''

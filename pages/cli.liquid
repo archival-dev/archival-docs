@@ -10,7 +10,7 @@
   <div id="docs-sidebar" class="z-10 w-64 hidden flex-col font-bold md:flex">
     {% for doc in objects.cli %}
       <a
-        href="/{{doc.path}}.html"
+        href="/{{doc.path}}"
         class="px-4 py-2 my-2 backdrop-blur-md side-nav-item {% if cli.command == doc.command %}side-nav-item-active{% endif %}"
         data-rybbit-event="cli-sidebar-nav"
         data-rybbit-prop-command="{{ doc.command }}"
@@ -66,14 +66,14 @@
           {% endif %}
         {% endfor %}
         {% if prev %}
-          <a href="/{{ prev.path }}.html" data-rybbit-event="cli-prev" data-rybbit-prop-command="{{ prev.command }}">
+          <a href="/{{ prev.path }}" data-rybbit-event="cli-prev" data-rybbit-prop-command="{{ prev.command }}">
             <div id="prev" class="">← {{ prev.command }}</div>
           </a>
         {% else %}
           <div></div>
         {% endif %}
         {% if next %}
-          <a href="/{{ next.path }}.html" data-rybbit-event="cli-next" data-rybbit-prop-command="{{ next.command }}">
+          <a href="/{{ next.path }}" data-rybbit-event="cli-next" data-rybbit-prop-command="{{ next.command }}">
             <div id="next" class="">{{ next.command }} →</div>
           </a>
         {% endif %}

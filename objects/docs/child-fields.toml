@@ -84,7 +84,7 @@ These fields are supported in the archival editor but will display as tables, so
 title = "A oneof inside a child"
 content = """
 {% raw %}
-A child's own fields may be any type, including a [oneof](/docs/object-fields.html#oneof). That combination is how you define a repeating list whose entries are each one of several types — a post with several pieces of media, where every piece is either an image or a video.
+A child's own fields may be any type, including a [oneof](/docs/object-fields#oneof). That combination is how you define a repeating list whose entries are each one of several types — a post with several pieces of media, where every piece is either an image or a video.
 
 Define the child's ordinary fields first, then the oneof:
 
@@ -105,7 +105,7 @@ name = "video"
 type = "video"
 ```
 
-**Every ordinary field has to come before the oneof.** `[[post.media.file]]` opens a new toml table, so a key written after it belongs to *that* table. Move `alt` below the oneof and it becomes part of the last option rather than a field of the child — and archival does not complain, it simply isn't where you meant to put it. Run [`archival types`](/cli/types.html) if you want to see the shape archival actually read.
+**Every ordinary field has to come before the oneof.** `[[post.media.file]]` opens a new toml table, so a key written after it belongs to *that* table. Move `alt` below the oneof and it becomes part of the last option rather than a field of the child — and archival does not complain, it simply isn't where you meant to put it. Run [`archival types`](/cli/types) if you want to see the shape archival actually read.
 
 In an object file, each entry names the option in `type` and puts the file under `value`:
 
@@ -153,7 +153,7 @@ Rendering iterates the child as usual and branches on the oneof's `type`:
 {% endfor %}
 ```
 
-The `{% if item.file %}` around the branch is not decoration. A row added in the editor but not yet filled in has no `file` at all, and reading `item.file.type` off nothing is a build error rather than an empty value — the same rule that makes [unknown variables](/docs/object-fields.html#liquid%20in%20field%20values) fail the build. The same guard is worth having on any optional child field.
+The `{% if item.file %}` around the branch is not decoration. A row added in the editor but not yet filled in has no `file` at all, and reading `item.file.type` off nothing is a build error rather than an empty value — the same rule that makes [unknown variables](/docs/object-fields#liquid%20in%20field%20values) fail the build. The same guard is worth having on any optional child field.
 
 Reach for this over two sibling fields — an `image` field next to a `video` field — whenever an entry should hold exactly one of them. Siblings let an entry hold both, or neither, and every template that reads them has to decide what that means. A oneof puts the choice in the type, and `type` tells your template which branch to take.
 {% endraw %}

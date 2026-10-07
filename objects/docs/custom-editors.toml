@@ -12,7 +12,7 @@ type = "upload"
 editor_url = "/editors/pdf-editor.html"
 ```
 
-The same `editor_types` key is also where you constrain what a field may contain — see [Validators](/docs/validators.html).
+The same `editor_types` key is also where you constrain what a field may contain — see [Validators](/docs/validators).
 
 ### Using Archival Custom Editors
 

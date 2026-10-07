@@ -2,7 +2,7 @@ order = 0
 command = "archival build"
 description = "Build your archival site into static files, ready to deploy to any host."
 content = """
-Build an archival site - this will generate a static site inside a directory (dist unless you have overridden it in archival.toml). This copies `public/`, builds your [scripts](/docs/scripts.html) into `dist/js/`, and renders your pages.
+Build an archival site - this will generate a static site inside a directory (dist unless you have overridden it in archival.toml). This copies `public/`, builds your [scripts](/docs/scripts) into `dist/js/`, and renders your pages.
 """
 
 [[options]]

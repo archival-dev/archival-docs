@@ -75,7 +75,7 @@ primary = "published_at"
 secondary = "title"
 ```
 
-See [Object Fields](/docs/object-fields.html) for the field types you can reference, [Validators](/docs/validators.html) for constraining what they may contain, and [Custom Editors](/docs/custom-editors.html) for customizing how individual fields are edited.
+See [Object Fields](/docs/object-fields) for the field types you can reference, [Validators](/docs/validators) for constraining what they may contain, and [Custom Editors](/docs/custom-editors) for customizing how individual fields are edited.
 """
 
 [[sections]]
@@ -232,7 +232,7 @@ Each type must map at least one of `content` or `name`. Fields you do not map ar
 
 If your site keeps drafts — objects it holds but does not show — map `when` to the field that decides, or they are published along with everything else. An object that does not set the field at all counts as false. On a type that is not federating yet, adding a field and mapping it publishes nothing until you turn it on object by object. On a type that is already federating, every post where the field is not true is deleted from the servers that received it, so set it to true on the posts you want to keep in the same deploy that adds `when`.
 
-When an object type has a [page template](/docs/page-templates.html), each post links to its page, and pasting that page's address into Mastodon's search finds the post.
+When an object type has a [page template](/docs/page-templates), each post links to its page, and pasting that page's address into Mastodon's search finds the post.
 
 ### When things are published
 
@@ -250,7 +250,7 @@ Any mistake in the section stops publishing: a setting it does not recognise, a 
 
 Archival keeps what the fediverse does with your account: who follows it, and the likes, boosts and public replies its posts get, including replies to those replies. Followers-only replies and direct messages are not kept. Edits, deletions and taken-back likes apply as they arrive, and an account that is deleted takes everything it did with it.
 
-Your pages are built before any of that happens, so they cannot show it. A [carrier](/docs/carriers.html) can: `site.activitypub` reads each post's likes, boosts and replies when a visitor asks, so a post's page can fetch them and show the conversation under it. See [Reading the fediverse](/docs/carriers.html#Reading%20the%20fediverse).
+Your pages are built before any of that happens, so they cannot show it. A [carrier](/docs/carriers) can: `site.activitypub` reads each post's likes, boosts and replies when a visitor asks, so a post's page can fetch them and show the conversation under it. See [Reading the fediverse](/docs/carriers#Reading%20the%20fediverse).
 
 ### Turning it off
 

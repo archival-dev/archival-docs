@@ -2,14 +2,14 @@
 {% assign doc_count = objects.docs | size %}
 {% for doc in objects.cli %}
   {% for opt in doc.options %}
-    { "path": "/{{ doc.path }}.html#options", "docTitle": "{{ doc.command }}", "sectionTitle": "{{ opt.flags }}",
+    { "path": "/{{ doc.path }}#options", "docTitle": "{{ doc.command }}", "sectionTitle": "{{ opt.flags }}",
     "content": "{{ opt.description | url_decode | replace: '"', '\"' | strip_newlines | url_encode }}" },
   {% endfor %}
   {% for arg in doc.arguments %}
-    { "path": "/{{ doc.path }}.html#arguments", "docTitle": "{{ doc.command }}", "sectionTitle": "{{ arg.arg }}",
+    { "path": "/{{ doc.path }}#arguments", "docTitle": "{{ doc.command }}", "sectionTitle": "{{ arg.arg }}",
     "content": "{{ arg.description | url_decode | replace: '"', '\"' | strip_newlines | url_encode }}" },
   {% endfor %}
-  { "path": "/{{ doc.path }}.html", "docTitle": "{{ doc.command }}", "sectionTitle": null, "content": "
+  { "path": "/{{ doc.path }}", "docTitle": "{{ doc.command }}", "sectionTitle": null, "content": "
   {{- doc.content | url_decode | replace: '"', '\"' | strip_newlines | url_encode -}}
   " }{% unless forloop.last and doc_count == 0 %},{% endunless %}
 {% endfor %}
@@ -20,11 +20,11 @@
   {% if doc.description %}
     {% assign desc = doc.description %}
   {% endif %}
-  { "path": "/{{ doc.path }}.html", "docTitle": "{{ doc.title }}", "sectionTitle": null, "content": "
+  { "path": "/{{ doc.path }}", "docTitle": "{{ doc.title }}", "sectionTitle": null, "content": "
   {{- desc | url_decode | replace: '"', '\"' | strip_newlines | url_encode -}}
   " }{% unless outer_last and section_count == 0 %},{% endunless %}
   {% for section in doc.sections %}
-    { "path": "/{{ doc.path }}.html#{{ section.title | url_encode }}", "docTitle": "{{ doc.title }}", "sectionTitle": "
+    { "path": "/{{ doc.path }}#{{ section.title | url_encode }}", "docTitle": "{{ doc.title }}", "sectionTitle": "
     {{- section.title -}}
     ", "content": "{{ section.content | url_decode | replace: '"', '\"' | strip_newlines | url_encode }}" }
     {%- unless forloop.last and outer_last %},{% endunless %}

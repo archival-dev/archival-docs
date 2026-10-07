@@ -7,7 +7,7 @@ Set up a new archival site through the hosted editor at editor.archival.dev, or 
 [[sections]]
 title = "Using editor.archival.dev/new"
 content = """
-The simplest way to set up an archival repo is to go to [editor.archival.dev/new](http://editor.archival.dev/new) and we'll set you up with a working archival site right away. This will create a new git repo in your github account (or if you're signed in with email, we'll create one on our servers). You can either purchase a domain or use an existing one for your site.
+The simplest way to set up an archival repo is to go to [editor.archival.dev/new](https://editor.archival.dev/new) and we'll set you up with a working archival site right away. This will create a new git repo in your github account (or if you're signed in with email, we'll create one on our servers). You can either purchase a domain or use an existing one for your site.
 
 Once you have a site set up, you will see it at editor.archival.dev, where you can make changes to the content, preview in real time, adjust settings, and use task mode to change your site by making requests and uploading files.
 

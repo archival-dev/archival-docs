@@ -12,7 +12,7 @@
       {% assign section_count = doc.sections | size %}
       <div class="side-nav-group flex flex-col">
         <a
-          href="/{{doc.path}}.html"
+          href="/{{doc.path}}"
           class="px-4 py-2 my-2 backdrop-blur-md side-nav-item {% if docs.path == doc.path %}side-nav-item-active{% endif %}"
           data-rybbit-event="docs-sidebar-nav"
           data-rybbit-prop-doc="{{ doc.title }}"
@@ -89,14 +89,14 @@
           {% endif %}
         {% endfor %}
         {% if prev %}
-          <a href="/{{ prev.path }}.html" data-rybbit-event="docs-prev" data-rybbit-prop-doc="{{ prev.title }}">
+          <a href="/{{ prev.path }}" data-rybbit-event="docs-prev" data-rybbit-prop-doc="{{ prev.title }}">
             <div id="prev" class="">← {{ prev.title }}</div>
           </a>
         {% else %}
           <div></div>
         {% endif %}
         {% if next %}
-          <a href="/{{ next.path }}.html" data-rybbit-event="docs-next" data-rybbit-prop-doc="{{ next.title }}">
+          <a href="/{{ next.path }}" data-rybbit-event="docs-next" data-rybbit-prop-doc="{{ next.title }}">
             <div id="next" class="">{{ next.title }} →</div>
           </a>
         {% endif %}

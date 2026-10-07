@@ -3,6 +3,7 @@
 /updates.rss
     Content-Type: application/rss+xml; charset=utf-8
     Cache-Control: public, max-age=3600
+    X-Robots-Tag: noindex
 
 # Apple requires this file be served as JSON, and it has no extension for the
 # static host to infer that from.
@@ -17,3 +18,14 @@
 /schemas/*
     Access-Control-Allow-Origin: *
     Cache-Control: public, max-age=3600
+    X-Robots-Tag: noindex
+
+# Machine-readable copies of the docs; the HTML pages are the ones to index.
+/llms.txt
+    X-Robots-Tag: noindex
+/docs/llms.txt
+    X-Robots-Tag: noindex
+/api/*
+    X-Robots-Tag: noindex
+/agent/*
+    X-Robots-Tag: noindex

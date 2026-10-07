@@ -16,3 +16,14 @@
 /cli          /cli/build               301
 /cli/         /cli/build               301
 /cli.html     /cli/build               301
+
+# Retired pages, pointed at what replaced them.
+/build-with-claude         /    301
+/build-with-claude.html    /    301
+/documentation             /docs/getting-started    301
+/documentation.html        /docs/getting-started    301
+/tutorial                  /docs/getting-started    301
+/tutorial.html             /docs/getting-started    301
+/tutorial/*                /docs/getting-started    301
+/cli_docs/*                /cli/:splat              301
+/manifesto/*               /manifesto               301

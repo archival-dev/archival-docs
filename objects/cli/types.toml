@@ -46,11 +46,11 @@ A few details worth knowing about the generated types:
 - Every field is nullable, since any field may be unset. Child objects default to `[]` rather than `null`.
 - Only objects read from their own file carry `path` and `order` — child objects live inside their parent's file, so they have neither.
 - `enum` fields become string literal unions, `oneof` fields become tagged unions, `date` fields are ISO 8601 strings, and `meta` fields are a recursive JSON type.
-- **`secret` fields are included.** They're hidden from templates, but anything consuming these types reads the real value. See [`secret`](/docs/object-fields.html#secret).
+- **`secret` fields are included.** They're hidden from templates, but anything consuming these types reads the real value. See [`secret`](/docs/object-fields#secret).
 
-This is the same traversal as [`archival schemas`](/cli/schemas.html) with a different backend, but it describes a different thing: the JSON schema describes *stored* objects for editor and LLM validation, while these types describe what a consumer of the built site sees — so files carry their resolved `url`, and top level objects carry the injected `path` and `order`.
+This is the same traversal as [`archival schemas`](/cli/schemas) with a different backend, but it describes a different thing: the JSON schema describes *stored* objects for editor and LLM validation, while these types describe what a consumer of the built site sees — so files carry their resolved `url`, and top level objects carry the injected `path` and `order`.
 
-The command knows nothing about carriers. To wire these types into a carrier's third argument, use `npx archival-carrier-types`, which runs this command and writes the result next to each carrier — see [Carriers](/docs/carriers.html).
+The command knows nothing about carriers. To wire these types into a carrier's third argument, use `npx archival-carrier-types`, which runs this command and writes the result next to each carrier — see [Carriers](/docs/carriers).
 """
 
 [[options]]

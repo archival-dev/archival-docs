@@ -8,7 +8,7 @@ Page templates go in your `pages` directory (or whatever you’ve defined as the
 [[sections]]
 title = "One page per file"
 content = """
-A template that no object type names renders once, to the same path in your build: `pages/index.liquid` becomes `dist/index.html`, and `pages/about.liquid` becomes `dist/about.html`. A listing page - a blog index, a menu, a portfolio grid - is one of these, reaching the objects it lists through their pluralized accessor (see [Template Variables](/docs/template-variables.html)).
+A template that no object type names renders once, to the same path in your build: `pages/index.liquid` becomes `dist/index.html`, and `pages/about.liquid` becomes `dist/about.html`. A listing page - a blog index, a menu, a portfolio grid - is one of these, reaching the objects it lists through their pluralized accessor (see [Template Variables](/docs/template-variables)).
 """
 
 [[sections]]
@@ -40,9 +40,11 @@ Link to these pages with each object's `path`, which is `<object-type>/<filename
 
 ```html
 {% for post in posts %}
-  <a href="/{{ post.path }}.html">{{ post.title }}</a>
+  <a href="/{{ post.path }}">{{ post.title }}</a>
 {% endfor %}
 ```
+
+Leave the `.html` off. Archival hosting and `archival run` both serve `dist/post/my-great-post.html` at `/post/my-great-post`, and hosting redirects the `.html` address there, so a link or canonical URL that includes it points search engines at a redirect.
 
 This is the only way pages are generated from objects. A file named like a route parameter, such as `pages/post/[slug].liquid`, is an ordinary page built under that literal name, and writing one `.liquid` file per object duplicates content the object already holds. The template's name does not have to match the type's - `template = "article"` renders `pages/article.liquid` - but the pages are still built under the type's folder.
 {% endraw %}
@@ -51,5 +53,5 @@ This is the only way pages are generated from objects. A file named like a route
 [[sections]]
 title = "Render passes"
 content = """
-In some cases (specifically liquid variables inside archival variables), a page will have multiple render passes: if the output still contains liquid syntax after the template renders, archival renders it a second time. This should be invisible except if you want a template to emit literal liquid, because a plain raw tag won’t survive it. See [liquid in field values](/docs/object-fields.html#liquid%20in%20field%20values).
+In some cases (specifically liquid variables inside archival variables), a page will have multiple render passes: if the output still contains liquid syntax after the template renders, archival renders it a second time. This should be invisible except if you want a template to emit literal liquid, because a plain raw tag won’t survive it. See [liquid in field values](/docs/object-fields#liquid%20in%20field%20values).
 """

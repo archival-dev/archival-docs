@@ -304,7 +304,7 @@ A schedule is a standard five-field crontab expression — minute, hour, day of 
 [[sections]]
 title = "Reading uploads"
 content = """
-`site.uploads` reads the files you've [uploaded to your site](/docs/uploading-files.html). Unlike `objects` it isn't a snapshot — it reads at request time, so a carrier sees files uploaded since it was deployed. Reads are scoped to your own site, and there is no way to write.
+`site.uploads` reads the files you've [uploaded to your site](/docs/uploading-files). Unlike `objects` it isn't a snapshot — it reads at request time, so a carrier sees files uploaded since it was deployed. Reads are scoped to your own site, and there is no way to write.
 
 This is what lets a carrier put a file behind a check your site can't make on its own — a password, a signed link, a purchase — or serve one under a name that isn't known until the request arrives.
 
@@ -452,7 +452,7 @@ A few things worth knowing:
 [[sections]]
 title = "Reading the fediverse"
 content = """
-A site with an [`activitypub` section](/docs/editor-config.html#ActivityPub) is an account people follow from Mastodon, Threads and the rest of the fediverse, and its posts collect likes, boosts and replies there. Archival keeps all of it, and `site.activitypub` reads it, so a carrier can show a post's replies under it on your own site:
+A site with an [`activitypub` section](/docs/editor-config#ActivityPub) is an account people follow from Mastodon, Threads and the rest of the fediverse, and its posts collect likes, boosts and replies there. Archival keeps all of it, and `site.activitypub` reads it, so a carrier can show a post's replies under it on your own site:
 
 ```ts
 const carrier: Carrier = async (params, body, objects, site) => {
@@ -535,7 +535,7 @@ Replies come in the order they arrived, so a thread reads top to bottom. To nest
 A few things worth knowing:
 
 - Reads happen when the request runs, so a reply shows up as soon as its server delivers it, without redeploying.
-- There is no moderation: any public reply from any account is kept. A carrier that shows replies can leave some out — for instance accounts or servers you list in a [secret](/docs/secrets.html) or a setting.
+- There is no moderation: any public reply from any account is kept. A carrier that shows replies can leave some out — for instance accounts or servers you list in a [secret](/docs/secrets) or a setting.
 - Showing who follows you is your choice to make. Your account itself publishes only how many followers it has, so someone following it may not expect to appear on your website.
 - A site that doesn't federate — including while its `activitypub` section is removed or its subscription is cancelled — and every preview and `archival run`, reads as having no account and nothing on any list. A carrier that shows replies works everywhere without special cases.
 - A method rejects, with the reason, when it is given something that isn't a post, more than 100 posts, or a `limit` over 100.
@@ -551,7 +551,7 @@ Every site's objects are different, so the types for them are generated from you
 npx archival-carrier-types
 ```
 
-That runs [`archival types`](/cli/types.html) and writes an `archival-objects.d.ts` next to each carrier — a self-contained module declaring an `ArchivalObjects` interface, followed by the one block that wires it into the carrier signature:
+That runs [`archival types`](/cli/types) and writes an `archival-objects.d.ts` next to each carrier — a self-contained module declaring an `ArchivalObjects` interface, followed by the one block that wires it into the carrier signature:
 
 ```ts
 declare module "@archival/carrier" {
@@ -597,7 +597,7 @@ npx archival-carrier-types --check
 [[sections]]
 title = "Reading secrets"
 content = """
-Fields declared [`secret`](/docs/object-fields.html#secret) are stripped from template contexts, but carriers run on the server and **do** receive their values — that's the point of the type. They're typed as `string | null` like any other string field.
+Fields declared [`secret`](/docs/object-fields#secret) are stripped from template contexts, but carriers run on the server and **do** receive their values — that's the point of the type. They're typed as `string | null` like any other string field.
 
 ```ts
 const carrier: Carrier = async (params, body, objects) => {
@@ -608,13 +608,13 @@ const carrier: Carrier = async (params, body, objects) => {
 };
 ```
 
-A secret set through the archival editor is stored encrypted in your repo, and archival decrypts it when it deploys your carriers, so `objects` always holds the value you typed. A secret you write into an object file by hand is committed as plain text. See [Secrets](/docs/secrets.html) for when each applies.
+A secret set through the archival editor is stored encrypted in your repo, and archival decrypts it when it deploys your carriers, so `objects` always holds the value you typed. A secret you write into an object file by hand is committed as plain text. See [Secrets](/docs/secrets) for when each applies.
 """
 
 [[sections]]
 title = "Running carriers locally"
 content = """
-[`archival run`](/cli/run.html) serves your carriers beside your site, so `http://localhost:1024/carriers/submit-form` answers the way `https://yoursite.com/carriers/submit-form` will once deployed. It needs **Node 22.13 or later** on your `PATH`, and nothing else to install or configure.
+[`archival run`](/cli/run) serves your carriers beside your site, so `http://localhost:1024/carriers/submit-form` answers the way `https://yoursite.com/carriers/submit-form` will once deployed. It needs **Node 22.13 or later** on your `PATH`, and nothing else to install or configure.
 
 - **Carriers are built the way a deploy builds them.** The same [build](#How%20a%20carrier%20is%20built) runs on your machine, so a carrier that breaks one of its rules answers with the message the deploy would fail with, and the others keep working.
 - **Changes are picked up as you save.** Editing a carrier, or adding or removing one, takes effect on the next request. That includes the first carrier in a site that had none when `archival run` started. Editing your objects reaches your carriers without a restart.

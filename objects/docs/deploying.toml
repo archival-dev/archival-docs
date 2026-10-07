@@ -46,7 +46,7 @@ content = """
 Because `archival build` produces an ordinary static site, you can deploy the `dist` folder to any static host — GitHub Pages, Cloudflare Pages, Netlify, S3, or your own server. The general recipe is:
 
 1. Install archival (`cargo install archival`, or `cargo binstall archival`).
-2. If your site uses a javascript or css toolchain, run `archival prebuild` first so those assets exist. TypeScript in [`scripts/`](/docs/scripts.html) is built by `archival build` itself and needs no prebuild.
+2. If your site uses a javascript or css toolchain, run `archival prebuild` first so those assets exist. TypeScript in [`scripts/`](/docs/scripts) is built by `archival build` itself and needs no prebuild.
 3. Run `archival build`.
 4. Publish the contents of `dist`.
 
@@ -70,6 +70,6 @@ publish-pages:
         command: pages deploy dist --project-name=your-project
 ```
 
-If you pin a minimum archival version in your `archival.toml`, you can guard your CI against accidentally building with an incompatible version by running `archival compat <version>` — it exits non-zero when the versions don’t match. See the [compat command](/cli/compat.html) for details.
+If you pin a minimum archival version in your `archival.toml`, you can guard your CI against accidentally building with an incompatible version by running `archival compat <version>` — it exits non-zero when the versions don’t match. See the [compat command](/cli/compat) for details.
 {% endraw %}
 """

@@ -84,7 +84,7 @@
       {% assign canonical_url = site_url | append: "/" %}
     {% else %}
       {% comment %}
-        No .html: the host 308-redirects /foo.html -> /foo, and a canonical
+        No .html: the host redirects /foo.html -> /foo, and a canonical
         pointing at a redirect is routinely ignored by search engines.
       {% endcomment %}
       {% assign canonical_url = site_url | append: "/" | append: path_str %}
@@ -226,17 +226,17 @@
           All rights reserved.
         </p>
         <p class="footer-legal">
-          <a href="/manifesto.html" data-rybbit-event="footer-rss">Manifesto</a>
+          <a href="/manifesto" data-rybbit-event="footer-rss">Manifesto</a>
           |
-          <a href="/updates.html" data-rybbit-event="footer-updates">Updates</a>
+          <a href="/updates" data-rybbit-event="footer-updates">Updates</a>
           |
           <a href="/updates.rss" data-rybbit-event="footer-rss">RSS</a>
           |
-          <a href="/privacy.html" data-rybbit-event="footer-privacy">Privacy</a>
+          <a href="/privacy" data-rybbit-event="footer-privacy">Privacy</a>
           |
-          <a href="/terms-of-service.html" data-rybbit-event="footer-terms">Terms of Service</a>
+          <a href="/terms-of-service" data-rybbit-event="footer-terms">Terms of Service</a>
           |
-          <a href="/eula.html" data-rybbit-event="footer-eula">EULA</a>
+          <a href="/eula" data-rybbit-event="footer-eula">EULA</a>
         </p>
       </footer>
     {% endunless %}

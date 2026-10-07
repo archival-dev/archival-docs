@@ -10,7 +10,7 @@
 
 <div class="updates-page updates-page--detail">
   <article class="update-detail">
-    <a class="update-back" href="/updates.html" data-rybbit-event="update-back">← All updates</a>
+    <a class="update-back" href="/updates" data-rybbit-event="update-back">← All updates</a>
 
     {% render "update-byline", update: update %}
 
@@ -107,7 +107,7 @@
 
     <div class="update-pager">
       {% if have_newer %}
-        <a href="/{{ newer.path }}.html" class="update-pager-link" data-rybbit-event="update-newer">
+        <a href="/{{ newer.path }}" class="update-pager-link" data-rybbit-event="update-newer">
           <span class="update-pager-dir">← Newer</span>
           <span class="update-pager-title">{{ newer.title }}</span>
         </a>
@@ -116,7 +116,7 @@
       {% endif %}
       {% if have_older %}
         <a
-          href="/{{ older.path }}.html"
+          href="/{{ older.path }}"
           class="update-pager-link update-pager-link--end"
           data-rybbit-event="update-older"
         >

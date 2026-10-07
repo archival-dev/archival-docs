@@ -64,20 +64,20 @@
     </li>
     {% assign docs_link = objects.docs | first %}
     <li class="nav-text {% if area == 'docs' %}nav-active{% endif %}">
-      <a href="/{{ docs_link.path }}.html" data-rybbit-event="nav-docs">Docs</a>
+      <a href="/{{ docs_link.path }}" data-rybbit-event="nav-docs">Docs</a>
     </li>
     {% assign cli_link = objects.cli | first %}
     <li class="nav-text {% if area == 'cli' %}nav-active{% endif %}">
-      <a href="/{{ cli_link.path }}.html" data-rybbit-event="nav-cli">CLI</a>
+      <a href="/{{ cli_link.path }}" data-rybbit-event="nav-cli">CLI</a>
     </li>
     <li class="nav-text {% if area == 'updates' %}nav-active{% endif %}">
-      <a href="/updates.html" data-rybbit-event="nav-updates">Updates</a>
+      <a href="/updates" data-rybbit-event="nav-updates">Updates</a>
     </li>
     {% comment %} <li class="nav-text {% if area == 'manifesto' %}nav-active{% endif %}">
-      <a href="/manifesto.html" data-rybbit-event="nav-manifesto">Manifesto</a>
+      <a href="/manifesto" data-rybbit-event="nav-manifesto">Manifesto</a>
     </li> {% endcomment %}
     <li class="nav-text {% if area == 'pricing' %}nav-active{% endif %}">
-      <a href="/pricing.html" data-rybbit-event="nav-pricing">Pricing</a>
+      <a href="/pricing" data-rybbit-event="nav-pricing">Pricing</a>
     </li>
     <li class="nav-text">
       <a href="https://editor.archival.dev" data-rybbit-event="nav-dashboard">Dashboard</a>
@@ -161,20 +161,20 @@
     </li>
     {% assign docs_link = objects.docs | first %}
     <li class="mobile-nav-item">
-      <a class="flex-1" href="/{{ docs_link.path }}.html" data-rybbit-event="mobile-nav-docs">Docs</a>
+      <a class="flex-1" href="/{{ docs_link.path }}" data-rybbit-event="mobile-nav-docs">Docs</a>
     </li>
     {% assign cli_link = objects.cli | first %}
     <li class="mobile-nav-item">
-      <a class="flex-1" href="/{{ cli_link.path }}.html" data-rybbit-event="mobile-nav-cli">CLI</a>
+      <a class="flex-1" href="/{{ cli_link.path }}" data-rybbit-event="mobile-nav-cli">CLI</a>
     </li>
     <li class="mobile-nav-item">
-      <a class="flex-1" href="/updates.html" data-rybbit-event="mobile-nav-updates">Updates</a>
+      <a class="flex-1" href="/updates" data-rybbit-event="mobile-nav-updates">Updates</a>
     </li>
     <li class="mobile-nav-item">
-      <a class="flex-1" href="/manifesto.html" data-rybbit-event="mobile-nav-manifesto">Manifesto</a>
+      <a class="flex-1" href="/manifesto" data-rybbit-event="mobile-nav-manifesto">Manifesto</a>
     </li>
     <li class="mobile-nav-item">
-      <a class="flex-1" href="/pricing.html" data-rybbit-event="mobile-nav-pricing">Pricing</a>
+      <a class="flex-1" href="/pricing" data-rybbit-event="mobile-nav-pricing">Pricing</a>
     </li>
     <li class="mobile-nav-item">
       <a class="flex-1" href="https://editor.archival.dev" data-rybbit-event="mobile-nav-dashboard">Editor</a>
@@ -200,13 +200,13 @@
     {% if order > 0 %}
       {% assign prev_index = order | minus: 1 %}
       {% assign prev_page = other_pages | slice: prev_index | first %}
-      {% assign prev_link = prev_page.path | append: ".html" %}
+      {% assign prev_link = prev_page.path %}
     {% endif %}
     {% assign max_order = other_pages | size | minus: 1 %}
     {% if order < max_order %}
       {% assign next_index = order | plus: 1 %}
       {% assign next_page = other_pages | slice: next_index | first %}
-      {% assign next_link = next_page.path | append: ".html" %}
+      {% assign next_link = next_page.path %}
     {% endif %}
     <a
       {% if prev_link %}
@@ -246,7 +246,7 @@
           {% assign section_count = doc.sections | size %}
           <li class="flex flex-col">
             <div class="flex px-8 py-3 text-center {% if current_path == doc.path %}nav-active{% endif %}">
-              <a class="flex-1" href="/{{ doc.path }}.html">{{ doc.title }}</a>
+              <a class="flex-1" href="/{{ doc.path }}">{{ doc.title }}</a>
             </div>
             {% if current_path == doc.path and section_count > 0 %}
               <ul class="mobile-nav-sections">
@@ -264,7 +264,7 @@
       <ul class="flex flex-col w-full">
         {% for doc in objects.cli %}
           <li class="flex px-8 py-3 text-center">
-            <a class="flex-1" href="/{{ doc.path }}.html">{{ doc.command }}</a>
+            <a class="flex-1" href="/{{ doc.path }}">{{ doc.command }}</a>
           </li>
         {% endfor %}
       </ul>

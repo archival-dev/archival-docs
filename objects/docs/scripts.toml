@@ -55,7 +55,7 @@ Nothing is bundled. Each file becomes one module, and the browser follows the im
 [[sections]]
 title = "TypeScript support"
 content = """
-Types are removed rather than compiled. This is the same rule Node applies to `.ts` files, and the same toolchain [carriers](/docs/carriers.html) use, so code can move between the two. Because types become whitespace, every line and column in the built file matches your source, so browser errors and stack traces point at the right place without source maps.
+Types are removed rather than compiled. This is the same rule Node applies to `.ts` files, and the same toolchain [carriers](/docs/carriers) use, so code can move between the two. Because types become whitespace, every line and column in the built file matches your source, so browser errors and stack traces point at the right place without source maps.
 
 The few TypeScript features that generate code aren't supported: `enum`, `namespace` and constructor parameter properties. Anything that isn't a type, such as a decorator, is left in the output as written. An import used only for types should say `import type`.
 

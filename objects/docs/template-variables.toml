@@ -18,19 +18,19 @@ These variables are available in every page and template:
 
 ```html
 {% for post in posts %}
-  <a href="/{{ post.path }}.html">{{ post.title }}</a>
+  <a href="/{{ post.path }}">{{ post.title }}</a>
 {% endfor %}
 ```
 
 - **`site_url`** — the `site_url` value from your `archival.toml`, as a string. Useful for building absolute URLs:
 
 ```html
-<link rel="canonical" href="{{ site_url }}/{{ post.path }}.html" />
+<link rel="canonical" href="{{ site_url }}/{{ post.path }}" />
 ```
 
 - **`page`** — the name of the page currently being rendered.
 
-These variables are also available inside partials rendered with `{% render %}`, which otherwise sees only the arguments passed to it (see [Partials](/docs/partials.html)).
+These variables are also available inside partials rendered with `{% render %}`, which otherwise sees only the arguments passed to it (see [Partials](/docs/partials)).
 {% endraw %}
 """
 
@@ -38,7 +38,7 @@ These variables are also available inside partials rendered with `{% render %}`,
 title = "Variables on a template page"
 content = """
 {% raw %}
-When an object type defines a `template`, that template is rendered once for each object of that type (see [Page Templates](/docs/page-templates.html)). Inside that template, the current object is available under its definition name — for a `post` type, that’s `{{ post }}` — and each object also carries a few extra fields:
+When an object type defines a `template`, that template is rendered once for each object of that type (see [Page Templates](/docs/page-templates)). Inside that template, the current object is available under its definition name — for a `post` type, that’s `{{ post }}` — and each object also carries a few extra fields:
 
 - **`object_name`** — the type name of the object (e.g. `"post"`). Access it as `{{ post.object_name }}`.
 - **`order`** — the object’s `order` value, if it has one. Access it as `{{ post.order }}`.
@@ -47,7 +47,7 @@ When an object type defines a `template`, that template is rendered once for eac
 ```html
 <article data-order="{{ post.order }}">
   <h1>{{ post.title }}</h1>
-  <a href="/{{ post.path }}.html">permalink</a>
+  <a href="/{{ post.path }}">permalink</a>
 </article>
 ```
 {% endraw %}
@@ -62,7 +62,7 @@ content = """
 ```html
 <ul>
   {% for post in posts %}
-    <li><a href="/{{ post.path }}.html">{{ post.title }}</a></li>
+    <li><a href="/{{ post.path }}">{{ post.title }}</a></li>
   {% endfor %}
 </ul>
 ```
@@ -75,6 +75,6 @@ Because `path` and `order` are populated by archival, they are **reserved** — 
 title = "page_content (inside layouts)"
 content = """
 {% raw %}
-One more special variable, `page_content`, is available inside [layouts](/docs/layouts.html). It contains the rendered content of the page that invoked the layout. See the Layouts page for details.
+One more special variable, `page_content`, is available inside [layouts](/docs/layouts). It contains the rendered content of the page that invoked the layout. See the Layouts page for details.
 {% endraw %}
 """

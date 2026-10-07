@@ -59,7 +59,7 @@ mime = "image/png"
 display_type = "image"
 ```
 
-This is the same structure documented under the [file field types](/docs/object-fields.html), so once a field is uploaded you render it just like any other file field.
+This is the same structure documented under the [file field types](/docs/object-fields), so once a field is uploaded you render it just like any other file field.
 {% endraw %}
 """
 
@@ -80,6 +80,6 @@ The final URL is built as `<uploads_url>/<upload_prefix><sha>/<filename>`. In te
 
 You can override the prefix for a single command with `-u, --upload-prefix` (this is required if you’re uploading in a directory with no `archival.toml`).
 
-Files on the CDN are served to anyone who knows the URL. If you need one readable only under some condition, a [carrier](/docs/carriers.html#Reading%20uploads) can read your uploads directly and decide whether to hand the file over.
+Files on the CDN are served to anyone who knows the URL. If you need one readable only under some condition, a [carrier](/docs/carriers#Reading%20uploads) can read your uploads directly and decide whether to hand the file over.
 {% endraw %}
 """

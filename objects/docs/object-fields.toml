@@ -45,13 +45,13 @@ That's deliberate: a typo can't quietly ship a key into your HTML, and the build
 
 **Secrets are readable where the code runs on your side of the wall:**
 
-- From [carriers](/docs/carriers.html), on the third argument — `objects.settings.api_key`. Carriers are exactly the place to use one.
+- From [carriers](/docs/carriers), on the third argument — `objects.settings.api_key`. Carriers are exactly the place to use one.
 - From the rust library, via `FieldValue::as_secret`. `Display` and the liquid `ValueView` both redact, so `as_secret` is the only way to read the value.
-- From [`archival types`](/cli/types.html), which includes secret fields — anything consuming those types is a server-side consumer.
+- From [`archival types`](/cli/types), which includes secret fields — anything consuming those types is a server-side consumer.
 
 In the archival editor, a secret field is masked until you reveal it, and list views never show it.
 
-**archival does not encrypt a secret; the archival editor does.** To `archival` on your machine a secret is a string in your object's toml file, committed to your repo like any other value: the type keeps it out of your *built site*, not out of your *repo*. A secret set through the archival editor, on a site archival deploys, is stored encrypted in the repo and decrypted for your carriers. See [Secrets](/docs/secrets.html) for how that works and exactly when it applies. Outside those cases, if a value must not exist in your git history at all, don't put it in an object — keep it in your carrier's own deployment configuration.
+**archival does not encrypt a secret; the archival editor does.** To `archival` on your machine a secret is a string in your object's toml file, committed to your repo like any other value: the type keeps it out of your *built site*, not out of your *repo*. A secret set through the archival editor, on a site archival deploys, is stored encrypted in the repo and decrypted for your carriers. See [Secrets](/docs/secrets) for how that works and exactly when it applies. Outside those cases, if a value must not exist in your git history at all, don't put it in an object — keep it in your carrier's own deployment configuration.
 {% endraw %}
 """
 
@@ -233,7 +233,7 @@ Enums render as a plain string, so you can print them or use them for control fl
 {% endif %}
 ```
 
-This is different from the [grouping pattern](/docs/patterns-grouping.html), which uses an open-ended `string` field — an enum is the right choice when you want to *guarantee* the value is one of a known set.
+This is different from the [grouping pattern](/docs/patterns-grouping), which uses an open-ended `string` field — an enum is the right choice when you want to *guarantee* the value is one of a known set.
 {% endraw %}
 """
 
@@ -289,9 +289,9 @@ When rendering, a oneof exposes two properties: `type` (the selected option name
 {% endif %}
 ```
 
-Note that the doubled brackets are what separates a oneof from a [child field](/docs/child-fields.html): `[post.media]` defines a child, while `[[post.media]]` defines a oneof. They are one keystroke apart and mean entirely different things.
+Note that the doubled brackets are what separates a oneof from a [child field](/docs/child-fields): `[post.media]` defines a child, while `[[post.media]]` defines a oneof. They are one keystroke apart and mean entirely different things.
 
-Reach for a oneof when a field is genuinely “either/or” — for example content that may be an image *or* a video. If you instead want a repeating list of structured items, use [child fields](/docs/child-fields.html) — and for a repeating list whose entries are each either/or, [put a oneof inside the child](/docs/child-fields.html#A%20oneof%20inside%20a%20child).
+Reach for a oneof when a field is genuinely “either/or” — for example content that may be an image *or* a video. If you instead want a repeating list of structured items, use [child fields](/docs/child-fields) — and for a repeating list whose entries are each either/or, [put a oneof inside the child](/docs/child-fields#A%20oneof%20inside%20a%20child).
 {% endraw %}
 """
 
@@ -320,7 +320,7 @@ tags = ["news", "updates"]
 email = "hi@example.com"
 ```
 
-Because `meta` is unstructured, archival does **not** validate its contents (though you can constrain individual keys with a [validator](/docs/validators.html)). When rendering, access keys with dot notation and iterate arrays like any other liquid value:
+Because `meta` is unstructured, archival does **not** validate its contents (though you can constrain individual keys with a [validator](/docs/validators)). When rendering, access keys with dot notation and iterate arrays like any other liquid value:
 
 ```html
 <body class="theme-{{ page.config.theme }}">
@@ -342,7 +342,7 @@ For complex cases, field values may contain liquid, which may reference the site
 
 Wherever a template outputs a value, archival checks the value for liquid and, if it finds any, renders it right there — in the middle of rendering your page. That is what evaluates liquid you wrote inside your *content*, so a `{{ site_url }}` typed into a field is rendered, not printed.
 
-This applies to every field value that reaches your output as text — `string`, `markdown`, `enum` values, strings inside `meta`, and fields on [child objects](/docs/child-fields.html). Every value below renders the site url:
+This applies to every field value that reaches your output as text — `string`, `markdown`, `enum` values, strings inside `meta`, and fields on [child objects](/docs/child-fields). Every value below renders the site url:
 
 ```toml
 title = "Hosted at {{ site_url }}"
@@ -355,7 +355,7 @@ note = "also {{ site_url }}"
 label = "and {{ site_url }}"
 ```
 
-Because the value renders in place, it sees exactly what the surrounding template sees at that point: your objects, all the [template variables](/docs/template-variables.html), and anything the template itself has created. Control flow (`{% if %}`, `{% for %}`) works just like it does in a template.
+Because the value renders in place, it sees exactly what the surrounding template sees at that point: your objects, all the [template variables](/docs/template-variables), and anything the template itself has created. Control flow (`{% if %}`, `{% for %}`) works just like it does in a template.
 
 That includes template-local variables. A value output inside a loop can use the loop variable and `forloop`:
 
