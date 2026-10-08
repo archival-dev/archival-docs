@@ -184,7 +184,7 @@ image = "cover"
 
 With this file, a site at `example.com` is followed as `@blog@example.com`.
 
-Every value in the section other than `username`, `domain`, `follow`, `type` and the actor's `object` names a field of your object, exactly as it appears in `archival_objects.toml`. Nothing you write here is itself published: what goes out is whatever your content says.
+Every value in the section other than `username`, `domain`, `follow`, `type` and the actor's `object` names a field of your object, exactly as it appears in `archival_objects.toml` — or, under `attachment`, one of its child lists and that list's fields. Nothing you write here is itself published: what goes out is whatever your content says.
 
 `activitypub` is reserved at the top level of this file, so an object type named `activitypub` cannot be configured here.
 
@@ -227,6 +227,16 @@ The section must map at least one object type under `activitypub.objects`. Each 
 - `published` — when the post was published. A `date` field. Left out, or left empty on an object, the post is dated when it was first federated.
 - `updated` — when the post last changed. A `date` field. Left out, an edited post is dated by the deploy that changed it.
 - `image` — an `image` field, attached to the post. The image's description is used as its alt text.
+- `attachment` — the photos, videos and audio shown with the post, read from a [child list](/docs/child-fields). It is a table of its own:
+
+  ```toml
+  [activitypub.objects.post.attachment]
+  children = "media"
+  file = "file"
+  name = "alt"
+  ```
+
+  `children` names the child list, and each of its entries is attached to the post in order, after `image`. `file` names an `image`, `video` or `audio` field of each entry, or a [oneof](/docs/child-fields#A%20oneof%20inside%20a%20child) with one of those among its options; an entry whose file is empty or another kind of upload is left out. `name` (optional) names a `string`, `markdown` or `enum` field of each entry, used as the attachment's alt text in place of the file's description. Mastodon shows only the first four attachments of a post.
 
 Each type must map at least one of `content` or `name`. Fields you do not map are never published, and a `secret` field cannot be mapped at all. `name` and `summary` are sent as written rather than rendered from markdown, so keep them to plain text.
 
