@@ -1,0 +1,15 @@
+order = 10
+title = "Updates to our ToS and Privacy policy"
+publish_date = 2026-10-09T20:30:28.602
+author = "jesse"
+summary = "We've removed some boilerplate and added data protections for your Archival sites"
+body = """
+Our ToS and Privacy Policy has up to this point been mostly boilerplate. As we onboard more customers, it made sense to me to make sure that our ToS and Privacy documents reflected our ethos more directly. Today I've added a "Your Content" section to each, which guarantee that when you put your site on Archival infra, you do not release any ownership of it, and we can't use it, sell it, or train AI with it.
+
+In the future, we might reach out to some of you for permission to do things like this (mostly just using your sites in marketing campaigns and the possibility of fine-tuning our LLMs using your sites in addition to our own training sets) - but we'll never do this without asking.
+
+Archival continues to be the easiest way to host your own website, and we think that if we can use your stuff without your permission, it's not really yours. We hope that this subtle but important differentiation will make it easier to build on our platform instead of the extractive ones.
+
+As always, all our site edits are public, so you can see the full diff of what changed here: <https://github.com/archival-dev/archival-docs/commit/be995cae2e046227e8406f29c8fc59af6c5cff8c>
+"""
+media = []
