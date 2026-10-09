@@ -1,7 +1,7 @@
 content = """
 # Terms and Conditions
 
-Last updated: August 20, 2025
+Last updated: October 9, 2026
 
 Please read these terms and conditions carefully before using Our Service.
 
@@ -25,7 +25,13 @@ For the purposes of these Terms and Conditions:
 - __Device__ means any device that can access the Service such as a computer, a cellphone or a digital tablet.
 
 
-- __Service__ refers to the Application.
+- __Service__ refers to the Application, the Website, and the hosting, build, deployment, editing, and related services the Company provides at archival.dev and its subdomains.
+
+- __Website__ refers to Archival, accessible from [https://archival.dev](https://archival.dev)
+
+- __Your Sites__ means the websites You create, build, host, or deploy using the Service, whether served from a domain You control or from a domain provided by the Company.
+
+- __Your Content__ means all content, data, and materials that You (or anyone acting on Your behalf) upload to, store in, publish through, or create using the Service, including the source files, templates, text, images, video, audio, and other media that make up Your Sites, and any posts or messages distributed from Your Sites (for example over ActivityPub, RSS, or email).
 
 
 - __Terms and Conditions__ (also referred as "Terms") mean these Terms and Conditions that form the entire agreement between You and the Company regarding the use of the Service.
@@ -46,6 +52,28 @@ You represent that you are over the age of 18. The Company does not permit those
 
 
 Your access to and use of the Service is also conditioned on Your acceptance of and compliance with the Privacy Policy of the Company. Our Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your personal information when You use the Application or the Website and tells You about Your privacy rights and how the law protects You. Please read Our Privacy Policy carefully before using Our Service.
+
+## Your Content
+
+### You Own Your Content
+
+You retain all ownership rights, title, and interest, including all intellectual property rights, in and to Your Content and Your Sites. Nothing in these Terms, and nothing You do on the Service, including uploading, publishing, or distributing Your Content on or from Your Sites, transfers or assigns any ownership of Your Content to the Company. The Company does not claim any ownership interest in Your Content or Your Sites.
+
+### License to Operate the Service
+
+So that We can provide the Service, You grant the Company a limited, non-exclusive, worldwide, royalty-free license to host, store, build, cache, back up, reproduce, transmit, and display Your Content solely as necessary to operate the Service as You direct, including to serve Your Sites to visitors and to deliver Your Content to third-party services You have chosen to connect to Your Sites.
+
+This license exists only to operate the Service for You. It does not permit Us to sell Your Content, to use it for advertising, to use it to train machine learning or artificial intelligence models, or to use it for any purpose unrelated to providing the Service to You. This license ends when You remove Your Content from the Service or close Your Account, except that copies may persist in backups and caches for a limited period, and except as required to comply with applicable law.
+
+### Portability
+
+You may export, download, or move Your Content and Your Sites away from the Service at any time. The source of Your Sites is stored in a standard git repository and is built with open source software, so Your Sites can be built and hosted without the Service.
+
+### Your Responsibility for Your Content
+
+Because Your Content belongs to You, You are solely responsible for it. You represent and warrant that You own or have the necessary rights to Your Content, and that Your Content and Your Sites do not violate any applicable law or the rights of any third party.
+
+Publishing Your Content on or through the Service does not transfer any responsibility or liability for Your Content to the Company. The Company acts only as a hosting provider for Your Content, does not pre-screen Your Content, and is not responsible or liable for Your Content or for anything published on Your Sites. You agree to defend, indemnify, and hold harmless the Company from any claims, damages, losses, and expenses (including reasonable attorneys' fees) arising out of Your Content, Your Sites, or Your breach of this section.
 
 
 

@@ -1,7 +1,7 @@
 content = """
 # Privacy Policy
 
-Last updated: August 20, 2025
+Last updated: October 9, 2026
 
 This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.
 
@@ -32,7 +32,11 @@ For the purposes of this Privacy Policy:
 - __Personal Data__ is any information that relates to an identified or identifiable individual.
 
 
-- __Service__ refers to the Application.
+- __Service__ refers to the Application, the Website, and the hosting, build, deployment, editing, and related services the Company provides at archival.dev and its subdomains.
+
+- __Website__ refers to Archival, accessible from [https://archival.dev](https://archival.dev)
+
+- __Your Content__ means all content, data, and materials that You upload to, store in, publish through, or create using the Service, including the source files, text, media, and data that make up the websites You build with the Service.
 
 - __Service Provider__ means any natural or legal person who processes the data on behalf of the Company. It refers to third-party companies or individuals employed by the Company to facilitate the Service, to provide the Service on behalf of the Company, to perform services related to the Service or to assist the Company in analyzing how the Service is used.
 
@@ -109,7 +113,6 @@ We may share Your personal information in the following situations:
 - __With Service Providers:__ We may share Your personal information with Service Providers to monitor and analyze the use of our Service,  to contact You.
 - __For business transfers:__ We may share or transfer Your personal information in connection with, or during negotiations of, any merger, sale of Company assets, financing, or acquisition of all or a portion of Our business to another company.
 - __With Affiliates:__ We may share Your information with Our affiliates, in which case we will require those affiliates to honor this Privacy Policy. Affiliates include Our parent company and any other subsidiaries, joint venture partners or other companies that We control or that are under common control with Us.
-- __With business partners:__ We may share Your information with Our business partners to offer You certain products, services or promotions.
 - __With other users:__ when You share personal information or otherwise interact in the public areas with other users, such information may be viewed by all users and may be publicly distributed outside. If You interact with other users or register through a Third-Party Social Media Service, Your contacts on the Third-Party Social Media Service may see Your name, profile, pictures and description of Your activity. Similarly, other users will be able to view descriptions of Your activity, communicate with You and view Your profile.
 - __With Your consent__: We may disclose Your personal information for any other purpose with Your consent.
 
@@ -161,6 +164,15 @@ The Company may disclose Your Personal Data in the good faith belief that such a
 
 The security of Your Personal Data is important to Us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While We strive to use commercially acceptable means to protect Your Personal Data, We cannot guarantee its absolute security.
 
+
+## Your Content and Your Sites
+
+Your Content belongs to You. We do not claim any ownership of it, and nothing You publish through the Service transfers ownership of it to Us. We treat Your Content differently from the Personal Data described above:
+
+- We process Your Content only to provide the Service to You, for example to build, host, cache, back up, and serve Your websites, and to deliver Your Content to third-party services You choose to connect to Your websites.
+- We do not sell Your Content, use it for advertising, use it to train machine learning or artificial intelligence models, or share it with third parties, except as needed to serve Your websites as You direct, with Your consent, or as required by law.
+- Content You publish on Your websites is public. Visitors, search engines, and other services may access, copy, or index it. You control what You publish, and You are responsible for it.
+- You may export or delete Your Content at any time. When You delete Your Content or close Your Account, We remove it from Our production systems, although copies may persist in backups for a limited period.
 
 ## Children's Privacy
 
