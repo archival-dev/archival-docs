@@ -1,0 +1,5 @@
+# Settings for the comments carrier (carriers/comments). Set the secrets from
+# the editor so they're stored encrypted; see carriers/comments/README.md.
+turnstile_secret_key = ""
+admin_token = ""
+blocked = []

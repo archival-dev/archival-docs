@@ -757,14 +757,60 @@ body.update-lightbox-open {
   background: hsl(var(--comment-hue, 0) 45% 38%);
 }
 
+.comment-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
 .comment-author {
   font-size: 0.9375rem;
   font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+
+a.comment-author:hover {
+  text-decoration: underline;
+}
+
+.comment-source {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .comment-date {
   font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+}
+
+a.comment-date:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.comments-reactions {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.comments-reactions[hidden],
+.comments-fediverse[hidden] {
+  display: none;
+}
+
+.comments-fediverse {
+  margin: -1.25rem 0 2rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.comments-fediverse code {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .comment-bubble {
@@ -779,6 +825,47 @@ body.update-lightbox-open {
   /* Comments arrive as plain text, and the line breaks in them are the only
      formatting a commenter gets. */
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* A reply from elsewhere arrives as HTML, with its own paragraphs. */
+.comment-bubble.is-html {
+  white-space: normal;
+}
+
+.comment-bubble.is-html > :first-child {
+  margin-top: 0;
+}
+
+.comment-bubble.is-html > :last-child {
+  margin-bottom: 0;
+}
+
+.comment-bubble.is-html p,
+.comment-bubble.is-html ul,
+.comment-bubble.is-html ol,
+.comment-bubble.is-html blockquote,
+.comment-bubble.is-html pre {
+  margin: 0 0 0.75em;
+}
+
+.comment-bubble.is-html ul,
+.comment-bubble.is-html ol {
+  padding-left: 1.25em;
+}
+
+.comment-bubble.is-html blockquote {
+  padding-left: 0.75em;
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.comment-bubble.is-html code {
+  font-size: 0.875em;
+}
+
+.comment-bubble.is-html a {
+  color: var(--color-secondary-interactive);
   overflow-wrap: anywhere;
 }
 

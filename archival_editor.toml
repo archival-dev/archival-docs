@@ -4,7 +4,7 @@ path = "update"
 
 [activitypub]
 domain = "archival.dev"
-username = "archival"
+username = "updates"
 follow = ["@bsky.brid.gy@bsky.brid.gy", "@threads@threads.net"]
 
 [activitypub.actor]
@@ -14,6 +14,21 @@ icon = "logo"
 
 [activitypub.objects.update]
 featured = "pinned"
+name = "title"
+content = "body"
+published = "publish_date"
+
+# Mentions of any page are received. Each update also sends a mention to every
+# page it links to, authored as the site.
+[webmention]
+domain = "archival.dev"
+
+[webmention.author]
+object = "home"
+name = "title"
+photo = "logo"
+
+[webmention.objects.update]
 name = "title"
 content = "body"
 published = "publish_date"

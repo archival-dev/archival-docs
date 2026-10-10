@@ -134,6 +134,15 @@ author = "string"
 role = "string"
 site_url = "string"
 
+[comments]
+# Secret for the Turnstile widget the comment form renders.
+turnstile_secret_key = "secret"
+# Lets the team post as the team, hide comments, and import old ones.
+admin_token = "secret"
+# Fediverse accounts, servers, or pages whose replies and mentions are left out.
+[comments.blocked]
+url = "string"
+
 [author]
 key = "string"
 name = "string"
