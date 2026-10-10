@@ -8,7 +8,7 @@ This file is most useful when creating an archival template or for customizing t
 
 Place `archival_editor.toml` in the root of your repo, alongside `archival_objects.toml` and `archival.toml`. The editor reads it automatically when your site loads, and re-reads it whenever the file changes.
 
-It is also where you turn on [ActivityPub](#ActivityPub), which publishes your content to Mastodon and the rest of the fediverse whenever your site deploys.
+It is also where you turn on [ActivityPub](#ActivityPub), which publishes your content to Mastodon and the rest of the fediverse whenever your site deploys, and [Webmention](#Webmention), which lets your pages and pages on other sites tell each other when one links to the other.
 """
 
 [[sections]]
@@ -267,4 +267,87 @@ Your pages are built before any of that happens, so they cannot show it. A [carr
 Removing the `activitypub` section and deploying stops the account from answering. Its followers, posts, the accounts it follows and the likes, boosts and replies it has received are kept, and adding the section back resumes it where it left off. While it is off, a carrier reads the account as not federating, with nothing on any list. The same happens while a site's subscription is cancelled: the account stops answering, and the next deploy after it is reactivated brings it back.
 
 Archival reserves the paths under `/_archival/ap/` on every site it hosts, whether or not the site federates, so your site cannot serve its own files there. While a site federates, Archival also answers `/.well-known/webfinger` for its account and requests for ActivityPub documents on its behalf. It answers `/.well-known/nodeinfo`, `/api/v1/instance` and `/api/v2/instance` as well, describing the site as a single-account server. Any of those requests it does not recognise is passed on to your site.
+"""
+
+[[sections]]
+title = "Webmention"
+content = """
+A `webmention` section lets your site take part in [Webmention](https://www.w3.org/TR/webmention/): when a page elsewhere links to one of yours, its site can tell yours, and when one of your objects links to a page elsewhere, your site tells theirs. Blogs on WordPress, Ghost, micro.blog and most of the IndieWeb speak it, and so does [Bridgy](https://brid.gy), which turns likes and replies on Mastodon and Bluesky into mentions.
+
+Webmention is part of Archival's hosting, like ActivityPub. Receiving and sending both run when Archival serves and deploys your site, so a site you build with the CLI and host elsewhere takes no part.
+
+The smallest section receives without sending:
+
+```toml
+[webmention]
+```
+
+Everything the section accepts:
+
+```toml
+[webmention]
+domain = "example.com"
+
+[webmention.author]
+object = "site"
+name = "title"
+photo = "logo"
+
+[webmention.objects.post]
+when = "live"
+name = "title"
+content = "body"
+published = "published_at"
+in_reply_to = "reply_to"
+like_of = "liked"
+```
+
+Every value other than `domain` and the author's `object` names a field of your object, exactly as it appears in `archival_objects.toml`. Nothing you write here is itself sent: what goes out is whatever your content says.
+
+`webmention` is reserved at the top level of this file, so an object type named `webmention` cannot be configured here.
+
+### Receiving
+
+With the section present, every page of your site advertises an endpoint, and Archival takes the mentions sent to it. Each one is checked before it is kept: the page that claims to link to yours is fetched, and the mention counts only when it does link to a page your site serves. The page's [microformats](https://microformats.org/wiki/h-entry) say what kind of mention it is — a reply, a like, a repost, a bookmark, or a plain mention — along with its author, its text and when it was written. A page that stops linking, or goes away, takes its mention with it the next time its site sends.
+
+Your pages are built before any of that happens, so they cannot show it. A [carrier](/docs/carriers) can: `site.webmentions` reads each page's mentions when a visitor asks. See [Reading mentions from other sites](/docs/carriers#Reading%20mentions%20from%20other%20sites).
+
+Nothing is moderated: any site can send a mention of any page, and what it says is kept as it says it. Each sending site is limited to 30 mentions a minute, a site keeps at most ten thousand, and a carrier can leave out whatever you would rather not show.
+
+### Sending
+
+Each table under `webmention.objects` is keyed by an object type your site has many of, and one with a [page template](/docs/page-templates), since a mention names the page it comes from. Every object of the type sends a mention to each page it links to:
+
+- `content` — the body. A `string`, `markdown` or `enum` field. Every `https` link in it to a page off your site is sent a mention. Markdown is rendered to HTML.
+- `in_reply_to` — a `string` field holding the address of the page this object replies to. A reply is what a blog shows as a comment.
+- `like_of` — a `string` field holding the address of the page this object likes.
+- `name` — the title. A `string`, `markdown` or `enum` field.
+- `published` — when the object was published. A `date` field.
+- `when` (optional) — a `boolean` field deciding which objects send. Only objects where it is true send, and one whose field turns false takes its mentions back. Left out, every object of the type sends.
+
+Each type must map at least one of `content`, `in_reply_to` or `like_of`, since those are what name the pages a mention reaches. A `secret` field cannot be mapped.
+
+`[webmention.author]` is optional, and sets who the receiving site shows as the mention's author. `object` names an object your site has exactly one of; `name` is a `string`, `markdown` or `enum` field and `photo` an `image` field. Left out, the author is your site, named by its domain.
+
+`domain` (optional) is which of your site's domains mentions are sent from. Give a bare hostname such as `example.com`, with no `https://`, port or path; it must be one of your site's own domains. Left out, your site's primary domain is used, which is normally the one the site was created with. Each mention is sent from a small page Archival serves on that domain holding your object's content as microformats. It is what the receiving site reads to verify the mention, so your own pages need no microformats of their own.
+
+### When mentions are sent
+
+Sending happens when your site deploys, however the change reached it. Nothing is sent while you are still editing.
+
+- **A new object** sends a mention to every page it links to. **A changed object** sends one to every page it linked to before and after the change, so a page it no longer links to can drop the mention. **A removed object**, or one whose `when` field turns false, sends one to every page it linked to, and the page Archival served for it answers that it is gone, which is how the other site knows to remove the mention.
+- **An object only counts as changed when what it says would come out different.** Editing a field you have not mapped sends nothing, and neither does changing the author, moving to another `domain`, or anything else that only changes how its page is written.
+- **New objects go out ten at a time**, a minute apart, so importing a backlog or mapping a type for the first time does not reach every site it links to at once. Every object is sent eventually; changes and removals are never held back.
+- **Each object sends to at most 50 pages.**
+- **A page that does not take mentions is skipped**, and one whose site is down is tried again over the following hours.
+
+Any mistake in the section stops sending: a setting it does not recognise, a `domain` that is not one of your site's domains, an object your site does not have (or a list where a single object is expected, or the reverse), a type with no page template, or a field your object does not have or whose type cannot fill it. That deploy sends nothing, and neither does any later one until you correct it; receiving carries on. Nothing in the editor reports these mistakes yet, so if mentions stop arriving on other sites, check the section against `archival_objects.toml`.
+
+### Turning it off
+
+Removing the `webmention` section and deploying stops your site taking mentions. The mentions it has received are kept, and adding the section back resumes it. The same happens while a site's subscription is cancelled. Taking the `objects` tables out, with the section left in place, takes back every mention your site sent and keeps receiving.
+
+The pages Archival served for your objects stay up either way, so a mention already on another site can still be verified. If your site loses a domain it sent mentions from, those mentions can no longer be updated or taken back.
+
+Archival reserves the paths under `/_archival/webmention` on every site it hosts, whether or not the site uses it.
 """
