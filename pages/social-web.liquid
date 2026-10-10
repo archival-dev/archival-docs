@@ -1,0 +1,685 @@
+{%
+  layout 'theme' title: social_web.title
+  , area: "social-web"
+  , description: social_web.description
+  , path: "social-web"
+%}
+{% assign social_web = objects.social_web %}
+
+<div id="header" class="social-web-hero w-full flex flex-col justify-center items-center gap-6 pt-44 relative">
+  <h1 class="hero-message" data-tilt-hero>
+    <span class="hero-line-1">websites for</span>
+    <span class="hero-line-2">the social web</span>
+  </h1>
+  <p class="sw-tagline">{{ social_web.tagline }}</p>
+  {% include "social-web-cta", placement: "top" %}
+</div>
+
+{% comment %} The standards this page is about, each linked to its source. {% endcomment %}
+
+<section class="sw-standards">
+  <h2 class="sw-standards-heading">{{ social_web.standards_title }}</h2>
+  <p class="sw-standards-intro">{{ social_web.standards_intro }}</p>
+  <div class="sw-standards-grid">
+    {% for standard in social_web.standards %}
+      <div class="benefit sw-standard" data-glow>
+        <span class="sw-standard-kicker">{{ standard.kicker }}</span>
+        <h3 class="sw-standard-name">{{ standard.name }}</h3>
+        <p class="sw-standard-blurb">{{ standard.blurb }}</p>
+        <div class="sw-standard-links">
+          <a
+            href="{{ standard.url }}"
+            rel="noopener"
+            data-rybbit-event="social-web-standard-{{ standard.name | downcase | replace: ' ', '-' }}"
+          >
+            {{ standard.link_label }}
+            <span class="sw-cta-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+          {% unless standard.extra_url == blank %}
+            <a
+              href="{{ standard.extra_url }}"
+              rel="noopener"
+              data-rybbit-event="social-web-standard-{{ standard.name | downcase | replace: ' ', '-' }}-extra"
+            >
+              {{ standard.extra_label }}
+              <span class="sw-cta-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          {% endunless %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% comment %}
+  How it works. The .product-page wrapper and .product-section grid are the
+  homepage tour's, so the copy/frame rhythm matches. Each frame here is a
+  diagram rather than an editor mock, drawn at a 560x400 viewBox and scaled by
+  the SVG itself, so the callout markers map straight from viewBox coordinates
+  to percentages of the frame.
+{% endcomment %}
+
+<div class="product-page social-web-page" id="how-it-works">
+  {% for section in social_web.sections %}
+    <section
+      class="product-section {% cycle 'frame-right', 'frame-left' %}"
+      data-product-section
+      data-section="{{ section.key }}"
+    >
+      <div class="product-copy">
+        <h2 class="section-title">{{ section.title }}</h2>
+        <div class="section-content">{{ section.content }}</div>
+      </div>
+      <div class="product-frame-wrap" data-tilt>
+        {% if section.key == "federate" %}
+          <div class="sw-frame">
+            <div class="sw-frame-glow" aria-hidden="true"></div>
+            <svg class="sw-diagram" viewBox="0 0 560 400" role="img" aria-labelledby="sw-d1-title">
+              <title id="sw-d1-title">
+                Your content is published by Archival to followers on Mastodon, Threads, Bluesky and other ActivityPub servers,
+                and their follows, likes, boosts and replies come back.
+              </title>
+              <defs>
+                <marker
+                  id="sw1-head"
+                  viewBox="0 0 10 10"
+                  refX="9"
+                  refY="5"
+                  markerWidth="7"
+                  markerHeight="7"
+                  orient="auto"
+                >
+                  <path d="M0 0 L10 5 L0 10 z" fill="#06d6a0"></path>
+                </marker>
+                <marker
+                  id="sw1-head-back"
+                  viewBox="0 0 10 10"
+                  refX="9"
+                  refY="5"
+                  markerWidth="7"
+                  markerHeight="7"
+                  orient="auto"
+                >
+                  <path d="M0 0 L10 5 L0 10 z" fill="#118ab2"></path>
+                </marker>
+              </defs>
+
+              <g data-callout-target="1">
+                <rect class="sw-card" x="20" y="52" width="226" height="150" rx="10"></rect>
+                <path class="sw-card-head" d="M30 52h206a10 10 0 0 1 10 10v16H20V62a10 10 0 0 1 10-10z"></path>
+                <text class="sw-kicker" x="32" y="70">YOUR CONTENT</text>
+                <text class="sw-mono sw-dim" x="234" y="70" text-anchor="end">post/hello.toml</text>
+                <text class="sw-mono" x="32" y="102">
+                  <tspan class="sw-key">title</tspan> = <tspan class="sw-val">"Hello, world"</tspan>
+                </text>
+                <text class="sw-mono" x="32" y="124">
+                  <tspan class="sw-key">published_at</tspan> = <tspan class="sw-val">2026-10-10</tspan>
+                </text>
+                <text class="sw-mono" x="32" y="146">
+                  <tspan class="sw-key">pinned</tspan> = <tspan class="sw-val">true</tspan>
+                </text>
+                <text class="sw-mono" x="32" y="168">
+                  <tspan class="sw-key">body</tspan> = <tspan class="sw-val">"""</tspan>
+                </text>
+                <rect class="sw-wire" x="32" y="178" width="150" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="32" y="188" width="100" height="5" rx="2.5"></rect>
+                <text class="sw-dim sw-small" x="133" y="229" text-anchor="middle">edit in the editor, or git push</text>
+              </g>
+
+              <path class="sw-arrow" d="M246 127 H312" marker-end="url(#sw1-head)"></path>
+              <text class="sw-dim sw-small" x="280" y="118" text-anchor="middle">publish</text>
+
+              <g data-callout-target="2">
+                <rect class="sw-card" x="314" y="52" width="226" height="150" rx="10"></rect>
+                <path class="sw-card-head" d="M324 52h206a10 10 0 0 1 10 10v16H314V62a10 10 0 0 1 10-10z"></path>
+                <text class="sw-kicker" x="326" y="70">ARCHIVAL HOSTING</text>
+                <text x="326" y="102"><tspan class="sw-check">&#10003;</tspan> WebFinger discovery</text>
+                <text x="326" y="124"><tspan class="sw-check">&#10003;</tspan> Actor profile</text>
+                <text x="326" y="146"><tspan class="sw-check">&#10003;</tspan> Inbox and outbox</text>
+                <text x="326" y="168"><tspan class="sw-check">&#10003;</tspan> Delivery on every deploy</text>
+                <text class="sw-mono sw-dim sw-tiny" x="326" y="190">/.well-known/webfinger &middot; /_archival/ap/</text>
+                <rect class="sw-pill sw-pill--teal" x="314" y="212" width="226" height="26" rx="13"></rect>
+                <text class="sw-mono sw-handle" x="427" y="229" text-anchor="middle">@blog@example.com</text>
+              </g>
+
+              <path class="sw-arrow" d="M350 238 V286" marker-end="url(#sw1-head)"></path>
+              <text class="sw-dim sw-small" text-anchor="end">
+                <tspan x="340" y="258">Create &middot; Update</tspan>
+                <tspan x="340" y="272">&middot; Delete</tspan>
+              </text>
+              <path class="sw-arrow sw-arrow--back" d="M500 288 V240" marker-end="url(#sw1-head-back)"></path>
+              <text class="sw-dim sw-small" text-anchor="end">
+                <tspan x="490" y="258">Follow &middot; Like</tspan>
+                <tspan x="490" y="272">Boost &middot; Reply</tspan>
+              </text>
+
+              <g data-callout-target="3">
+                <rect class="sw-dashed-box" x="20" y="288" width="520" height="92" rx="10"></rect>
+                <text class="sw-kicker" x="32" y="306">FOLLOWED FROM</text>
+                <rect class="sw-pill" x="32" y="316" width="160" height="24" rx="12"></rect>
+                <text x="112" y="332" text-anchor="middle">Mastodon</text>
+                <rect class="sw-pill" x="200" y="316" width="160" height="24" rx="12"></rect>
+                <text x="280" y="332" text-anchor="middle">Threads</text>
+                <rect class="sw-pill" x="368" y="316" width="160" height="24" rx="12"></rect>
+                <text x="448" y="332" text-anchor="middle">Bluesky &middot; via Bridgy Fed</text>
+                <rect class="sw-pill" x="32" y="348" width="160" height="24" rx="12"></rect>
+                <text x="112" y="364" text-anchor="middle">Misskey</text>
+                <rect class="sw-pill" x="200" y="348" width="160" height="24" rx="12"></rect>
+                <text x="280" y="364" text-anchor="middle">Micro.blog</text>
+                <text class="sw-dim" x="448" y="364" text-anchor="middle">+ hundreds more</text>
+              </g>
+            </svg>
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--cx:43.9%;--cy:13%;--i:1;"
+              aria-describedby="sw1-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--cx:96.4%;--cy:13%;--i:2;"
+              aria-describedby="sw1-2"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="3"
+              style="--cx:96.4%;--cy:72%;--i:3;"
+              aria-describedby="sw1-3"
+            >
+              3
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li class="callout-item" data-callout="1" id="sw1-1" style="--i:1;">
+              <b>1</b>
+              Map a post type's fields once. The content is what you already write.
+            </li>
+            <li class="callout-item" data-callout="2" id="sw1-2" style="--i:2;">
+              <b>2</b>
+              Archival serves WebFinger, the actor, inbox and outbox, and delivers each deploy.
+            </li>
+            <li class="callout-item" data-callout="3" id="sw1-3" style="--i:3;">
+              <b>3</b>
+              Followed from anything that speaks ActivityPub, and Bluesky through Bridgy Fed.
+            </li>
+          </ol>
+        {% elsif section.key == "webmention" %}
+          <div class="sw-frame">
+            <div class="sw-frame-glow" aria-hidden="true"></div>
+            <svg class="sw-diagram" viewBox="0 0 560 400" role="img" aria-labelledby="sw-d2-title">
+              <title id="sw-d2-title">
+                A page on another site links to yours and sends a webmention, which Archival verifies and keeps. When your
+                post links out, Archival sends a webmention to the other site on deploy.
+              </title>
+              <defs>
+                <marker
+                  id="sw2-head"
+                  viewBox="0 0 10 10"
+                  refX="9"
+                  refY="5"
+                  markerWidth="7"
+                  markerHeight="7"
+                  orient="auto"
+                >
+                  <path d="M0 0 L10 5 L0 10 z" fill="#06d6a0"></path>
+                </marker>
+                <marker
+                  id="sw2-head-back"
+                  viewBox="0 0 10 10"
+                  refX="9"
+                  refY="5"
+                  markerWidth="7"
+                  markerHeight="7"
+                  orient="auto"
+                >
+                  <path d="M0 0 L10 5 L0 10 z" fill="#118ab2"></path>
+                </marker>
+              </defs>
+
+              <text class="sw-kicker" x="20" y="40">THEIR SITE</text>
+              <text class="sw-kicker" x="314" y="40">YOUR SITE</text>
+
+              <g data-callout-target="1">
+                <rect class="sw-card" x="20" y="52" width="226" height="140" rx="10"></rect>
+                <path class="sw-card-head" d="M30 52h206a10 10 0 0 1 10 10v16H20V62a10 10 0 0 1 10-10z"></path>
+                <text class="sw-mono sw-dim" x="32" y="70">their-blog.com/notes/42</text>
+                <text class="sw-small" x="32" y="100">Replying to <tspan class="sw-link">example.com/post/hello</tspan></text>
+                <rect class="sw-wire" x="32" y="112" width="170" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="32" y="122" width="120" height="5" rx="2.5"></rect>
+                <text class="sw-kicker" x="32" y="150">MICROFORMATS</text>
+                <rect class="sw-pill" x="32" y="158" width="58" height="18" rx="9"></rect>
+                <text class="sw-mono sw-tiny" x="61" y="170" text-anchor="middle">h-entry</text>
+                <rect class="sw-pill" x="96" y="158" width="78" height="18" rx="9"></rect>
+                <text class="sw-mono sw-tiny" x="135" y="170" text-anchor="middle">in-reply-to</text>
+                <rect class="sw-pill" x="180" y="158" width="54" height="18" rx="9"></rect>
+                <text class="sw-mono sw-tiny" x="207" y="170" text-anchor="middle">p-author</text>
+              </g>
+
+              <path class="sw-arrow" d="M246 100 H312" marker-end="url(#sw2-head)"></path>
+              <text class="sw-dim sw-small" x="280" y="92" text-anchor="middle">webmention</text>
+              <path class="sw-arrow sw-arrow--back" d="M314 136 H248" marker-end="url(#sw2-head-back)"></path>
+              <text class="sw-dim sw-small" x="280" y="152" text-anchor="middle">verified</text>
+
+              <g data-callout-target="2">
+                <rect class="sw-card" x="314" y="52" width="226" height="140" rx="10"></rect>
+                <path class="sw-card-head" d="M324 52h206a10 10 0 0 1 10 10v16H314V62a10 10 0 0 1 10-10z"></path>
+                <text class="sw-mono sw-dim" x="326" y="70">example.com/post/hello</text>
+                <rect class="sw-pill sw-pill--teal" x="326" y="86" width="202" height="22" rx="11"></rect>
+                <text class="sw-mono sw-handle" x="427" y="101" text-anchor="middle">/_archival/webmention</text>
+                <text x="326" y="134"><tspan class="sw-check">&#10003;</tspan> Link verified</text>
+                <text x="326" y="156"><tspan class="sw-check">&#10003;</tspan> Kept as a reply</text>
+                <text class="sw-dim sw-small" x="326" y="176">or a like, repost, bookmark or mention</text>
+              </g>
+
+              <line class="sw-divider" x1="20" y1="212" x2="540" y2="212"></line>
+              <rect class="sw-divider-mask" x="222" y="204" width="116" height="16"></rect>
+              <text class="sw-dim sw-tiny" x="280" y="215.5" text-anchor="middle">AND THE OTHER WAY</text>
+
+              <g data-callout-target="4">
+                <rect class="sw-card" x="20" y="232" width="226" height="140" rx="10"></rect>
+                <path class="sw-card-head" d="M30 232h206a10 10 0 0 1 10 10v16H20v-16a10 10 0 0 1 10-10z"></path>
+                <text class="sw-mono sw-dim" x="32" y="250">their-blog.com/notes/42</text>
+                <rect class="sw-pill sw-pill--blue" x="32" y="266" width="202" height="22" rx="11"></rect>
+                <text class="sw-mono sw-endpoint" x="133" y="281" text-anchor="middle">/webmention</text>
+                <text x="32" y="314"><tspan class="sw-check">&#10003;</tspan> Verifies, shows your reply</text>
+                <text class="sw-dim sw-small" x="32" y="334">as a comment under their post</text>
+              </g>
+
+              <path class="sw-arrow" d="M314 280 H250" marker-end="url(#sw2-head)"></path>
+              <text class="sw-dim sw-small" x="280" y="272" text-anchor="middle">webmention</text>
+              <path class="sw-arrow sw-arrow--back" d="M246 316 H310" marker-end="url(#sw2-head-back)"></path>
+              <text class="sw-dim sw-small" x="280" y="332" text-anchor="middle">verified</text>
+
+              <g data-callout-target="3">
+                <rect class="sw-card" x="314" y="232" width="226" height="140" rx="10"></rect>
+                <path class="sw-card-head" d="M324 232h206a10 10 0 0 1 10 10v16H314v-16a10 10 0 0 1 10-10z"></path>
+                <text class="sw-mono sw-dim" x="326" y="250">post/hello.toml</text>
+                <text class="sw-mono" x="326" y="276">
+                  <tspan class="sw-key">content</tspan> = <tspan class="sw-val">"""</tspan>
+                </text>
+                <text class="sw-small" x="326" y="296">Loved <tspan class="sw-link">their-blog.com/notes/42</tspan></text>
+                <rect class="sw-wire" x="326" y="306" width="150" height="5" rx="2.5"></rect>
+                <text x="326" y="338"><tspan class="sw-check">&#10003;</tspan> Mention sent on deploy</text>
+                <text class="sw-dim sw-small" x="326" y="358">Archival serves it as microformats</text>
+              </g>
+            </svg>
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--cx:43.9%;--cy:13%;--i:1;"
+              aria-describedby="sw2-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--cx:96.4%;--cy:13%;--i:2;"
+              aria-describedby="sw2-2"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="3"
+              style="--cx:96.4%;--cy:58%;--i:3;"
+              aria-describedby="sw2-3"
+            >
+              3
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="4"
+              style="--cx:43.9%;--cy:58%;--i:4;"
+              aria-describedby="sw2-4"
+            >
+              4
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li class="callout-item" data-callout="1" id="sw2-1" style="--i:1;">
+              <b>1</b>
+              A page elsewhere links to yours, and its site sends a mention.
+            </li>
+            <li class="callout-item" data-callout="2" id="sw2-2" style="--i:2;">
+              <b>2</b>
+              Archival fetches that page, confirms the link, and keeps the mention by kind.
+            </li>
+            <li class="callout-item" data-callout="3" id="sw2-3" style="--i:3;">
+              <b>3</b>
+              One of your posts links out, and Archival tells the other site on deploy.
+            </li>
+            <li class="callout-item" data-callout="4" id="sw2-4" style="--i:4;">
+              <b>4</b>
+              Their site verifies it against a microformats page Archival serves for you.
+            </li>
+          </ol>
+        {% elsif section.key == "conversation" %}
+          <div class="sw-frame">
+            <div class="sw-frame-glow" aria-hidden="true"></div>
+            <svg class="sw-diagram" viewBox="0 0 560 400" role="img" aria-labelledby="sw-d3-title">
+              <title id="sw-d3-title">
+                Replies from Mastodon, likes from Bluesky and webmentions from blogs are kept by Archival and read by a
+                carrier, which shows them as a thread under the post on your own site.
+              </title>
+              <defs>
+                <marker
+                  id="sw3-head"
+                  viewBox="0 0 10 10"
+                  refX="9"
+                  refY="5"
+                  markerWidth="7"
+                  markerHeight="7"
+                  orient="auto"
+                >
+                  <path d="M0 0 L10 5 L0 10 z" fill="#06d6a0"></path>
+                </marker>
+              </defs>
+
+              <text class="sw-kicker" x="20" y="40">FROM EVERYWHERE</text>
+
+              <g data-callout-target="1">
+                <rect class="sw-card" x="20" y="52" width="170" height="66" rx="10"></rect>
+                <circle class="sw-avatar sw-avatar--pink" cx="42" cy="76" r="11"></circle>
+                <text class="sw-strong" x="62" y="74">Ana</text>
+                <text class="sw-dim sw-tiny" x="62" y="88">@ana@mastodon.social</text>
+                <rect class="sw-pill" x="138" y="62" width="42" height="18" rx="9"></rect>
+                <text class="sw-tiny" x="159" y="74" text-anchor="middle">reply</text>
+                <rect class="sw-wire" x="62" y="98" width="100" height="5" rx="2.5"></rect>
+
+                <rect class="sw-card" x="20" y="138" width="170" height="66" rx="10"></rect>
+                <circle class="sw-avatar sw-avatar--blue" cx="42" cy="162" r="11"></circle>
+                <text class="sw-strong" x="62" y="160">Kai</text>
+                <text class="sw-dim sw-tiny" x="62" y="174">Bluesky, via Bridgy Fed</text>
+                <rect class="sw-pill" x="142" y="148" width="38" height="18" rx="9"></rect>
+                <text class="sw-tiny" x="161" y="160" text-anchor="middle">like</text>
+                <rect class="sw-wire" x="62" y="184" width="70" height="5" rx="2.5"></rect>
+
+                <rect class="sw-card" x="20" y="224" width="170" height="66" rx="10"></rect>
+                <circle class="sw-avatar sw-avatar--yellow" cx="42" cy="248" r="11"></circle>
+                <text class="sw-strong" x="62" y="246">Sam's blog</text>
+                <text class="sw-dim sw-tiny" x="62" y="260">webmention</text>
+                <rect class="sw-pill" x="138" y="234" width="42" height="18" rx="9"></rect>
+                <text class="sw-tiny" x="159" y="246" text-anchor="middle">reply</text>
+                <rect class="sw-wire" x="62" y="270" width="110" height="5" rx="2.5"></rect>
+              </g>
+
+              <path class="sw-arrow" d="M190 85 C214 85 210 172 234 172" marker-end="url(#sw3-head)"></path>
+              <path class="sw-arrow" d="M190 171 C212 171 212 192 234 192" marker-end="url(#sw3-head)"></path>
+              <path class="sw-arrow" d="M190 257 C214 257 210 212 234 212" marker-end="url(#sw3-head)"></path>
+
+              <g data-callout-target="2">
+                <rect class="sw-card sw-card--accent" x="236" y="146" width="110" height="92" rx="10"></rect>
+                <text class="sw-strong" x="291" y="176" text-anchor="middle">Archival</text>
+                <text class="sw-strong" x="291" y="192" text-anchor="middle">keeps it</text>
+                <text class="sw-dim sw-tiny" x="291" y="212" text-anchor="middle">verified &middot; stored</text>
+                <text class="sw-dim sw-tiny" x="291" y="226" text-anchor="middle">nothing to run</text>
+                <text class="sw-mono sw-dim sw-tiny" x="236" y="262">site.activitypub.replies()</text>
+                <text class="sw-mono sw-dim sw-tiny" x="236" y="276">site.webmentions.list()</text>
+              </g>
+
+              <path class="sw-arrow" d="M346 192 H386" marker-end="url(#sw3-head)"></path>
+              <text class="sw-dim sw-small" x="366" y="184" text-anchor="middle">carrier</text>
+
+              <g data-callout-target="3">
+                <rect class="sw-card" x="390" y="52" width="150" height="328" rx="10"></rect>
+                <path class="sw-card-head" d="M400 52h130a10 10 0 0 1 10 10v12H390V62a10 10 0 0 1 10-10z"></path>
+                <circle class="sw-wire" cx="402" cy="63" r="3"></circle>
+                <circle class="sw-wire" cx="412" cy="63" r="3"></circle>
+                <circle class="sw-wire" cx="422" cy="63" r="3"></circle>
+                <rect class="sw-wire" x="432" y="59" width="96" height="8" rx="4"></rect>
+                <rect class="sw-wire sw-wire--bright" x="402" y="90" width="100" height="7" rx="3.5"></rect>
+                <rect class="sw-wire" x="402" y="106" width="118" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="402" y="116" width="110" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="402" y="126" width="90" height="5" rx="2.5"></rect>
+                <line class="sw-divider" x1="402" y1="146" x2="528" y2="146"></line>
+                <text class="sw-strong sw-small" x="402" y="164">Replies &middot; 3</text>
+                <circle class="sw-avatar sw-avatar--pink" cx="410" cy="188" r="7"></circle>
+                <rect class="sw-wire sw-wire--bright" x="424" y="181" width="50" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="424" y="191" width="100" height="4" rx="2"></rect>
+                <rect class="sw-wire" x="424" y="199" width="70" height="4" rx="2"></rect>
+                <circle class="sw-avatar sw-avatar--yellow" cx="410" cy="232" r="7"></circle>
+                <rect class="sw-wire sw-wire--bright" x="424" y="225" width="60" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="424" y="235" width="104" height="4" rx="2"></rect>
+                <rect class="sw-wire" x="424" y="243" width="80" height="4" rx="2"></rect>
+                <circle class="sw-avatar sw-avatar--pink" cx="410" cy="276" r="7"></circle>
+                <rect class="sw-wire sw-wire--bright" x="424" y="269" width="44" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="424" y="279" width="92" height="4" rx="2"></rect>
+                <line class="sw-divider" x1="402" y1="306" x2="528" y2="306"></line>
+                <text class="sw-dim sw-small" x="402" y="330">12 likes &middot; 4 boosts</text>
+                <text class="sw-dim sw-tiny" x="402" y="348">1 from Bluesky</text>
+              </g>
+            </svg>
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--cx:33.9%;--cy:13%;--i:1;"
+              aria-describedby="sw3-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--cx:61.8%;--cy:36.5%;--i:2;"
+              aria-describedby="sw3-2"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="3"
+              style="--cx:96.4%;--cy:13%;--i:3;"
+              aria-describedby="sw3-3"
+            >
+              3
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li class="callout-item" data-callout="1" id="sw3-1" style="--i:1;">
+              <b>1</b>
+              Likes, boosts, replies and mentions arrive from wherever people already are.
+            </li>
+            <li class="callout-item" data-callout="2" id="sw3-2" style="--i:2;">
+              <b>2</b>
+              Archival verifies and keeps them. No database of your own.
+            </li>
+            <li class="callout-item" data-callout="3" id="sw3-3" style="--i:3;">
+              <b>3</b>
+              A carrier reads them when a visitor asks, and your page shows the thread.
+            </li>
+          </ol>
+        {% elsif section.key == "config" %}
+          <div class="sw-frame sw-frame--code">
+            <div class="sw-frame-glow" aria-hidden="true"></div>
+            <div class="sw-code-head">
+              <span class="sw-code-file">archival_editor.toml</span>
+            </div>
+            {%- comment -%}
+              Whitespace inside the pre is the code, so this block is written
+              flush left and the liquid tags around it strip their own.
+            {%- endcomment -%}
+            <pre class="sw-code"><code><span class="sw-code-block" data-callout-target="1"><span class="t">[activitypub]</span>
+<span class="k">username</span> = <span class="s">"blog"</span>
+<span class="k">follow</span> = [<span class="s">"@bsky.brid.gy@bsky.brid.gy"</span>]
+
+<span class="t">[activitypub.actor]</span>
+<span class="k">object</span> = <span class="s">"site"</span>
+<span class="k">summary</span> = <span class="s">"bio"</span>
+<span class="k">icon</span> = <span class="s">"logo"</span></span>
+
+<span class="sw-code-block" data-callout-target="2"><span class="t">[activitypub.objects.post]</span>
+<span class="k">name</span> = <span class="s">"title"</span>
+<span class="k">content</span> = <span class="s">"body"</span>
+<span class="k">published</span> = <span class="s">"published_at"</span>
+<span class="k">featured</span> = <span class="s">"pinned"</span></span>
+
+<span class="sw-code-block" data-callout-target="3"><span class="t">[webmention]</span>
+
+<span class="t">[webmention.objects.post]</span>
+<span class="k">name</span> = <span class="s">"title"</span>
+<span class="k">content</span> = <span class="s">"body"</span>
+<span class="k">published</span> = <span class="s">"published_at"</span></span></code></pre>
+          </div>
+
+          <ol class="callout-legend">
+            <li class="callout-item" data-callout="1" id="sw4-1" style="--i:1;">
+              <b>1</b>
+              The account: a handle on your domain, a profile from your site object, and the Bridgy Fed bot for Bluesky.
+            </li>
+            <li class="callout-item" data-callout="2" id="sw4-2" style="--i:2;">
+              <b>2</b>
+              Posts: the fields that make up each one. A boolean pins it.
+            </li>
+            <li class="callout-item" data-callout="3" id="sw4-3" style="--i:3;">
+              <b>3</b>
+              Webmention: receive with an empty section, send by mapping a post type.
+            </li>
+          </ol>
+        {% endif %}
+      </div>
+    </section>
+  {% endfor %}
+</div>
+
+{% comment %} Benefit Sections {% endcomment %}
+
+<div class="benefit-grid benefit-grid--compact">
+  {% for benefit in social_web.benefits %}
+    <div class="benefit" data-glow>
+      <h2 class="section-title">{{ benefit.title }}</h2>
+      <div class="section-content">
+        {{ benefit.content }}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<section class="sw-closing">
+  <h2 class="sw-closing-heading">{{ social_web.closing_title }}</h2>
+  <div class="sw-closing-content">{{ social_web.closing_content }}</div>
+  {% include "social-web-cta", placement: "bottom" %}
+</section>
+
+<script>
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Reveal each section on scroll
+    var sections = document.querySelectorAll('[data-product-section]');
+    if (reduce || !('IntersectionObserver' in window)) {
+      sections.forEach(function (s) {
+        s.classList.add('is-visible');
+      });
+    } else {
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-visible');
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.25 },
+      );
+      sections.forEach(function (s) {
+        io.observe(s);
+      });
+    }
+
+    // Cross-highlight callouts: marker <-> legend <-> diagram target
+    sections.forEach(function (section) {
+      var frame = section.querySelector('.sw-frame');
+      function setActive(n, on) {
+        section
+          .querySelectorAll('[data-callout="' + n + '"], [data-callout-target="' + n + '"]')
+          .forEach(function (el) {
+            el.classList.toggle('callout-active', on);
+          });
+        if (frame) {
+          frame.classList.toggle('is-focusing', on);
+        }
+      }
+      section.querySelectorAll('[data-callout]').forEach(function (trigger) {
+        var n = trigger.getAttribute('data-callout');
+        trigger.addEventListener('mouseenter', function () {
+          setActive(n, true);
+        });
+        trigger.addEventListener('mouseleave', function () {
+          setActive(n, false);
+        });
+        trigger.addEventListener('focus', function () {
+          setActive(n, true);
+        });
+        trigger.addEventListener('blur', function () {
+          setActive(n, false);
+        });
+      });
+    });
+
+    if (reduce) return;
+
+    // Cards track the pointer to place their hover glow
+    document.querySelectorAll('[data-glow]').forEach(function (card) {
+      var bounds;
+      card.addEventListener('mouseenter', function () {
+        bounds = card.getBoundingClientRect();
+      });
+      card.addEventListener('mousemove', function (e) {
+        if (!bounds) return;
+        card.style.setProperty('--mouse-x', ((e.clientX - bounds.left) / bounds.width) * 100 + '%');
+        card.style.setProperty('--mouse-y', ((e.clientY - bounds.top) / bounds.height) * 100 + '%');
+      });
+      card.addEventListener('mouseleave', function () {
+        card.style.setProperty('--mouse-x', '50%');
+        card.style.setProperty('--mouse-y', '50%');
+      });
+    });
+
+    // 3D tilt on diagram frames
+    document.querySelectorAll('.product-frame-wrap[data-tilt]').forEach(function (card) {
+      var frame = card.querySelector('.sw-frame');
+      if (!frame) return;
+      var maxTilt = 6,
+        bounds;
+      card.addEventListener('mouseenter', function () {
+        bounds = frame.getBoundingClientRect();
+        frame.style.transition = 'none';
+      });
+      card.addEventListener('mousemove', function (e) {
+        if (!bounds) return;
+        var mx = e.clientX - bounds.left,
+          my = e.clientY - bounds.top;
+        var rx = ((my - bounds.height / 2) / (bounds.height / 2)) * -maxTilt;
+        var ry = ((mx - bounds.width / 2) / (bounds.width / 2)) * maxTilt;
+        frame.style.transform = 'perspective(1200px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+      });
+      card.addEventListener('mouseleave', function () {
+        frame.style.transition = 'transform 0.4s ease-out';
+        frame.style.transform = 'perspective(1200px) rotateX(0) rotateY(0)';
+      });
+    });
+  })();
+</script>

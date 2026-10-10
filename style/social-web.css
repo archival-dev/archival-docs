@@ -1,0 +1,537 @@
+/* Social web landing page. Reuses the homepage hero, the tour's section grid
+   and callout legend, and the compact benefit cards; what is new here is the
+   diagram frame that stands where the tour's editor mocks stand. */
+
+/* Longer second line than the homepage's "everyone", so it is sized to fit the
+   1200px column rather than inheriting the 11rem cap. */
+.social-web-hero .hero-line-2 {
+  font-size: clamp(2.4rem, 12vw, 7.5rem);
+}
+
+.sw-tagline {
+  position: relative;
+  z-index: 1;
+  max-width: 40rem;
+  margin: 1.5rem auto 0;
+  padding: 0 2rem;
+  text-align: center;
+  font-size: var(--typo-body-size-large);
+  line-height: 1.5;
+  color: var(--color-typography-secondary);
+}
+
+.sw-cta-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.sw-cta-primary {
+  padding: 0.75rem 2rem;
+  font-size: 1.0625rem;
+}
+
+.sw-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 0.5rem;
+  font-size: var(--typo-body-size);
+  font-weight: var(--typo-body-weight);
+  color: var(--color-typography-primary);
+  transition: border-color 0.3s ease-in-out;
+}
+
+.sw-cta-secondary:hover,
+.sw-cta-secondary:focus-visible {
+  border-color: rgba(255, 255, 255, 1);
+}
+
+.sw-cta-arrow {
+  display: inline-block;
+  transition: transform 200ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.sw-cta-secondary:hover .sw-cta-arrow,
+.sw-standard-links a:hover .sw-cta-arrow {
+  transform: translateX(3px);
+}
+
+/* ============ Standards ============ */
+
+.sw-standards {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 7rem auto 0;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.sw-standards-heading {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: var(--typo-subheader-size);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  font-feature-settings: "ss01" on;
+}
+
+.sw-standards-intro {
+  max-width: 42rem;
+  margin: 1.25rem auto 0;
+  font-size: var(--typo-body-size-large);
+  line-height: 1.5;
+  color: var(--color-typography-secondary);
+}
+
+.sw-standards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 3rem;
+  text-align: left;
+}
+
+.sw-standard {
+  --benefit-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.75rem;
+}
+
+.sw-standard > * {
+  position: relative;
+  z-index: 2;
+}
+
+.sw-standard-kicker {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-secondary-interactive);
+}
+
+.sw-standard-name {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-typography-primary);
+}
+
+.sw-standard-blurb {
+  flex: 1;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.sw-standard-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.sw-standard-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-primary-cta-highlight);
+}
+
+.sw-standard-links a:hover,
+.sw-standard-links a:focus-visible {
+  color: var(--color-primary-cta-shadow);
+}
+
+/* ============ Diagram frames ============ */
+
+.social-web-page .section-content code,
+.sw-closing-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85em;
+  padding: 0.1em 0.4em;
+  border-radius: 0.3rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-transparent-border);
+}
+
+.sw-frame {
+  --sw-text: #f5f5f5;
+  --sw-text-dim: #b8b8b8;
+  --sw-teal: #06d6a0;
+  --sw-blue: #118ab2;
+  --sw-pink: #ef476f;
+  --sw-yellow: #ffd166;
+  --sw-hairline: rgba(255, 255, 255, 0.12);
+
+  position: relative;
+  width: 100%;
+  border-radius: 1rem;
+  background: #13111c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+  color: var(--sw-text);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.sw-frame-glow {
+  position: absolute;
+  inset: -30% -10% auto -10%;
+  height: 120%;
+  background: radial-gradient(
+    circle at 30% 20%,
+    rgba(255, 0, 150, 0.25) 0%,
+    rgba(0, 200, 255, 0.18) 35%,
+    rgba(0, 255, 100, 0.12) 55%,
+    transparent 70%
+  );
+  filter: blur(40px);
+  opacity: 0.5;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* The SVG fills the frame edge to edge, so a marker's --cx/--cy is its viewBox
+   coordinate over 560 and 400. */
+.sw-diagram {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family:
+    system-ui,
+    -apple-system,
+    "SF Pro",
+    sans-serif;
+}
+
+.sw-diagram text {
+  fill: var(--sw-text);
+  font-size: 11.5px;
+}
+
+.sw-diagram .sw-small {
+  font-size: 10.5px;
+}
+
+.sw-diagram .sw-tiny {
+  font-size: 9.5px;
+}
+
+.sw-diagram .sw-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10.5px;
+}
+
+.sw-diagram .sw-mono.sw-tiny {
+  font-size: 9px;
+}
+
+.sw-diagram .sw-dim {
+  fill: var(--sw-text-dim);
+}
+
+.sw-diagram .sw-strong {
+  font-weight: 600;
+}
+
+.sw-diagram .sw-kicker {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  fill: var(--sw-text-dim);
+}
+
+.sw-diagram .sw-key {
+  fill: #7ec8b8;
+}
+
+.sw-diagram .sw-val {
+  fill: var(--sw-yellow);
+}
+
+.sw-diagram .sw-link {
+  fill: #4fc3f7;
+  text-decoration: underline;
+}
+
+.sw-diagram .sw-check {
+  fill: var(--sw-teal);
+  font-weight: 700;
+}
+
+.sw-diagram .sw-handle {
+  fill: var(--sw-teal);
+  font-weight: 600;
+}
+
+.sw-diagram .sw-endpoint {
+  fill: #4fc3f7;
+  font-weight: 600;
+}
+
+.sw-diagram .sw-card {
+  fill: rgba(255, 255, 255, 0.05);
+  stroke: var(--sw-hairline);
+}
+
+.sw-diagram .sw-card--accent {
+  fill: rgba(6, 214, 160, 0.1);
+  stroke: rgba(6, 214, 160, 0.5);
+}
+
+.sw-diagram .sw-card-head {
+  fill: rgba(0, 0, 0, 0.3);
+}
+
+.sw-diagram .sw-pill {
+  fill: rgba(255, 255, 255, 0.06);
+  stroke: var(--sw-hairline);
+}
+
+.sw-diagram .sw-pill--teal {
+  fill: rgba(6, 214, 160, 0.12);
+  stroke: rgba(6, 214, 160, 0.45);
+}
+
+.sw-diagram .sw-pill--blue {
+  fill: rgba(17, 138, 178, 0.16);
+  stroke: rgba(79, 195, 247, 0.45);
+}
+
+.sw-diagram .sw-dashed-box {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-dasharray: 5 4;
+}
+
+.sw-diagram .sw-divider {
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-dasharray: 4 4;
+}
+
+.sw-diagram .sw-divider-mask {
+  fill: #13111c;
+}
+
+.sw-diagram .sw-wire {
+  fill: rgba(255, 255, 255, 0.14);
+}
+
+.sw-diagram .sw-wire--bright {
+  fill: rgba(255, 255, 255, 0.28);
+}
+
+.sw-diagram .sw-arrow {
+  fill: none;
+  stroke: var(--sw-teal);
+  stroke-width: 1.75;
+}
+
+.sw-diagram .sw-arrow--back {
+  stroke: var(--sw-blue);
+  stroke-dasharray: 4 4;
+}
+
+.sw-diagram .sw-avatar--pink {
+  fill: var(--sw-pink);
+}
+
+.sw-diagram .sw-avatar--blue {
+  fill: var(--sw-blue);
+}
+
+.sw-diagram .sw-avatar--yellow {
+  fill: var(--sw-yellow);
+}
+
+/* Spotlight on hover: the hovered callout's target stays lit while the other
+   targets step back. The arrows are never dimmed; they are what connects the
+   lit part to the rest. */
+.sw-diagram [data-callout-target] {
+  transition:
+    opacity 0.28s ease-out,
+    filter 0.28s ease-out;
+}
+
+.sw-frame.is-focusing .sw-diagram [data-callout-target]:not(.callout-active) {
+  opacity: 0.4;
+  filter: grayscale(0.9);
+}
+
+.sw-frame.is-focusing .callout-marker:not(.callout-active) {
+  filter: grayscale(0.85) brightness(0.5);
+}
+
+/* ============ Config frame ============ */
+
+.sw-frame--code {
+  display: flex;
+  flex-direction: column;
+}
+
+.sw-code-head {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--sw-hairline);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.sw-code-file {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  color: var(--sw-text-dim);
+}
+
+.sw-code {
+  margin: 0;
+  padding: 1.1rem 1.25rem 1.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  color: #cccccc;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.sw-code .t {
+  color: #b87fd4;
+}
+
+.sw-code .k {
+  color: #7ec8b8;
+}
+
+.sw-code .s {
+  color: #ffd166;
+}
+
+.sw-code-block {
+  display: inline-block;
+  width: 100%;
+  margin: 0 -0.5rem;
+  padding: 0 0.5rem;
+  border-radius: 0.375rem;
+  transition:
+    background-color 0.28s ease-out,
+    opacity 0.28s ease-out;
+}
+
+.sw-code-block.callout-active {
+  background: rgba(254, 131, 0, 0.14);
+}
+
+.sw-frame.is-focusing .sw-code-block:not(.callout-active) {
+  opacity: 0.4;
+}
+
+/* ============ Reveal ============ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .sw-frame {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+      opacity 0.7s ease-out,
+      transform 0.7s ease-out;
+  }
+
+  .product-section.is-visible .sw-frame {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============ Closing ============ */
+
+.sw-closing {
+  width: 100%;
+  max-width: 52rem;
+  margin: 0 auto 10rem;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.sw-closing-heading {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: var(--typo-subheader-size);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  font-feature-settings: "ss01" on;
+}
+
+.sw-closing-content {
+  margin: 1.25rem auto 2rem;
+  font-size: var(--typo-body-size-large);
+  line-height: 1.5;
+  color: var(--color-typography-secondary);
+}
+
+.sw-closing-content p {
+  margin: 0 0 1rem;
+}
+
+.sw-closing-content p:last-child {
+  margin-bottom: 0;
+}
+
+.sw-closing-content a {
+  color: var(--color-secondary-interactive);
+}
+
+/* ============ Responsive ============ */
+
+@media (max-width: 1100px) {
+  .sw-standards-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .sw-standard {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .sw-standards-grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 32rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .sw-standards {
+    margin-top: 5rem;
+  }
+
+  .sw-closing {
+    margin-bottom: 6rem;
+  }
+
+  .sw-code {
+    font-size: 0.75rem;
+    padding: 1rem;
+  }
+}

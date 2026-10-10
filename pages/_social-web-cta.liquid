@@ -1,0 +1,18 @@
+{% assign social_web = objects.social_web %}
+<div class="sw-cta-row">
+  <a
+    class="primary-cta sw-cta-primary"
+    href="{{ social_web.cta_url }}"
+    data-rybbit-event="social-web-cta-{{ placement }}"
+  >
+    {{- social_web.cta_label -}}
+  </a>
+  <a
+    class="sw-cta-secondary"
+    href="{{ social_web.docs_url }}"
+    data-rybbit-event="social-web-docs-{{ placement }}"
+  >
+    <span>{{ social_web.docs_label }}</span>
+    <span class="sw-cta-arrow" aria-hidden="true">&rarr;</span>
+  </a>
+</div>

@@ -86,6 +86,37 @@ key = "string"
 title = "string"
 content = "markdown"
 
+[social_web]
+title = "string"
+description = "string"
+tagline = "string"
+cta_label = "string"
+cta_url = "string"
+docs_label = "string"
+docs_url = "string"
+standards_title = "string"
+standards_intro = "string"
+closing_title = "string"
+closing_content = "markdown"
+
+[social_web.standards]
+kicker = "string"
+name = "string"
+url = "string"
+link_label = "string"
+blurb = "string"
+extra_label = "string"
+extra_url = "string"
+
+[social_web.sections]
+key = "string"
+title = "string"
+content = "markdown"
+
+[social_web.benefits]
+title = "string"
+content = "markdown"
+
 [showcase]
 title = "string"
 tagline = "string"

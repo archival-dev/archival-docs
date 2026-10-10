@@ -1,0 +1,103 @@
+order = -1
+title = "Websites for The Social Web"
+description = "Archival sites speak ActivityPub and Webmention out of the box. Publish once, get followed from Mastodon, Threads and Bluesky, and bring every reply home to a site you own."
+tagline = "Followed from Mastodon, Threads and Bluesky. Replies and mentions from anywhere, kept on a site you own. No plugins, no platform, nothing to run."
+cta_label = "Build your site"
+cta_url = "https://editor.archival.dev/new"
+docs_label = "Read the docs"
+docs_url = "/docs/editor-config#ActivityPub"
+standards_title = "Built on open standards"
+standards_intro = "The social web is a set of open protocols, not a product. Archival implements the two W3C recommendations at its heart, so a site we host takes part without a plugin or a line of code."
+closing_title = "Join the social web."
+closing_content = """
+Start from a template, map your posts, and publish. Your site is followable in minutes.
+
+Already on Archival? Add the section to `archival_editor.toml`, or ask task mode to do it for you.
+"""
+
+[[standards]]
+kicker = "W3C Recommendation"
+name = "ActivityPub"
+url = "https://www.w3.org/TR/activitypub/"
+link_label = "Read the spec"
+blurb = "The protocol behind Mastodon, Threads, Pixelfed and the rest of the fediverse. An Archival site is an account people can follow, and every deploy delivers what changed."
+extra_label = ""
+extra_url = ""
+
+[[standards]]
+kicker = "W3C Recommendation"
+name = "Webmention"
+url = "https://www.w3.org/TR/webmention/"
+link_label = "Read the spec"
+blurb = "The simplest way for one page to tell another that it linked to it. Archival receives, verifies and keeps mentions of your pages, and sends them when your posts link out."
+extra_label = ""
+extra_url = ""
+
+[[standards]]
+kicker = "Stewards of the social web"
+name = "Social Web Foundation"
+url = "https://socialwebfoundation.org"
+link_label = "Visit the foundation"
+blurb = "The nonprofit working to grow a healthy, open social web on ActivityPub. We build to the standards it stewards, and we read its blog to see where the web is going next."
+extra_label = "Read their blog"
+extra_url = "https://socialwebfoundation.org/blog/"
+
+[[sections]]
+key = "federate"
+title = "Your site is an account"
+content = """
+Add an `activitypub` section to your site and it becomes something people can follow: `@blog@example.com`, from Mastodon, Threads, Misskey, Micro.blog and [hundreds of other apps](/update/activitypub). Follow the Bridgy Fed bot and your posts reach Bluesky too.
+
+There is nothing to run. Archival answers WebFinger and serves your actor, inbox and outbox. Every time your site deploys, the people following it get what you added, changed or removed. Pin a post with a single boolean field.
+"""
+
+[[sections]]
+key = "webmention"
+title = "Pages that talk to each other"
+content = """
+Webmention is how the open web replies. When a blog on WordPress, Ghost or micro.blog links to one of your pages, its site tells yours. Archival takes the mention, fetches the page to confirm the link, and reads its microformats to learn whether it is a reply, a like, a repost, a bookmark or a plain mention.
+
+It works in both directions. Map a post type and every link in your posts sends a mention of its own when you deploy. Likes and replies from Mastodon and Bluesky arrive the same way through [Bridgy](https://brid.gy).
+"""
+
+[[sections]]
+key = "conversation"
+title = "Bring the conversation home"
+content = """
+Replies, likes and boosts from the fediverse, and mentions from other sites, are kept with your site rather than on someone else's server. A small [carrier](/docs/carriers) reads them when a visitor asks, so a post's page can show the whole thread under it: a comment from Mastodon beside a reply from a blog, with no database to run.
+
+What you show is up to you. A carrier is a filter you write, not a queue you work. Your site stays static, fast and yours, and the conversation comes to it.
+"""
+
+[[sections]]
+key = "config"
+title = "Turned on in one file"
+content = """
+Both protocols are configured the same way: name the fields of your objects that make up a post, and Archival does the rest. Everything it publishes is your content, read from the files already in your repo. Nothing in the section is itself sent anywhere.
+
+Write it by hand, or ask the editor's task mode to add it for you. Remove the section and your site stops federating. Add it back and it picks up where it left off, followers and all.
+"""
+
+[[benefits]]
+title = "Own your audience"
+content = """
+Followers follow your domain. Redesign, rename your objects or go quiet for a year: the account stays put and everything it published is still there.
+"""
+
+[[benefits]]
+title = "No plugins to maintain"
+content = """
+ActivityPub and Webmention are part of Archival's hosting, not an add-on. There is nothing to install, update or keep patched, and every site we host gets both.
+"""
+
+[[benefits]]
+title = "Standards, not platforms"
+content = """
+We implement the W3C recommendations as written, so your site works with every app that does the same, including the ones that have not been built yet.
+"""
+
+[[benefits]]
+title = "Still just a website"
+content = """
+Your pages build to static HTML and your content lives in plain files in a git repo. The social web is a layer on top, and it never gets in the way.
+"""
