@@ -7,7 +7,6 @@
 // GET  ?slug=a                             -> { slug, count, account, reactions, comments }
 // POST { slug, author, body, parentId?, turnstileToken?, token? } -> { comment }
 // POST { action: "moderate", token, id, hidden }                 -> { ok: true }
-// POST { action: "import", token, slug, comments }               -> { imported }
 
 import type {
   Carrier,
@@ -601,53 +600,6 @@ const moderate = async (
   return json({ ok: true });
 };
 
-interface ImportedComment {
-  author: string;
-  body: string;
-  role?: string;
-  createdAt: string;
-  replies?: ImportedComment[];
-}
-
-const isImported = (value: unknown): value is ImportedComment =>
-  isRecord(value) &&
-  typeof value.author === "string" &&
-  typeof value.body === "string" &&
-  typeof value.createdAt === "string" &&
-  (value.replies === undefined || Array.isArray(value.replies));
-
-/** Brings a thread over from the previous comments backend, replies and all. */
-const importThread = async (
-  site: CarrierSite,
-  objects: Objects,
-  payload: Record<string, unknown>,
-) => {
-  if (!isAdmin(payload.token, objects)) return fail(401, "Nope.");
-  const { slug, comments } = payload;
-  if (!isSlug(slug)) return fail(400, "Bad slug.");
-  if (!Array.isArray(comments) || !comments.every(isImported)) {
-    return fail(400, "Expected comments as the old /thread endpoint returned them.");
-  }
-
-  let imported = 0;
-  const add = async (comment: ImportedComment, parent: string | null) => {
-    const id = await insert(site, {
-      slug,
-      parent_id: parent,
-      author: comment.author.slice(0, MAX_AUTHOR),
-      body: cleanBody(comment.body).slice(0, MAX_BODY),
-      role: comment.role === "team" ? "team" : "reader",
-      created_at: comment.createdAt,
-    });
-    imported += 1;
-    for (const reply of comment.replies ?? []) {
-      if (isImported(reply)) await add(reply, localId(id));
-    }
-  };
-  for (const comment of comments) await add(comment, null);
-  return json({ imported });
-};
-
 const updatePath = (slug: string) => `update/${slug}`;
 
 const findUpdate = (objects: Objects, slug: string): Update | undefined =>
@@ -682,8 +634,6 @@ const carrier: Carrier = async (params, body, objects, site) => {
         return await postComment(site, objects, payload);
       case "moderate":
         return await moderate(site, objects, payload);
-      case "import":
-        return await importThread(site, objects, payload);
       default:
         return fail(400, "No such action.");
     }

@@ -22,7 +22,7 @@ encrypted (see [Secrets](https://archival.dev/docs/secrets)):
 | Field                  | Required | Purpose                                                         |
 | ---------------------- | -------- | --------------------------------------------------------------- |
 | `turnstile_secret_key` | yes      | Secret for the Turnstile widget the comment form renders.       |
-| `admin_token`          | no       | Lets you post as the team, hide comments, and import old ones.  |
+| `admin_token`          | no       | Lets you post as the team and hide comments.                    |
 | `blocked`              | no       | Accounts, servers or pages whose replies and mentions are left out. |
 
 An entry in `blocked` matches a reply's id or page, an account's id, profile
@@ -42,7 +42,6 @@ always-passes test widget that the dev build renders.
 | `GET`  | `?slug=a`                                             | One update's thread, replies nested under their parent.   |
 | `POST` | `{ slug, author, body, parentId?, turnstileToken }`   | Post a comment. Add `token` to post as the team.          |
 | `POST` | `{ action: "moderate", token, id, hidden }`           | Hide (or unhide) a comment posted on the site.            |
-| `POST` | `{ action: "import", token, slug, comments }`         | Bring a thread over from the old backend.                 |
 
 Ids are strings prefixed by source: `l:12` for a comment posted here,
 `ap:<activitypub id>` for a fediverse reply, `wm:<source url>` for a
@@ -68,16 +67,6 @@ curl -X POST https://archival.dev/carriers/comments \
 Hidden comments drop out of both the thread and the feed count. Fediverse
 replies and webmentions can't be hidden this way: add them to `blocked` on the
 `comments` object instead.
-
-## Migrating from Val Town
-
-`scripts/migrate-comments.mjs` copies every thread from the old val into this
-carrier:
-
-```sh
-COMMENTS_ADMIN_TOKEN=... ./scripts/migrate-comments.mjs \
-  https://<org>--<file id>.web.val.run https://archival.dev/carriers/comments
-```
 
 ## Types
 
