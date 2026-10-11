@@ -370,7 +370,7 @@ const setupTemplateMosaic = async () => {
 const SHADOW_DISTANCE = 20;
 const updateShadowImages = () => {
   const viewH = window.innerHeight;
-  document.querySelectorAll(".shadow-image").forEach((img, i) => {
+  document.querySelectorAll(".shadow-image").forEach((img) => {
     const shadow = img.querySelector(".bg") as HTMLImageElement;
     const { top, height } = img.getBoundingClientRect();
     const topDistance = top + height / 2;
