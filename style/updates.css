@@ -936,27 +936,173 @@ a.comment-date:hover {
   color: rgba(255, 255, 255, 0.45);
 }
 
-.comment-name {
+.account-note {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.account-note[hidden] {
+  display: none;
+}
+
+.account-name {
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.account-link {
+  margin-left: 0.6rem;
+  font-size: 0.8125rem;
+  color: var(--color-secondary-interactive);
+}
+
+.account-link:hover {
+  text-decoration: underline;
+}
+
+.account-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.comment-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.comment.is-team > .comment-actions {
+  justify-content: flex-end;
+}
+
+.comment-remove {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.2s ease-out;
+}
+
+.comment-remove:hover {
+  color: var(--color-primary-cta-highlight);
+}
+
+.comment-remove[hidden] {
+  display: none;
+}
+
+/* Passkey dialog */
+
+.account-dialog {
+  width: min(28rem, calc(100vw - 2rem));
+  padding: 2rem;
+  border: 1px solid var(--color-transparent-border);
+  border-radius: 1.25rem;
+  background: #161616;
+  color: inherit;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+}
+
+.account-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.account-dismiss {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  margin: 0;
+}
+
+.account-close {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.account-close:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.account-step[hidden] {
+  display: none;
+}
+
+.account-title {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  font-feature-settings: "ss01" on;
+  margin: 0 1.5rem 0.5rem 0;
+}
+
+.account-explain {
+  margin: 0 0 1.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--color-typography-secondary);
+}
+
+.account-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.account-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.account-row input {
   flex: 1;
   min-width: 0;
-  max-width: 14rem;
-  padding: 0.35rem 0;
-  font-size: 0.9375rem;
-  font-weight: 700;
+  padding: 0.7rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-transparent-border);
+  background: rgba(255, 255, 255, 0.05);
   color: inherit;
-  background: none;
-  border: none;
-  border-bottom: 1px solid transparent;
+  font: inherit;
+  font-size: 0.9375rem;
 }
 
-.comment-name::placeholder {
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.comment-name:focus {
+.account-row input:focus {
   outline: none;
-  border-bottom-color: var(--color-transparent-border);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.account-save {
+  flex: none;
+  padding: 0.7rem 1.1rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-secondary-interactive);
+}
+
+.account-save:disabled {
+  opacity: 0.5;
+}
+
+.account-step .account-link {
+  display: block;
+  margin: 1rem 0 0;
+}
+
+.account-error {
+  margin: 1rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-primary-cta-highlight);
+}
+
+.account-error:empty {
+  display: none;
 }
 
 .comment-replying {

@@ -1,9 +1,19 @@
 // Comments for the updates feed and the update detail pages, backed by the
-// carrier in carriers/comments. A thread merges comments posted here with
-// replies from the fediverse and webmentions from other sites. Counts on the
-// feed come from one batched request; a thread is only fetched once its
-// section nears the viewport.
+// carrier in carriers/comments. A thread merges comments posted here by
+// passkey accounts with replies from the fediverse and webmentions from other
+// sites. Counts on the feed come from one batched request; a thread is only
+// fetched once its section nears the viewport.
 
+import {
+  account,
+  asUser,
+  changeName,
+  initAccount,
+  read,
+  requireAccount,
+  signOut,
+  type User,
+} from "./account";
 import { track } from "./analytics";
 
 type Source = "local" | "fediverse" | "webmention";
@@ -21,6 +31,7 @@ interface Comment {
   source: Source;
   role: "reader" | "team";
   author: Author;
+  authorId: number | null;
   body: string | null;
   html: string | null;
   url: string | null;
@@ -35,54 +46,10 @@ interface Thread {
   comments: Comment[];
 }
 
-const NAME_KEY = "archival-comment-name";
-const TOKEN_KEY = "archival-comment-token";
-
 const SOURCE_LABEL: Record<Source, string> = {
   local: "",
   fediverse: "from the fediverse",
   webmention: "from another site",
-};
-
-const store = {
-  get(key: string) {
-    try {
-      return localStorage.getItem(key);
-    } catch {
-      return null;
-    }
-  },
-  set(key: string, value: string) {
-    try {
-      localStorage.setItem(key, value);
-    } catch {
-      // Private browsing. The field just won't be remembered.
-    }
-  },
-  remove(key: string) {
-    try {
-      localStorage.removeItem(key);
-    } catch {
-      // Nothing was stored to begin with.
-    }
-  },
-};
-
-/**
- * The team's posting token arrives as a query param once and lives in local
- * storage after that, so an author replies from the same form everyone else
- * uses.
- */
-const adminToken = () => {
-  const url = new URL(window.location.href);
-  const fromUrl = url.searchParams.get("comment_token");
-  if (fromUrl) {
-    store.set(TOKEN_KEY, fromUrl);
-    url.searchParams.delete("comment_token");
-    history.replaceState(null, "", url.toString());
-    return fromUrl;
-  }
-  return store.get(TOKEN_KEY);
 };
 
 const initials = (name: string) =>
@@ -212,13 +179,10 @@ export const setupCommentCounts = () => {
 
   void (async () => {
     try {
-      const response = await fetch(
-        `${COMMENTS_URL}?slugs=${encodeURIComponent(slugs.join(","))}`,
+      const { counts } = await read<{ counts: Record<string, number> }>(
+        "counts",
+        { slugs: slugs.join(",") },
       );
-      if (!response.ok) return;
-      const { counts } = (await response.json()) as {
-        counts: Record<string, number>;
-      };
       targets.forEach((el) => {
         const count = counts[el.dataset.commentSlug ?? ""] ?? 0;
         if (!count) return;
@@ -246,8 +210,11 @@ export const setupCommentThread = () => {
     "[data-comments-fediverse]",
   )!;
   const form = root.querySelector<HTMLFormElement>("[data-comment-form]")!;
-  const nameField = form.querySelector<HTMLInputElement>(
-    "[data-comment-name]",
+  const youAvatar = form.querySelector<HTMLElement>("[data-comment-you]")!;
+  const note = form.querySelector<HTMLElement>("[data-account-note]")!;
+  const noteName = form.querySelector<HTMLElement>("[data-account-name]")!;
+  const signedOutNote = form.querySelector<HTMLElement>(
+    "[data-account-signed-out]",
   )!;
   const bodyField = form.querySelector<HTMLTextAreaElement>(
     "[data-comment-body]",
@@ -261,9 +228,7 @@ export const setupCommentThread = () => {
   const cancelReply = form.querySelector<HTMLButtonElement>(
     "[data-comment-reply-cancel]",
   )!;
-  const youAvatar = form.querySelector<HTMLElement>("[data-comment-you]")!;
 
-  let token = adminToken();
   let count = 0;
   let parentId: string | null = null;
 
@@ -274,24 +239,39 @@ export const setupCommentThread = () => {
     total.textContent = count ? ` · ${count}` : "";
   };
 
-  const setYou = (name: string) => {
-    youAvatar.classList.toggle("is-empty", !name);
-    youAvatar.style.setProperty("--comment-hue", String(hue(name)));
-    youAvatar.textContent = name ? initials(name) : "?";
+  const renderYou = () => {
+    const user = account.user;
+    youAvatar.classList.toggle("is-empty", !user);
+    youAvatar.style.setProperty("--comment-hue", String(hue(user?.name ?? "")));
+    youAvatar.textContent = user ? initials(user.name) : "?";
+    note.hidden = !user;
+    signedOutNote.hidden = !!user;
+    noteName.textContent = user?.name ?? "";
+    list
+      .querySelectorAll<HTMLElement>("[data-comment-remove]")
+      .forEach((button) => {
+        button.hidden = !canRemove(
+          Number(button.dataset.commentAuthor),
+          user,
+        );
+      });
   };
-
-  const savedName = store.get(NAME_KEY);
-  if (savedName) {
-    nameField.value = savedName;
-    setYou(savedName);
-  }
-  nameField.addEventListener("input", () => setYou(nameField.value.trim()));
+  account.onChange(renderYou);
+  form
+    .querySelector("[data-account-rename]")
+    ?.addEventListener("click", () => void changeName());
+  form
+    .querySelector("[data-account-signout]")
+    ?.addEventListener("click", () => void signOut());
 
   const growBody = () => {
     bodyField.style.height = "auto";
     bodyField.style.height = `${bodyField.scrollHeight}px`;
   };
   bodyField.addEventListener("input", growBody);
+
+  const canRemove = (authorId: number | null, user: User | null) =>
+    !!user && authorId !== null && (user.role === "team" || user.id === authorId);
 
   const renderAuthor = (comment: Comment) => {
     const { author } = comment;
@@ -351,6 +331,8 @@ export const setupCommentThread = () => {
     }
     item.appendChild(bubble);
 
+    const actions = document.createElement("div");
+    actions.className = "comment-actions";
     if (depth === 0) {
       const reply = document.createElement("button");
       reply.type = "button";
@@ -359,8 +341,22 @@ export const setupCommentThread = () => {
       reply.addEventListener("click", () =>
         startReply(comment.id, comment.author.name, item),
       );
-      item.appendChild(reply);
+      actions.appendChild(reply);
+    }
+    if (comment.source === "local") {
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "comment-remove";
+      remove.dataset.commentRemove = "";
+      remove.dataset.commentAuthor = String(comment.authorId);
+      remove.textContent = "Remove";
+      remove.hidden = !canRemove(comment.authorId, account.user);
+      remove.addEventListener("click", () => void removeComment(comment, item));
+      actions.appendChild(remove);
+    }
+    item.appendChild(actions);
 
+    if (depth === 0) {
       const replies = document.createElement("ol");
       replies.className = "comment-replies";
       replies.dataset.commentReplies = "";
@@ -371,6 +367,22 @@ export const setupCommentThread = () => {
     }
 
     return item;
+  };
+
+  const removeComment = async (comment: Comment, item: HTMLElement) => {
+    if (!window.confirm("Remove this comment?")) return;
+    try {
+      const { removed } = await asUser<{ removed: number }>("remove", {
+        id: comment.id,
+      });
+      if (form.parentElement === item || item.contains(form)) endReply();
+      item.remove();
+      setCount(Math.max(0, count - removed));
+      if (!list.children.length) status.textContent = "No comments yet. Go first.";
+    } catch (thrown) {
+      error.textContent =
+        thrown instanceof Error ? thrown.message : "That didn't work.";
+    }
   };
 
   const startReply = (id: string, author: string, item: HTMLElement) => {
@@ -428,11 +440,7 @@ export const setupCommentThread = () => {
 
   const load = async () => {
     try {
-      const response = await fetch(
-        `${COMMENTS_URL}?slug=${encodeURIComponent(slug)}`,
-      );
-      if (!response.ok) throw new Error(String(response.status));
-      const thread = (await response.json()) as Thread;
+      const thread = await read<Thread>("thread", { slug });
       list.replaceChildren(
         ...thread.comments.map((comment) => renderComment(comment)),
       );
@@ -446,43 +454,23 @@ export const setupCommentThread = () => {
 
   const send = async () => {
     try {
-      const response = await fetch(COMMENTS_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          slug,
-          author: nameField.value.trim(),
-          body: bodyField.value,
-          parentId,
-          ...(token ? { token } : {}),
-        }),
+      await requireAccount("comment", post.closest(".comment-form-send"));
+      const { comment } = await asUser<{ comment: Comment }>("comment", {
+        slug,
+        body: bodyField.value,
+        parentId,
       });
-      if (!response.ok) {
-        const { error: message } = (await response
-          .json()
-          .catch(() => ({ error: "" }))) as { error?: string };
-        // A token the carrier no longer accepts would fail every retry the
-        // same way, so drop it and let the next attempt post as a reader.
-        if (token && response.status === 401) {
-          store.remove(TOKEN_KEY);
-          token = null;
-        }
-        throw new Error(message || "That didn't post. Please try again.");
-      }
-      const { comment } = (await response.json()) as { comment: Comment };
       endReply();
       insert(comment);
       setCount(count + 1);
       status.textContent = "";
-      store.set(NAME_KEY, nameField.value.trim());
       bodyField.value = "";
       growBody();
       track("update-comment-post");
     } catch (thrown) {
-      error.textContent =
-        thrown instanceof Error
-          ? thrown.message
-          : "That didn't post. Please try again.";
+      const message =
+        thrown instanceof Error ? thrown.message : "That didn't post.";
+      if (message !== "Not signed in.") error.textContent = message;
     } finally {
       post.disabled = false;
     }
@@ -491,8 +479,8 @@ export const setupCommentThread = () => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     error.textContent = "";
-    if (!nameField.value.trim() || !bodyField.value.trim()) {
-      error.textContent = "A name and a comment, please.";
+    if (!bodyField.value.trim()) {
+      error.textContent = "Write a comment first.";
       return;
     }
     post.disabled = true;
@@ -505,6 +493,9 @@ export const setupCommentThread = () => {
       form.requestSubmit();
     }
   });
+
+  renderYou();
+  void initAccount();
 
   let loaded = false;
   const loadOnce = () => {

@@ -39,17 +39,14 @@
       <form class="comment-form" data-comment-form hidden>
         <div class="comment-form-identity">
           <span class="comment-avatar comment-avatar--you is-empty" data-comment-you aria-hidden="true">?</span>
-          <label class="sr-only" for="comment-name">Your name</label>
-          <input
-            class="comment-name"
-            id="comment-name"
-            data-comment-name
-            type="text"
-            maxlength="60"
-            autocomplete="name"
-            placeholder="Your name"
-            required
-          >
+          <p class="account-note" data-account-note hidden>
+            <span class="account-name" data-account-name></span>
+            <button type="button" class="account-link" data-account-rename>Change name</button>
+            <button type="button" class="account-link" data-account-signout>Sign out</button>
+          </p>
+          <p class="account-note" data-account-signed-out>
+            Comment with a passkey. No password or email.
+          </p>
         </div>
 
         <p class="comment-replying" data-comment-reply-to hidden>
@@ -81,7 +78,7 @@
       </form>
 
       <noscript>
-        <p class="comments-status">Comments need JavaScript.</p>
+        <p class="comments-status">Comments need JavaScript and a browser with passkeys.</p>
       </noscript>
     </section>
 

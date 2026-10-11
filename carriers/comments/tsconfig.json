@@ -13,5 +13,5 @@
     "noEmit": true,
     "skipLibCheck": true
   },
-  "include": ["index.ts", "archival-objects.d.ts"]
+  "include": ["*.ts"]
 }
