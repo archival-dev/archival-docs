@@ -10,7 +10,7 @@ Archival recently got the ability to really easily add activitypub to a site. As
 For instance, with just [this config](https://github.com/archival-dev/archival-docs/commit/3b633d7dbf680b7ad081e71ff12362b90bdd49b1), this post and the other updates can now be read via rss and on various federated social feeds. For instance:
 
 * **Threads:** <https://www.threads.com/fediverse_profile/@updates@archival.dev>
-* **Bluesky (via Bridgy Fed):** <https://bsky.app/profile/did:plc:4jojyrkht5grnmg4qpyn5xia>
+* **Bluesky (via Bridgy Fed):** <https://bsky.app/profile/updates.archival.dev.ap.brid.gy>
 * **Flipboard (Surf):** <https://surf.social/feed/mastodon%2Fuser%2F%40updates%40archival.dev>
 * **Mastodon:** <https://mastodon.social/@updates@archival.dev>
 * **Misskey:** <https://misskey.io/@updates@archival.dev>
