@@ -1016,15 +1016,6 @@ a.comment-date:hover {
   opacity: 0.5;
 }
 
-.comment-turnstile {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.comment-turnstile:empty {
-  display: none;
-}
-
 .comment-error {
   margin: 0.75rem 0 0;
   font-size: 0.8125rem;

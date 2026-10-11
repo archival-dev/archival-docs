@@ -251,8 +251,6 @@ export interface CommentsObject {
   path: string;
   /** The object's `order`, or null when it is unordered. */
   order: number | null;
-  /** Secret for the Turnstile widget the comment form renders. */
-  turnstile_secret_key: string | null;
   /** Lets the team post as the team and hide comments. */
   admin_token: string | null;
   /** Fediverse accounts, servers, or pages whose replies and mentions are left out. */

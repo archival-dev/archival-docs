@@ -35,24 +35,6 @@ interface Thread {
   comments: Comment[];
 }
 
-interface TurnstileApi {
-  render(
-    el: HTMLElement,
-    options: {
-      sitekey: string;
-      action?: string;
-      execution?: "render" | "execute";
-      appearance?: "always" | "execute" | "interaction-only";
-      callback: (token: string) => void;
-      "error-callback"?: () => void;
-      "expired-callback"?: () => void;
-    },
-  ): string;
-  execute(container: HTMLElement | string): void;
-  reset(widgetId: string): void;
-}
-
-const TURNSTILE_ACTION = "update-comment";
 const NAME_KEY = "archival-comment-name";
 const TOKEN_KEY = "archival-comment-token";
 
@@ -61,9 +43,6 @@ const SOURCE_LABEL: Record<Source, string> = {
   fediverse: "from the fediverse",
   webmention: "from another site",
 };
-
-const turnstile = () =>
-  (window as unknown as { turnstile?: TurnstileApi }).turnstile;
 
 const store = {
   get(key: string) {
@@ -282,16 +261,11 @@ export const setupCommentThread = () => {
   const cancelReply = form.querySelector<HTMLButtonElement>(
     "[data-comment-reply-cancel]",
   )!;
-  const challenge = form.querySelector<HTMLElement>(
-    "[data-comment-turnstile]",
-  )!;
   const youAvatar = form.querySelector<HTMLElement>("[data-comment-you]")!;
 
   let token = adminToken();
   let count = 0;
   let parentId: string | null = null;
-  let widgetId: string | null = null;
-  let challengeReady: Promise<void> | null = null;
 
   form.hidden = false;
 
@@ -470,7 +444,7 @@ export const setupCommentThread = () => {
     }
   };
 
-  const send = async (turnstileToken: string | null) => {
+  const send = async () => {
     try {
       const response = await fetch(COMMENTS_URL, {
         method: "POST",
@@ -480,7 +454,6 @@ export const setupCommentThread = () => {
           author: nameField.value.trim(),
           body: bodyField.value,
           parentId,
-          turnstileToken,
           ...(token ? { token } : {}),
         }),
       });
@@ -488,9 +461,8 @@ export const setupCommentThread = () => {
         const { error: message } = (await response
           .json()
           .catch(() => ({ error: "" }))) as { error?: string };
-        // A token the carrier no longer accepts would keep skipping the
-        // challenge on every retry, so drop it and let the next attempt take
-        // the widget.
+        // A token the carrier no longer accepts would fail every retry the
+        // same way, so drop it and let the next attempt post as a reader.
         if (token && response.status === 401) {
           store.remove(TOKEN_KEY);
           token = null;
@@ -513,57 +485,8 @@ export const setupCommentThread = () => {
           : "That didn't post. Please try again.";
     } finally {
       post.disabled = false;
-      if (widgetId) turnstile()?.reset(widgetId);
     }
   };
-
-  // The Turnstile script is only pulled in once someone starts writing, so a
-  // reader who never comments never loads it.
-  const prepareChallenge = () => {
-    challengeReady ??= new Promise<void>((resolve, reject) => {
-      if (turnstile()) {
-        resolve();
-        return;
-      }
-      (
-        window as unknown as { onloadCommentsTurnstile?: () => void }
-      ).onloadCommentsTurnstile = () => resolve();
-      const script = document.createElement("script");
-      script.src =
-        "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadCommentsTurnstile&render=explicit";
-      script.async = true;
-      script.defer = true;
-      script.addEventListener("error", () => reject(new Error("turnstile")));
-      document.head.appendChild(script);
-    }).then(() => {
-      widgetId ??=
-        turnstile()?.render(challenge, {
-          sitekey: COMMENTS_TURNSTILE_SITE_KEY,
-          action: TURNSTILE_ACTION,
-          execution: "execute",
-          appearance: "interaction-only",
-          callback: (value) => void send(value),
-          "error-callback": () => {
-            error.textContent = "The challenge failed. Please try again.";
-            post.disabled = false;
-          },
-          "expired-callback": () => {
-            error.textContent = "The challenge expired. Please try again.";
-            post.disabled = false;
-          },
-        }) ?? null;
-    });
-    return challengeReady;
-  };
-  if (!token) {
-    bodyField.addEventListener(
-      "focus",
-      () => void prepareChallenge().catch(() => {}),
-      {
-        once: true,
-      },
-    );
-  }
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -573,19 +496,7 @@ export const setupCommentThread = () => {
       return;
     }
     post.disabled = true;
-    if (token) {
-      void send(null);
-      return;
-    }
-    prepareChallenge()
-      .then(() => {
-        if (!widgetId) throw new Error("no widget");
-        turnstile()?.execute(challenge);
-      })
-      .catch(() => {
-        error.textContent = "Couldn't load the challenge. Please reload.";
-        post.disabled = false;
-      });
+    void send();
   });
 
   bodyField.addEventListener("keydown", (e) => {

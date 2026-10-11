@@ -30,9 +30,6 @@ const TURNSTILE_SITE_KEY = dev
   : staging
     ? "0x4AAAAAAEZffDvzgSX4xffU"
     : "0x4AAAAAAEZfb1ZNwVKPq0Eq";
-const COMMENTS_TURNSTILE_SITE_KEY = dev
-  ? "1x00000000000000000000AA"
-  : "0x4AAAAAAE2bl5C1gBUENCco";
 
 const ctx = await esbuild.context({
   entryPoints: {
@@ -50,7 +47,6 @@ const ctx = await esbuild.context({
     API_URL: `"${API_URL}"`,
     TURNSTILE_SITE_KEY: `"${TURNSTILE_SITE_KEY}"`,
     COMMENTS_URL: `"${COMMENTS_URL}"`,
-    COMMENTS_TURNSTILE_SITE_KEY: `"${COMMENTS_TURNSTILE_SITE_KEY}"`,
   },
   format: "esm",
   target: "es2022",

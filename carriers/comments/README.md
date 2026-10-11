@@ -21,7 +21,6 @@ encrypted (see [Secrets](https://archival.dev/docs/secrets)):
 
 | Field                  | Required | Purpose                                                         |
 | ---------------------- | -------- | --------------------------------------------------------------- |
-| `turnstile_secret_key` | yes      | Secret for the Turnstile widget the comment form renders.       |
 | `admin_token`          | no       | Lets you post as the team and hide comments.                    |
 | `blocked`              | no       | Accounts, servers or pages whose replies and mentions are left out. |
 
@@ -31,8 +30,9 @@ on that server.
 
 The table is created on the first request, so there is no migration step.
 
-Under `archival run`, with no secret set, the carrier accepts Cloudflare's
-always-passes test widget that the dev build renders.
+Posting needs no challenge of its own: Archival's proof of work on carrier
+requests stops drive-by submissions, and the carrier caps how many comments a
+thread and the site take in ten minutes.
 
 ## Endpoints
 
@@ -40,7 +40,7 @@ always-passes test widget that the dev build renders.
 | ------ | ----------------------------------------------------- | --------------------------------------------------------- |
 | `GET`  | `?slugs=a,b,c`                                        | Comment totals for the feed, across all three sources.    |
 | `GET`  | `?slug=a`                                             | One update's thread, replies nested under their parent.   |
-| `POST` | `{ slug, author, body, parentId?, turnstileToken }`   | Post a comment. Add `token` to post as the team.          |
+| `POST` | `{ slug, author, body, parentId? }`                   | Post a comment. Add `token` to post as the team.          |
 | `POST` | `{ action: "moderate", token, id, hidden }`           | Hide (or unhide) a comment posted on the site.            |
 
 Ids are strings prefixed by source: `l:12` for a comment posted here,

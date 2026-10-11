@@ -5,7 +5,7 @@
 //
 // GET  ?slugs=a,b,c                        -> { counts: { slug: number } }
 // GET  ?slug=a                             -> { slug, count, account, reactions, comments }
-// POST { slug, author, body, parentId?, turnstileToken?, token? } -> { comment }
+// POST { slug, author, body, parentId?, token? }                 -> { comment }
 // POST { action: "moderate", token, id, hidden }                 -> { ok: true }
 
 import type {
@@ -23,13 +23,12 @@ const MAX_AUTHOR = 60;
 const MAX_BODY = 2000;
 const MAX_SLUGS_PER_REQUEST = 200;
 const MAX_REMOTE_PAGES = 10;
-// Turnstile stops the drive-by case. A carrier never sees the request's
-// address, so the ceilings below are per thread and per site, not per visitor.
+// Archival's proof of work on carrier requests stops the drive-by case. A
+// carrier never sees the request's address, so the ceilings below are per
+// thread and per site, not per visitor.
 const RATE_LIMIT_MINUTES = 10;
 const RATE_LIMIT_PER_SLUG = 20;
 const RATE_LIMIT_PER_SITE = 60;
-// Cloudflare's published always-passes pair, for archival run without a secret.
-const TEST_TURNSTILE_SECRET = "1x0000000000000000000000000000000AA";
 
 type Role = "reader" | "team";
 type Source = "local" | "fediverse" | "webmention";
@@ -418,21 +417,6 @@ const readCounts = async (
   return json({ counts });
 };
 
-const verifyTurnstile = async (token: string, secret: string) => {
-  const form = new FormData();
-  form.append("secret", secret);
-  form.append("response", token);
-  const response = await fetch(
-    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    { method: "POST", body: form },
-  );
-  const result = (await response.json()) as { success?: boolean };
-  return result.success === true;
-};
-
-const isLocalRun = (site: CarrierSite) =>
-  /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?/.test(site.url);
-
 const isAdmin = (presented: unknown, objects: Objects) => {
   const token = objects.comments.admin_token;
   if (!token || typeof presented !== "string") return false;
@@ -512,7 +496,7 @@ const postComment = async (
   objects: Objects,
   payload: Record<string, unknown>,
 ) => {
-  const { slug, author, body, parentId, turnstileToken, token } = payload;
+  const { slug, author, body, parentId, token } = payload;
   if (!isSlug(slug)) return fail(400, "Bad slug.");
   const post = findUpdate(objects, slug);
   if (!post) return fail(404, "No such update.");
@@ -530,17 +514,6 @@ const postComment = async (
   if (token && !admin) return fail(401, "That token is no longer good.");
   const role: Role = admin ? "team" : "reader";
   if (!admin) {
-    const secret =
-      objects.comments.turnstile_secret_key ||
-      (isLocalRun(site) ? TEST_TURNSTILE_SECRET : "");
-    if (!secret) return fail(503, "Comments aren't set up yet.");
-    if (typeof turnstileToken !== "string" || !turnstileToken) {
-      return fail(400, "Missing challenge.");
-    }
-    if (!(await verifyTurnstile(turnstileToken, secret))) {
-      return fail(403, "The challenge didn't pass.");
-    }
-
     const since = new Date(Date.now() - RATE_LIMIT_MINUTES * 60_000);
     const [recent] = await site.sql.exec<{ thread: number; site: number }>(
       `SELECT SUM(slug = ?) AS thread, COUNT(*) AS site FROM ${TABLE}
