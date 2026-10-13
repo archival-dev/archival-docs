@@ -1,0 +1,729 @@
+{% comment %}
+  The product tour: one bespoke editor frame per section, picked by the
+  section's key. Shared by the homepage and the ads landing page, which bring
+  their own copy for each frame.
+
+  sections: a list of { key, title, content }. Keys with a frame here are
+    prompt, editor, media, settings, history.
+  id: optional anchor for the wrapper.
+
+  The .product-page wrapper is load-bearing: every callout marker coordinate in
+  style/product.css is a custom property scoped to it, so the whole stylesheet
+  applies here unchanged.
+{% endcomment %}
+
+<div
+  class="product-page"
+  {% if id %}
+    id="{{ id }}"
+  {% endif %}
+>
+  {% for section in sections %}
+    {% assign n = forloop.index %}
+    <section
+      class="product-section {% cycle 'frame-right', 'frame-left' %}"
+      data-product-section
+      data-section="{{ n }}"
+    >
+      <div class="product-copy">
+        <h2 class="section-title">{{ section.title }}</h2>
+        <div class="section-content">{{ section.content }}</div>
+      </div>
+      <div class="product-frame-wrap" data-tilt>
+        {% if section.key == "editor" %}
+          <div class="product-frame product-frame--shell">
+            <div class="product-frame-glow" aria-hidden="true"></div>
+
+            <div class="pf-window">
+              {% comment %} Top chrome bar {% endcomment %}
+              <div class="pf-chrome" data-callout-target="1">
+                <span class="pf-chrome-btn">History</span>
+                <div class="pf-mode-toggle">
+                  <span class="on">Content</span>
+                  <span>Task</span>
+                </div>
+                <div class="pf-chrome-right">
+                  <span class="pf-chrome-btn" data-callout-target="4">Mobile</span>
+                  <span class="pf-chrome-btn">View Live</span>
+                  <span class="pf-status">
+                    <i class="pf-dot ok"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="pf-body">
+                {% comment %} Site sections sidebar {% endcomment %}
+                <div class="pf-sidebar">
+                  <div class="pf-sidebar-item active">Site</div>
+                  <div class="pf-sidebar-item">Gallery</div>
+                  <div class="pf-sidebar-item">About</div>
+                  <div class="pf-sidebar-item">Contact</div>
+                </div>
+
+                {% comment %} Glass editing panel {% endcomment %}
+                <div class="pf-panel pf-glass" data-callout-target="2">
+                  <div class="pf-field">
+                    <label>Title</label>
+                    <div class="pf-input">Hello, world</div>
+                  </div>
+                  <div class="pf-field">
+                    <label>Published</label>
+                    <div class="pf-input">Jul 6, 2026</div>
+                  </div>
+                  <div class="pf-field">
+                    <label>Draft</label>
+                    <div class="pf-toggle"></div>
+                  </div>
+                </div>
+
+                {% comment %} Live preview: desktop website wireframe {% endcomment %}
+                <div class="pf-preview" data-callout-target="3">
+                  <div class="pf-browser">
+                    <div class="pf-browser-bar">
+                      <span class="pf-browser-dot"></span>
+                      <span class="pf-browser-dot"></span>
+                      <span class="pf-browser-dot"></span>
+                      <div class="pf-browser-url"></div>
+                    </div>
+                    <div class="pf-browser-page">
+                      <div class="pf-wire-nav">
+                        <div class="pf-wire-logo"></div>
+                        <div class="pf-wire-navlinks">
+                          <span></span>
+                          <span></span>
+                          <span></span>
+                        </div>
+                      </div>
+                      <div class="pf-wire-hero">
+                        <div class="pf-wire-hero-copy">
+                          <div class="pf-wire-line pf-wire-line--title"></div>
+                          <div class="pf-wire-line"></div>
+                          <div class="pf-wire-line pf-wire-line--short"></div>
+                          <div class="pf-wire-btn"></div>
+                        </div>
+                        <div class="pf-wire-hero-art"></div>
+                      </div>
+                      <div class="pf-wire-cards">
+                        <div class="pf-wire-card"></div>
+                        <div class="pf-wire-card"></div>
+                        <div class="pf-wire-card"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--i:1;"
+              aria-describedby="c1-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--i:2;"
+              aria-describedby="c1-2"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="3"
+              style="--i:3;"
+              aria-describedby="c1-3"
+            >
+              3
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="4"
+              style="--i:4;"
+              aria-describedby="c1-4"
+            >
+              4
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li
+              class="callout-item"
+              data-callout="1"
+              id="c1-1"
+              style="--i:1;"
+            >
+              <b>1</b>
+              Switch between editing content and task mode.
+            </li>
+            <li
+              class="callout-item"
+              data-callout="2"
+              id="c1-2"
+              style="--i:2;"
+            >
+              <b>2</b>
+              Make quick edits in the editor panel.
+            </li>
+            <li
+              class="callout-item"
+              data-callout="3"
+              id="c1-3"
+              style="--i:3;"
+            >
+              <b>3</b>
+              Your live site, previewed right as you edit.
+            </li>
+            <li
+              class="callout-item"
+              data-callout="4"
+              id="c1-4"
+              style="--i:4;"
+            >
+              <b>4</b>
+              Preview your site on mobile any time.
+            </li>
+          </ol>
+        {% elsif section.key == "prompt" %}
+          {% comment %}
+            The flow this draws: choose a template, optionally say something
+            about your site, generate. Built from the same .pf-* primitives the
+            other frames use rather than a vocabulary of its own: the optional
+            box IS .pf-prompt-card, unchanged.
+
+            Every element in here carries a number. A detail view of the picked
+            template was drawn here once and was the only thing that did not,
+            which is what gave it away as decoration rather than a step.
+          {% endcomment %}
+          <div class="product-frame product-frame--prompt">
+            <div class="product-frame-glow" aria-hidden="true"></div>
+
+            {% comment %} The gallery, as a strip. One is picked. {% endcomment %}
+            <div class="pf-choose">
+              <p class="pf-frame-title">Select a template</p>
+              <div class="pf-tile-strip" data-callout-target="1">
+                <span class="pf-tile"><i class="pf-tile-header"></i><i class="pf-tile-body"></i></span>
+                <span class="pf-tile"><i class="pf-tile-header"></i><i class="pf-tile-body"></i></span>
+                <span class="pf-tile pf-tile--active">
+                  <i class="pf-tile-header"></i><i class="pf-tile-body"></i>
+                </span>
+                <span class="pf-tile"><i class="pf-tile-header"></i><i class="pf-tile-body"></i></span>
+                <span class="pf-tile"><i class="pf-tile-header"></i><i class="pf-tile-body"></i></span>
+                <span class="pf-tile"><i class="pf-tile-header"></i><i class="pf-tile-body"></i></span>
+              </div>
+            </div>
+
+            <div class="pf-prompt-card pf-glass" data-callout-target="2">
+              <span class="pf-optional-label">Optional</span>
+              <div class="pf-prompt-textarea">Tell us about your site&hellip;</div>
+              <div class="pf-attach-row">
+                <span class="pf-chip"> <i class="pf-chip-icon" aria-hidden="true"></i>Photos</span>
+                <span class="pf-chip"> <i class="pf-chip-icon" aria-hidden="true"></i>Video</span>
+                <span class="pf-chip"> <i class="pf-chip-icon" aria-hidden="true"></i>Audio</span>
+              </div>
+            </div>
+
+            <button
+              class="pf-cta pf-generate-btn"
+              type="button"
+              data-callout-target="3"
+            >
+              Generate
+            </button>
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--i:1;"
+              aria-describedby="c2-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--i:2;"
+              aria-describedby="c2-2"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="3"
+              style="--i:3;"
+              aria-describedby="c2-3"
+            >
+              3
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li class="callout-item" data-callout="1" id="c2-1" style="--i:1;">
+              <b>1</b>
+              Pick a template and see it running.
+            </li>
+            <li class="callout-item" data-callout="2" id="c2-2" style="--i:2;">
+              <b>2</b>
+              Describe your site, and attach what you already have.
+            </li>
+            <li class="callout-item" data-callout="3" id="c2-3" style="--i:3;">
+              <b>3</b>
+              Generate, and it is yours to edit.
+            </li>
+          </ol>
+        {% elsif section.key == "media" %}
+          <div class="product-frame product-frame--media">
+            <div class="product-frame-glow" aria-hidden="true"></div>
+
+            {% comment %} Image field editor: dropzone + upload progress + conversion/CDN badges {% endcomment %}
+            <div class="pf-media-card pf-glass">
+              <div class="pf-dropzone" data-callout-target="1">
+                <div class="pf-thumb" aria-hidden="true"></div>
+                <div class="pf-dropzone-text">
+                  <span class="pf-dropzone-title">Drop image to upload</span>
+                  <span class="pf-dropzone-sub">or click to browse</span>
+                </div>
+              </div>
+
+              <div class="pf-upload-progress" data-callout-target="2">
+                <div class="pf-progress-track">
+                  <div class="pf-progress-fill" style="width: 67%;"></div>
+                </div>
+                <div class="pf-progress-label">Uploading&hellip; 67%</div>
+              </div>
+
+              <div class="pf-media-badges">
+                <span class="pf-badge">HEIC &rarr; PNG, auto</span>
+                <span class="pf-badge pf-badge--cdn" data-callout-target="3"
+                  >Served from CDN &middot; deduplicated</span
+                >
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--i:1;"
+              aria-describedby="c4-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--i:2;"
+              aria-describedby="c4-2"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="3"
+              style="--i:3;"
+              aria-describedby="c4-3"
+            >
+              3
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li
+              class="callout-item"
+              data-callout="1"
+              id="c4-1"
+              style="--i:1;"
+            >
+              <b>1</b>
+              Drag in a photo. That's the whole workflow.
+            </li>
+            <li
+              class="callout-item"
+              data-callout="2"
+              id="c4-2"
+              style="--i:2;"
+            >
+              <b>2</b>
+              Phone formats like HEIC convert automatically.
+            </li>
+            <li
+              class="callout-item"
+              data-callout="3"
+              id="c4-3"
+              style="--i:3;"
+            >
+              <b>3</b>
+              Served from a fast CDN, and never stored twice.
+            </li>
+          </ol>
+        {% elsif section.key == "settings" %}
+          <div class="product-frame product-frame--settings">
+            <div class="product-frame-glow" aria-hidden="true"></div>
+
+            {% comment %} Overview + DNS + recent deploys {% endcomment %}
+            <div class="pf-settings-card pf-glass">
+              <div class="pf-settings-overview">
+                <div class="pf-settings-row">
+                  <span class="pf-settings-site"> <i class="pf-dot ok" aria-hidden="true"></i>acme.com</span>
+                  <span class="pf-settings-live">Live</span>
+                </div>
+                <div class="pf-settings-row">
+                  <span class="pf-settings-label">Plan</span>
+                  <span class="pf-settings-value">Editor &middot; $15/mo</span>
+                </div>
+                <div class="pf-settings-row" data-callout-target="1">
+                  <span class="pf-settings-label">GitHub</span>
+                  <span class="pf-settings-value">acme-studio/acme-site</span>
+                </div>
+                <div class="pf-settings-row">
+                  <span class="pf-settings-label">Billing</span>
+                  <span class="pf-settings-value">&bull;&bull;&bull;&bull; 4242</span>
+                </div>
+              </div>
+
+              <div class="pf-deploys" data-callout-target="2">
+                <div class="pf-deploys-title">Recent deploys</div>
+                <div class="pf-deploy-row">
+                  <span class="pf-deploy-date">Jul 6</span>
+                  <span class="pf-deploy-msg">Update homepage copy</span>
+                  <i class="pf-dot ok" aria-hidden="true"></i>
+                </div>
+                <div class="pf-deploy-row">
+                  <span class="pf-deploy-date">Jul 4</span>
+                  <span class="pf-deploy-msg">Add new gallery images</span>
+                  <i class="pf-dot ok" aria-hidden="true"></i>
+                </div>
+                <div class="pf-deploy-row">
+                  <span class="pf-deploy-date">Jul 1</span>
+                  <span class="pf-deploy-msg">Fix contact form styling</span>
+                  <i class="pf-dot ok" aria-hidden="true"></i>
+                </div>
+              </div>
+
+              <div class="pf-dns" data-callout-target="3">
+                <div class="pf-dns-title">DNS records</div>
+                <div class="pf-dns-row">
+                  <span class="pf-dns-type">A</span>
+                  <span class="pf-dns-host">@</span>
+                  <span class="pf-dns-value">76.76.21.21</span>
+                </div>
+                <div class="pf-dns-row">
+                  <span class="pf-dns-type">CNAME</span>
+                  <span class="pf-dns-host">www</span>
+                  <span class="pf-dns-value">cname.archival.dev</span>
+                </div>
+                <div class="pf-dns-row">
+                  <span class="pf-dns-type">TXT</span>
+                  <span class="pf-dns-host">@</span>
+                  <span class="pf-dns-value">v=spf1 include:_spf&hellip;</span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--i:1;"
+              aria-describedby="c5-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--i:2;"
+              aria-describedby="c5-2"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="3"
+              style="--i:3;"
+              aria-describedby="c5-3"
+            >
+              3
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li
+              class="callout-item"
+              data-callout="1"
+              id="c5-1"
+              style="--i:1;"
+            >
+              <b>1</b>
+              Backed by a real repository you control.
+            </li>
+            <li
+              class="callout-item"
+              data-callout="2"
+              id="c5-2"
+              style="--i:2;"
+            >
+              <b>2</b>
+              A timestamped deployment history.
+            </li>
+            <li
+              class="callout-item"
+              data-callout="3"
+              id="c5-3"
+              style="--i:3;"
+            >
+              <b>3</b>
+              Full DNS configurability.
+            </li>
+          </ol>
+        {% elsif section.key == "history" %}
+          <div class="product-frame product-frame--history">
+            <div class="product-frame-glow" aria-hidden="true"></div>
+
+            {% comment %} Slide-in History panel: uncommitted changes + published commits {% endcomment %}
+            <div class="pf-history-panel pf-glass">
+              <div class="pf-history-header">
+                <span class="pf-history-title">History</span>
+              </div>
+
+              <div class="pf-history-group" data-callout-target="1">
+                <div class="pf-history-group-label">Upcoming changes</div>
+                <div class="pf-change-row">
+                  <i class="pf-dot warn" aria-hidden="true"></i>
+                  <span class="pf-change-desc">Edited: Home &rsaquo; Hero title</span>
+                </div>
+                <div class="pf-change-row">
+                  <i class="pf-dot warn" aria-hidden="true"></i>
+                  <span class="pf-change-desc">Added: Post &rsaquo; Summer sale</span>
+                </div>
+              </div>
+
+              <div class="pf-history-group">
+                <div class="pf-history-group-label">Published</div>
+                <div class="pf-commit-row">
+                  <i class="pf-dot ok" aria-hidden="true"></i>
+                  <span class="pf-commit-date">Jul 5</span>
+                  <span class="pf-commit-msg">Publish spring collection</span>
+                  <button class="pf-revert-btn" type="button">Revert</button>
+                </div>
+                <div class="pf-commit-row" data-callout-target="2">
+                  <i class="pf-dot ok" aria-hidden="true"></i>
+                  <span class="pf-commit-date">Jul 2</span>
+                  <span class="pf-commit-msg">Rewrite about page</span>
+                  <button class="pf-revert-btn" type="button">Revert</button>
+                </div>
+                <div class="pf-commit-row">
+                  <i class="pf-dot ok" aria-hidden="true"></i>
+                  <span class="pf-commit-date">Jun 28</span>
+                  <span class="pf-commit-msg">Update team photos</span>
+                  <button
+                    class="pf-revert-btn"
+                    type="button"
+                    data-callout-target="3"
+                  >
+                    Revert
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--i:1;"
+              aria-describedby="c6-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--i:2;"
+              aria-describedby="c6-2"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="3"
+              style="--i:3;"
+              aria-describedby="c6-3"
+            >
+              3
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li
+              class="callout-item"
+              data-callout="1"
+              id="c6-1"
+              style="--i:1;"
+            >
+              <b>1</b>
+              See exactly what's changed before it goes live.
+            </li>
+            <li
+              class="callout-item"
+              data-callout="2"
+              id="c6-2"
+              style="--i:2;"
+            >
+              <b>2</b>
+              Every publish is a point you can return to.
+            </li>
+            <li
+              class="callout-item"
+              data-callout="3"
+              id="c6-3"
+              style="--i:3;"
+            >
+              <b>3</b>
+              Roll back any change instantly.
+            </li>
+          </ol>
+        {% else %}
+          {% comment %} FRAME {{ n }}: bespoke editor UI added by its task {% endcomment %}
+        {% endif %}
+      </div>
+    </section>
+  {% endfor %}
+</div>
+
+<script>
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Uniformly scale each product frame to fit its column. The frame is laid out
+    // at a fixed design width (--pf-dw), so its internal layout never reflows; zoom
+    // scales the whole thing — content and the %-pinned callout markers alike —
+    // keeping every marker aligned to its target at any window size.
+    var rootFontPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    var frames = [];
+    document.querySelectorAll('.product-frame-wrap').forEach(function (wrap) {
+      var frame = wrap.querySelector('.product-frame');
+      if (!frame) return;
+      var dwRaw = getComputedStyle(frame).getPropertyValue('--pf-dw').trim();
+      var dw = dwRaw.indexOf('rem') > -1 ? parseFloat(dwRaw) * rootFontPx : parseFloat(dwRaw);
+      if (dw) {
+        frames.push({ wrap: wrap, frame: frame, dw: dw });
+      }
+    });
+    function fit() {
+      frames.forEach(function (f) {
+        var cw = f.wrap.clientWidth;
+        if (!cw) return;
+        // Never scale past the design size; only shrink to fit narrower columns.
+        f.frame.style.zoom = Math.min(1, cw / f.dw);
+      });
+    }
+    fit();
+    if ('ResizeObserver' in window) {
+      var ro = new ResizeObserver(fit);
+      frames.forEach(function (f) {
+        ro.observe(f.wrap);
+      });
+    } else {
+      window.addEventListener('resize', fit);
+    }
+
+    // Reveal product sections on scroll
+    var sections = document.querySelectorAll('[data-product-section]');
+    if (reduce) {
+      sections.forEach(function (s) {
+        s.classList.add('is-visible');
+      });
+    } else if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-visible');
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.25 },
+      );
+      sections.forEach(function (s) {
+        io.observe(s);
+      });
+    } else {
+      sections.forEach(function (s) {
+        s.classList.add('is-visible');
+      });
+    }
+
+    // Cross-highlight callouts: marker <-> line <-> legend <-> target
+    sections.forEach(function (section) {
+      var frame = section.querySelector('.product-frame');
+      function setActive(n, on) {
+        section
+          .querySelectorAll('[data-callout="' + n + '"], [data-callout-target="' + n + '"]')
+          .forEach(function (el) {
+            el.classList.toggle('callout-active', on);
+          });
+        if (frame) {
+          frame.classList.toggle('is-focusing', on);
+        }
+      }
+      section.querySelectorAll('[data-callout]').forEach(function (trigger) {
+        var n = trigger.getAttribute('data-callout');
+        trigger.addEventListener('mouseenter', function () {
+          setActive(n, true);
+        });
+        trigger.addEventListener('mouseleave', function () {
+          setActive(n, false);
+        });
+        trigger.addEventListener('focus', function () {
+          setActive(n, true);
+        });
+        trigger.addEventListener('blur', function () {
+          setActive(n, false);
+        });
+      });
+    });
+
+    if (reduce) return;
+
+    // 3D tilt on product frames
+    document.querySelectorAll('.product-frame-wrap[data-tilt]').forEach(function (card) {
+      var frame = card.querySelector('.product-frame');
+      if (!frame) return;
+      var maxTilt = 6,
+        bounds;
+      card.addEventListener('mouseenter', function () {
+        bounds = frame.getBoundingClientRect();
+        frame.style.transition = 'none';
+      });
+      card.addEventListener('mousemove', function (e) {
+        if (!bounds) return;
+        var mx = e.clientX - bounds.left,
+          my = e.clientY - bounds.top;
+        var rx = ((my - bounds.height / 2) / (bounds.height / 2)) * -maxTilt;
+        var ry = ((mx - bounds.width / 2) / (bounds.width / 2)) * maxTilt;
+        frame.style.transform = 'perspective(1200px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+      });
+      card.addEventListener('mouseleave', function () {
+        frame.style.transition = 'transform 0.4s ease-out';
+        frame.style.transform = 'perspective(1200px) rotateX(0) rotateY(0)';
+      });
+    });
+  })();
+</script>

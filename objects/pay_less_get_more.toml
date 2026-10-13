@@ -1,0 +1,122 @@
+title = "Pay less, get more: $15/mo websites with email and analytics included"
+description = "Pay less, get more: $15/mo websites with email and analytics included"
+headline = "Pay Less, Get More."
+subhead = "$15/mo for hosting, email, analytics, and AI editing. Your site lives in a repo you own."
+cta_label = "Build your site now"
+compare_link_label = "See the comparison"
+features_title = "What you get"
+compare_title = "Compare"
+archival_label = "Archival Pro"
+squarespace_label = "Squarespace Core"
+wix_label = "Wix Core"
+prices_checked = "Prices checked on October 13, 2026"
+
+[[features]]
+key = "prompt"
+title = "A working site in minutes"
+content = """
+Start from a template built by people, or describe your site and attach your files. Then make it yours before you publish.
+"""
+
+[[features]]
+key = "editor"
+title = "Edit from anywhere"
+content = """
+Change text, photos, and pages from your phone or laptop. Or describe the change and AI editing makes it for you.
+"""
+
+[[features]]
+key = "settings"
+title = "Your repo, your domain"
+content = """
+Your site lives in a real repository you control. You get a timestamped deploy history and full control of your DNS.
+"""
+
+[[features]]
+key = "history"
+title = "Undo anything"
+content = """
+Every change is saved. See what changed and when, and roll back a single edit or a whole day's work.
+"""
+
+[[benefits]]
+title = "Email"
+content = """
+Email on your own domain, set up for you. Pro includes 5 addresses, then $0.50/mo for each one after that.
+"""
+
+[[benefits]]
+title = "Analytics"
+content = """
+See how many people visit and what they read. Cookieless analytics come with Pro, with nothing extra to install.
+"""
+
+[[benefits]]
+title = "AI Editing"
+content = """
+Describe the change you want and AI editing makes it. Pro includes $5 of AI usage each month, billed at cost after that.
+"""
+
+[[rows]]
+label = "Monthly price"
+archival = "$15/mo"
+squarespace = "$29/mo billed annually, $39 month to month"
+wix = "$29/mo, billed yearly up front"
+archival_mark = "lower"
+squarespace_mark = "higher"
+wix_mark = "higher"
+
+[[rows]]
+label = "Email included"
+archival = "Yes. 5 addresses on your domain, then $0.50/mo each"
+squarespace = "Google Workspace free for the first year, then paid per user"
+wix = "Not included; Google Workspace sold separately"
+archival_mark = "yes"
+squarespace_mark = "partly"
+wix_mark = "no"
+
+[[rows]]
+label = "Cookieless analytics"
+archival = "Yes, included with Pro"
+squarespace = "Basic site metrics"
+wix = "Basic traffic analytics"
+archival_mark = "yes"
+squarespace_mark = "partly"
+wix_mark = "partly"
+
+[[rows]]
+label = "Domain renewal"
+archival = "Included yearly when registered with us (up to $40/yr)"
+squarespace = "Free first year on annual plans, then about $20/yr for .com"
+wix = "Free first year, then about $21/yr for .com"
+archival_mark = "yes"
+squarespace_mark = "partly"
+wix_mark = "partly"
+
+[[rows]]
+label = "Who owns the code"
+archival = "You do"
+squarespace = "Squarespace. You own your content, not the templates"
+wix = "Wix. Sites “need to be hosted and operated on Wix’s servers”"
+archival_mark = "yes"
+squarespace_mark = "no"
+wix_mark = "no"
+
+[[rows]]
+label = "Rollback history"
+archival = "Every change, roll back any of them"
+# Not yet checked against a Squarespace page; verify before launch.
+squarespace = "No site version history"
+wix = "Yes, Site History can restore earlier versions"
+archival_mark = "yes"
+squarespace_mark = "no"
+wix_mark = "yes"
+
+[[rows]]
+label = "Can you leave with your site"
+archival = "Yes, it's your repo"
+squarespace = "Partly: pages and posts export as a WordPress XML file, design does not"
+wix = "No. Wix says its architecture “does not support external hosting”; content is yours, the site isn’t"
+archival_mark = "yes"
+squarespace_mark = "partly"
+wix_mark = "no"
