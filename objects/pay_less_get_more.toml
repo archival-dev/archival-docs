@@ -60,8 +60,8 @@ Describe the change you want and AI editing makes it. Pro includes $5 of AI usag
 [[rows]]
 label = "Monthly price"
 archival = "$15/mo"
-squarespace = "$29/mo billed annually, $39 month to month"
-wix = "$29/mo, billed yearly up front"
+squarespace = "$39/mo billed monthly ($348/yr if you prepay)"
+wix = "$36/mo billed monthly ($348/yr if you prepay)"
 archival_mark = "lower"
 squarespace_mark = "higher"
 wix_mark = "higher"
