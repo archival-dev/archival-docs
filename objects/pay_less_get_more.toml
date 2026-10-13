@@ -103,6 +103,15 @@ squarespace_mark = "no"
 wix_mark = "no"
 
 [[rows]]
+label = "Who owns the company"
+archival = "Independent and self-funded. Answers to customers, not investors."
+squarespace = "Private equity. Taken private by Permira in October 2024 for $7.2 billion."
+wix = "Public company, traded on Nasdaq since 2013. Answers to shareholders."
+archival_mark = "yes"
+squarespace_mark = "no"
+wix_mark = "no"
+
+[[rows]]
 label = "Rollback history"
 archival = "Every change, roll back any of them"
 # Not yet checked against a Squarespace page; verify before launch.
