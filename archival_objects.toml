@@ -117,6 +117,44 @@ content = "markdown"
 title = "string"
 content = "markdown"
 
+[pay_less_get_more]
+# Page <title> before the " | Archival" suffix, and the meta description.
+title = "string"
+description = "string"
+headline = "string"
+subhead = "string"
+cta_label = "string"
+compare_link_label = "string"
+features_title = "string"
+compare_title = "string"
+# Column headers for the comparison table.
+archival_label = "string"
+squarespace_label = "string"
+wix_label = "string"
+prices_checked = "string"
+
+[pay_less_get_more.features]
+# Must be a product tour frame: prompt, editor, media, settings or history.
+key = "string"
+title = "string"
+content = "markdown"
+
+# The row of cards under the product tour.
+[pay_less_get_more.benefits]
+title = "string"
+content = "markdown"
+
+[pay_less_get_more.rows]
+label = "string"
+archival = "string"
+squarespace = "string"
+wix = "string"
+# Optional icon before each cell's text: yes, no, partly, lower or higher
+# (for prices), or empty for none.
+archival_mark = "string"
+squarespace_mark = "string"
+wix_mark = "string"
+
 [showcase]
 title = "string"
 tagline = "string"

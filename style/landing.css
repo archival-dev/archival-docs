@@ -1,0 +1,417 @@
+/* Paid landing pages (layout/landing.liquid), built from the site's own
+   tokens. This file is imported ahead of main.css's own rules, so anything that
+   has to beat a shared class there (.hero-message, .section-title, .primary-cta)
+   is scoped under .lp-body for the extra specificity. */
+
+.lp-body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.lp-body a:focus-visible {
+  outline: 2px solid var(--color-primary-cta-highlight);
+  outline-offset: 4px;
+  border-radius: 0.5rem;
+}
+
+/* The bar itself is the homepage's #nav (main.css), fixed to the top. */
+
+.lp-logo {
+  display: block;
+  flex-shrink: 0;
+  width: 179px;
+}
+
+.lp-logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.lp-nav-cta {
+  flex-shrink: 0;
+}
+
+/* Phones: no hamburger to fold into, so the logo and the button share the
+   bar and both give up a little size to fit side by side. */
+@media (max-width: 480px) {
+  .lp-body #nav {
+    padding: 0.875rem 1rem;
+  }
+
+  .lp-body .lp-nav .lp-logo {
+    width: 128px;
+  }
+
+  .lp-body .lp-nav-cta a {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+.lp-main {
+  flex: 1;
+  width: 100%;
+}
+
+/* Hero. Sized so the headline, subhead and CTA fit a phone's first screen,
+   and so the comparison's top edge clears the fold on a laptop. */
+
+/* The top padding clears the fixed nav. */
+.lp-hero {
+  position: relative;
+  padding: 7.5rem 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* The homepage hero's teal glow, without the blur filter: a plain gradient
+   paints the same falloff for far less work on a phone. */
+.lp-hero::before {
+  content: "";
+  position: absolute;
+  inset: -4rem 0 0;
+  background: radial-gradient(
+    ellipse at 50% 35%,
+    rgba(6, 214, 160, 0.16),
+    rgba(17, 138, 178, 0.1) 35%,
+    transparent 65%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.lp-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.lp-body .lp-headline {
+  margin: 0;
+  max-width: 12ch;
+  font-size: clamp(3rem, 10vw, 6.5rem);
+  text-wrap: balance;
+  line-height: 1;
+  padding-bottom: 0.1em;
+}
+
+.lp-subhead {
+  max-width: 34rem;
+  margin: 1.25rem 0 0;
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--color-typography-secondary);
+}
+
+.lp-actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem 1.5rem;
+}
+
+.lp-body .lp-cta {
+  min-height: 48px;
+  padding: 0.875rem 2rem;
+  font-size: 1.125rem;
+}
+
+.lp-compare-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0 0.5rem;
+  font-weight: 700;
+  color: var(--color-typography-secondary);
+  transition: color 0.2s ease-in-out;
+}
+
+.lp-compare-link:hover,
+.lp-compare-link:focus-visible {
+  color: var(--color-primary-cta-highlight);
+}
+
+.lp-body .lp-section-title {
+  margin: 0 0 2rem;
+  text-align: center;
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+/* Comparison. The Archival column carries the CTA's orange, so the eye lands
+   on the one column that is filled in and reads straight down it. */
+
+.lp-compare {
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  /* The top padding separates the title from the hero's CTAs. */
+  padding: 2rem 1rem 0;
+  /* With that padding, clears the fixed nav when the hero's link jumps here. */
+  scroll-margin-top: 4rem;
+}
+
+.lp-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+  border: 1px solid var(--color-transparent-border);
+  border-radius: 1.5rem;
+  background: rgba(20, 20, 20, 0.9);
+  box-shadow: var(--style-double-border);
+  overflow: hidden;
+}
+
+.lp-table th,
+.lp-table td {
+  padding: 1rem 1.25rem;
+  vertical-align: top;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  line-height: 1.4;
+}
+
+.lp-table thead th,
+.lp-table thead td {
+  border-top: none;
+}
+
+.lp-table thead th {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-feature-settings: "ss01" on;
+  color: var(--color-typography-primary);
+}
+
+.lp-table thead td,
+.lp-table tbody th {
+  width: 28%;
+  font-weight: 600;
+  color: var(--color-typography-secondary);
+}
+
+.lp-table td {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.lp-table .lp-col-archival {
+  font-weight: 700;
+  color: var(--color-typography-primary);
+  background: linear-gradient(
+    180deg,
+    rgba(254, 131, 0, 0.14),
+    rgba(255, 60, 0, 0.07)
+  );
+  box-shadow:
+    inset 1px 0 0 rgba(254, 131, 0, 0.35),
+    inset -1px 0 0 rgba(254, 131, 0, 0.35);
+}
+
+.lp-table thead .lp-col-archival {
+  color: var(--color-primary-cta-highlight);
+}
+
+/* A cell's verdict icon sits in front of its text, top-aligned so it stays
+   with the first line when the text wraps. Colors are three stops of the
+   site's hero gradient. */
+.lp-cell {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.lp-mark {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0.075em;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lp-mark circle {
+  stroke: none;
+}
+
+.lp-mark--yes circle {
+  fill: rgba(6, 214, 160, 0.18);
+}
+
+.lp-mark--yes path {
+  stroke: #06d6a0;
+}
+
+.lp-mark--partly circle {
+  fill: rgba(255, 209, 102, 0.16);
+}
+
+.lp-mark--partly path {
+  stroke: #ffd166;
+}
+
+.lp-mark--no circle {
+  fill: rgba(239, 71, 111, 0.16);
+}
+
+.lp-mark--no path {
+  stroke: #ef476f;
+}
+
+.lp-checked {
+  margin: 1rem 0 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-typography-secondary);
+}
+
+/* Phones: four columns will not fit, so each row becomes a card that names
+   the row and lists the three plans under it. The column headers stay in the
+   accessibility tree, hidden visually; each cell shows its plan name instead. */
+@media (max-width: 640px) {
+  .lp-table,
+  .lp-table tbody,
+  .lp-table tr,
+  .lp-table th,
+  .lp-table td {
+    display: block;
+  }
+
+  .lp-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .lp-table tbody tr {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .lp-table tbody tr:first-child {
+    border-top: none;
+  }
+
+  .lp-table tbody th,
+  .lp-table td {
+    width: auto;
+    padding: 0;
+    border-top: none;
+  }
+
+  .lp-table tbody th {
+    margin-bottom: 0.5rem;
+    color: var(--color-typography-primary);
+  }
+
+  .lp-table td {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: 0.75rem;
+    padding: 0.375rem 0;
+  }
+
+  .lp-table td::before {
+    content: attr(data-col);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-typography-secondary);
+  }
+
+  .lp-table .lp-col-archival {
+    margin: 0 -0.5rem;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: inset 0 0 0 1px rgba(254, 131, 0, 0.35);
+  }
+
+  .lp-table .lp-col-archival::before {
+    color: var(--color-primary-cta-highlight);
+  }
+}
+
+.lp-features {
+  width: 100%;
+  padding-top: 7rem;
+}
+
+/* Three cards, not the homepage's four, so the row gets three columns and
+   goes straight to one where three no longer fit. */
+.lp-body .lp-benefits {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 1200px;
+  margin: 4rem auto 0;
+}
+
+.lp-body .lp-benefits .section-title {
+  min-height: 0;
+}
+
+@media (max-width: 900px) {
+  .lp-body .lp-benefits {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 36rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .lp-body .lp-benefits {
+    padding: 0 1rem;
+  }
+}
+
+.lp-final-logo {
+  width: 216px;
+}
+
+.lp-final {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 7rem 1rem;
+  text-align: center;
+}
+
+.lp-footer {
+  padding: 2rem 1rem 3rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-typography-secondary);
+}
+
+.lp-footer p {
+  margin: 0;
+}
+
+.lp-footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.lp-footer a:hover {
+  color: var(--color-typography-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-body .lp-headline {
+    animation: none;
+  }
+
+  .lp-compare-link {
+    transition: none;
+  }
+}

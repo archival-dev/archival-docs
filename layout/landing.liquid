@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    {% comment %}
+      A layout for paid landing pages: one job, no way off the page but the CTA
+      and the legal links. Unlike theme.liquid it loads no Google tag and no
+      /scripts/main.js, whose ad-click handling keeps the click id in
+      localStorage; a page on this layout stores nothing. Rybbit is loaded the
+      same way as everywhere else, so data-rybbit-event attributes report here
+      too.
+
+      The only web font these pages use is the self-hosted Build face (headings);
+      body text is system-ui, as on the rest of the site. Typekit and Poppins are
+      left out because nothing on these pages is set in them.
+    {% endcomment %}
+    <script
+      src="https://app.rybbit.io/api/script.js"
+      data-site-id="8c55ed758d8d"
+      defer
+    ></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {% assign page_title = title | append: " | Archival" %}
+    <title>{{ page_title | escape }}</title>
+    <meta name="description" content="{{ description | escape }}">
+    <meta name="robots" content="noindex">
+    {% comment %} No .html: the host redirects /foo.html to /foo. {% endcomment %}
+    <link rel="canonical" href="{{ site_url }}/{{ path }}" />
+
+    <meta property="og:title" content="{{ page_title | escape }}">
+    <meta property="og:description" content="{{ description | escape }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ site_url }}/{{ path }}">
+    <meta property="og:image" content="{{ site_url }}/img/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:alt" content="archival.dev" />
+
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon-16x16.png"
+    />
+    <meta name="theme-color" content="#000000" />
+    <link
+      rel="preload"
+      href="/fonts/build-bold.otf"
+      as="font"
+      type="font/otf"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/style/main.css">
+
+    <script>
+      // Carry the ad click and campaign tags to the editor on the link itself.
+      // Read from this page's URL only and written nowhere else: no cookie, no
+      // storage, so a visitor who arrives without them sends none.
+      document.addEventListener('DOMContentLoaded', function () {
+        var keys = ['gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
+        var here = new URLSearchParams(location.search);
+        var carried = keys.filter(function (key) {
+          return here.get(key);
+        });
+        if (!carried.length) return;
+        document.querySelectorAll('a[href]').forEach(function (link) {
+          if (link.hostname !== 'editor.archival.dev') return;
+          var url = new URL(link.href);
+          carried.forEach(function (key) {
+            url.searchParams.set(key, here.get(key));
+          });
+          link.href = url.toString();
+        });
+      });
+    </script>
+  </head>
+
+  <body class="lp-body">
+    {% comment %}
+      The homepage nav's bar (fixed, blurred, same padding), holding only the
+      logo and its Create button's styling. The label comes from the page.
+    {% endcomment %}
+    <nav
+      id="nav"
+      class="lp-nav z-50 w-full py-5 fixed flex justify-between items-center gap-4 backdrop-blur-md top-0 inset-x-0 shadow-lg"
+    >
+      <span class="lp-logo" role="img" aria-label="Archival">
+        {% include "logo-svg-2" %}
+      </span>
+      {% if nav_cta_label %}
+        <div class="nav-text-cta lp-nav-cta">
+          <a
+            href="https://editor.archival.dev/new"
+            data-rybbit-event="cta_click"
+            data-rybbit-prop-page="{{ path }}"
+            data-rybbit-prop-cta_text="{{ nav_cta_label | escape }}"
+          >
+            {{- nav_cta_label -}}
+          </a>
+        </div>
+      {% endif %}
+    </nav>
+
+    <main role="main" class="lp-main">
+      {{ page_content }}
+    </main>
+
+    <footer class="lp-footer">
+      <p>
+        &copy; 2026 Fuck Billionaires, LLC.
+        <span aria-hidden="true">&middot;</span>
+        <a href="/privacy">Privacy</a>
+        <span aria-hidden="true">&middot;</span>
+        <a href="/terms-of-service">Terms</a>
+      </p>
+    </footer>
+  </body>
+</html>
