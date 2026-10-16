@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     {% comment %}
-      A layout for paid landing pages: one job, no way off the page but the CTA
-      and the legal links. Unlike theme.liquid it loads no Google tag and no
+      A layout for paid landing pages: one job, no way off the page but the CTA,
+      the logo (home, as on every other page) and the legal links. Unlike theme.liquid it loads no Google tag and no
       /scripts/main.js, whose ad-click handling keeps the click id in
       localStorage; a page on this layout stores nothing. Rybbit is loaded the
       same way as everywhere else, so data-rybbit-event attributes report here
@@ -97,9 +97,15 @@
       id="nav"
       class="lp-nav z-50 w-full py-5 fixed flex justify-between items-center gap-4 backdrop-blur-md top-0 inset-x-0 shadow-lg"
     >
-      <span class="lp-logo" role="img" aria-label="Archival">
+      <a
+        class="lp-logo"
+        href="/"
+        aria-label="Archival home"
+        data-rybbit-event="nav-logo"
+        data-rybbit-prop-page="{{ path }}"
+      >
         {% include "logo-svg-2" %}
-      </span>
+      </a>
       {% if nav_cta_label %}
         <div class="nav-text-cta lp-nav-cta">
           <a
@@ -120,7 +126,7 @@
 
     <footer class="lp-footer">
       <p>
-        &copy; 2026 Fuck Billionaires, LLC.
+        &copy; 2026 Archival.
         <span aria-hidden="true">&middot;</span>
         <a href="/privacy">Privacy</a>
         <span aria-hidden="true">&middot;</span>
