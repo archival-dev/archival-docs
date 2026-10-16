@@ -121,8 +121,6 @@ content = "markdown"
 # Page <title> before the " | Archival" suffix, and the meta description.
 title = "string"
 description = "string"
-# The small line above the headline.
-eyebrow = "string"
 headline = "string"
 subhead = "string"
 cta_label = "string"

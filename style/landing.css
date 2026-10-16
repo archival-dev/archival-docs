@@ -89,16 +89,6 @@
   z-index: 1;
 }
 
-/* The teal is the hero glow's first stop. */
-.lp-eyebrow {
-  margin: 0 0 1rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #06d6a0;
-}
-
 .lp-body .lp-headline {
   margin: 0;
   max-width: 12ch;
