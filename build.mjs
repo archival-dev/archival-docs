@@ -22,19 +22,14 @@ const EDITOR_URL = dev
   : staging
     ? "https://editor.archival-staging.dev"
     : "https://editor.archival.dev";
-// The Val Town val in valtown/comments.ts. Override with COMMENTS_URL to point
-// a build at a val of your own.
-const COMMENTS_URL =
-  process.env.COMMENTS_URL ??
-  "https://archival--a1ef3c9ab12011f1a0c41607ee4eb77e.web.val.run";
+// The carrier in carriers/comments, served beside the site. Override with
+// COMMENTS_URL to point a build somewhere else.
+const COMMENTS_URL = process.env.COMMENTS_URL ?? "/carriers/comments";
 const TURNSTILE_SITE_KEY = dev
   ? "1x00000000000000000000AA"
   : staging
     ? "0x4AAAAAAEZffDvzgSX4xffU"
     : "0x4AAAAAAEZfb1ZNwVKPq0Eq";
-const COMMENTS_TURNSTILE_SITE_KEY = dev
-  ? "1x00000000000000000000AA"
-  : "0x4AAAAAAE2bl5C1gBUENCco";
 
 const ctx = await esbuild.context({
   entryPoints: {
@@ -52,7 +47,6 @@ const ctx = await esbuild.context({
     API_URL: `"${API_URL}"`,
     TURNSTILE_SITE_KEY: `"${TURNSTILE_SITE_KEY}"`,
     COMMENTS_URL: `"${COMMENTS_URL}"`,
-    COMMENTS_TURNSTILE_SITE_KEY: `"${COMMENTS_TURNSTILE_SITE_KEY}"`,
   },
   format: "esm",
   target: "es2022",
@@ -61,9 +55,6 @@ const ctx = await esbuild.context({
 
 if (dev) {
   await ctx.watch();
-
-  const { host, port } = await ctx.serve({ servedir: "dist" });
-  console.log(`server started at http://${host}:${port}`);
 } else {
   await ctx.rebuild();
   process.exit(0);

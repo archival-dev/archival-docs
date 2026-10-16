@@ -181,6 +181,13 @@ author = "string"
 role = "string"
 site_url = "string"
 
+[comments]
+# Lets the team post as the team and hide comments.
+admin_token = "secret"
+# Fediverse accounts, servers, or pages whose replies and mentions are left out.
+[comments.blocked]
+url = "string"
+
 [author]
 key = "string"
 name = "string"

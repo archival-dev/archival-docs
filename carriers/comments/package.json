@@ -1,0 +1,16 @@
+{
+  "name": "archival-docs-comments",
+  "private": true,
+  "type": "module",
+  "main": "index.ts",
+  "archival": {
+    "carrier": 2
+  },
+  "devDependencies": {
+    "@archival/carrier": "^1.5.0",
+    "typescript": "^5.8.0"
+  },
+  "dependencies": {
+    "@simplewebauthn/server": "^14.0.3"
+  }
+}
