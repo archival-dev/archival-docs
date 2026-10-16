@@ -89,6 +89,16 @@
   z-index: 1;
 }
 
+/* The teal is the hero glow's first stop. */
+.lp-eyebrow {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #06d6a0;
+}
+
 .lp-body .lp-headline {
   margin: 0;
   max-width: 12ch;
@@ -142,6 +152,24 @@
   margin: 0 0 2rem;
   text-align: center;
   font-size: clamp(2rem, 5vw, 3rem);
+  text-wrap: balance;
+}
+
+/* The title's bottom margin, given to the line under it instead. */
+.lp-section-intro {
+  max-width: 40rem;
+  margin: -1rem auto 2rem;
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-typography-secondary);
+}
+
+/* The features section runs edge to edge, so its text brings its own gutter. */
+.lp-features .lp-section-title,
+.lp-features .lp-section-intro {
+  padding: 0 1rem;
 }
 
 /* Comparison. The Archival column carries the CTA's orange, so the eye lands
@@ -371,6 +399,54 @@
   .lp-body .lp-benefits {
     padding: 0 1rem;
   }
+}
+
+/* Questions read as a single column of the table's rules, not cards: this is
+   reference text for the reader who wants the numbers spelled out. */
+.lp-faq {
+  width: 100%;
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 7rem 1rem 0;
+}
+
+.lp-faq-item {
+  padding: 1.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lp-faq-item:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.lp-faq-question {
+  margin: 0 0 0.5rem;
+  font-family: "Build", system-ui, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-feature-settings: "ss01" on;
+  line-height: 1.3;
+  color: var(--color-typography-primary);
+}
+
+.lp-faq-answer {
+  font-weight: 500;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.lp-faq-answer p {
+  margin: 0;
+}
+
+.lp-final-line {
+  max-width: 30rem;
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-typography-secondary);
 }
 
 .lp-final-logo {

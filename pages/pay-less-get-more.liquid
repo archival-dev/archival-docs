@@ -18,6 +18,7 @@
 {% endcomment %}
 
 <section class="lp-hero">
+  <p class="lp-eyebrow">{{ lp.eyebrow }}</p>
   <h1 class="hero-message lp-headline">{{ lp.headline }}</h1>
   <p class="lp-subhead">{{ lp.subhead }}</p>
   <div class="lp-actions">
@@ -45,6 +46,7 @@
 
 <section class="lp-compare" id="compare" aria-labelledby="compare-title">
   <h2 class="section-title lp-section-title" id="compare-title">{{ lp.compare_title }}</h2>
+  <p class="lp-section-intro">{{ lp.compare_intro }}</p>
 
   {% comment %}
     Explicit roles because the phone layout restyles the rows as blocks, and
@@ -91,6 +93,7 @@
 
 <section class="lp-features" aria-labelledby="features-title">
   <h2 class="section-title lp-section-title" id="features-title">{{ lp.features_title }}</h2>
+  <p class="lp-section-intro">{{ lp.features_intro }}</p>
   {% include "product-tour", sections: lp.features %}
 
   <div class="benefit-grid benefit-grid--compact lp-benefits">
@@ -103,11 +106,29 @@
   </div>
 </section>
 
+{% comment %}
+  Plain headings, not FAQ structured data: the page is noindex, and the
+  questions are here for the people who searched them.
+{% endcomment %}
+<section class="lp-faq" aria-labelledby="faq-title">
+  <h2 class="section-title lp-section-title" id="faq-title">{{ lp.faq_title }}</h2>
+  <div class="lp-faq-list">
+    {% for item in lp.faq %}
+      <div class="lp-faq-item">
+        <h3 class="lp-faq-question">{{ item.question }}</h3>
+        <div class="lp-faq-answer">{{ item.answer }}</div>
+      </div>
+    {% endfor %}
+  </div>
+  <p class="lp-checked">{{ lp.faq_checked }}</p>
+</section>
+
 <section class="lp-final">
   <span class="lp-logo lp-final-logo" role="img" aria-label="Archival">
     {% include "logo-svg-2" %}
   </span>
   <h2 class="hero-message lp-headline">{{ lp.headline }}</h2>
+  <p class="lp-final-line">{{ lp.final_line }}</p>
   <a
     class="primary-cta lp-cta"
     href="https://editor.archival.dev/new"
