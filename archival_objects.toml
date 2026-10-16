@@ -135,7 +135,6 @@ squarespace_label = "string"
 wix_label = "string"
 prices_checked = "string"
 faq_title = "string"
-faq_checked = "string"
 # The line above the closing section's button.
 final_line = "string"
 

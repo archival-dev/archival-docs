@@ -5,7 +5,7 @@ subhead = "A $15/mo website builder with hosting, email, analytics, and AI editi
 cta_label = "Build your site now"
 compare_link_label = "See the comparison"
 features_title = "What you get with the $15/mo plan"
-features_intro = "Everything a small business website needs, in one monthly plan. Hosting, email, and analytics come with it instead of as add-ons."
+features_intro = "Everything a small business website needs, in one monthly plan. Hosting, email, and analytics included."
 compare_title = "Squarespace vs. Wix vs. Archival"
 compare_intro = "Plans and pricing, side by side."
 archival_label = "Archival Pro"
@@ -13,8 +13,7 @@ squarespace_label = "Squarespace Core"
 wix_label = "Wix Core"
 prices_checked = "Prices checked on October 13, 2026"
 faq_title = "Squarespace and Wix pricing questions"
-faq_checked = "Squarespace and Wix prices checked on October 13, 2026."
-final_line = "A $15/mo website builder for small businesses. Monthly plans, cancel anytime."
+final_line = "A $15/mo website builder for small businesses. Billed monthly. Cancel anytime."
 
 [[features]]
 key = "prompt"
@@ -156,5 +155,5 @@ Both are capable website builders at similar prices. The bigger differences are 
 [[faq]]
 question = "What does Archival cost?"
 answer = """
-Archival Pro is $15/mo, billed monthly. It includes hosting, a custom domain, 5 email addresses on your domain ($0.50/mo for each one after that), cookieless analytics, and $5 of AI editing usage each month (billed at cost after that).
+Archival Pro is $15/mo, billed monthly. It includes hosting, a custom domain (renewal included when registered with us), 5 email addresses on your domain ($0.50/mo for each one after that), cookieless analytics, and $5 of AI editing usage each month (billed at cost after that).
 """
