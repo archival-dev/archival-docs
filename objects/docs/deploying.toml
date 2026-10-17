@@ -40,6 +40,30 @@ The action accepts a few optional inputs:
 """
 
 [[sections]]
+title = "Password-protecting pages"
+content = """
+{% raw %}
+A site archival hosts can put some or all of its pages behind a username and password. Add a `Basic-Auth` line under the path it protects in the `_headers` file at the root of your build — `public/_headers` for most sites:
+
+```
+/*
+  Basic-Auth: alex:correct-horse jamie:battery-staple
+```
+
+Every `user:password` pair on the line can sign in, separated by spaces. Browsers ask for the username and password, and tools that fetch your pages, like curl or a feed reader, can send them in the URL: `https://alex:correct-horse@example.com/feed.xml`.
+
+Paths use the same patterns as the rest of `_headers`. `*` matches anything, so `/members/*` protects everything under `/members/`, and `:name` matches one segment of a path, as in `/posts/:slug/draft`. When more than one rule matches a page, a pair from any of them signs in. A rule with no pairs on its line locks its pages for everyone.
+
+A few things to know:
+
+- `Basic-Auth` lines are never sent as headers, and archival keeps only a hash of each password. The password is still written out in your site's source, so anyone who can read the source can sign in.
+- A change takes up to two minutes after a deploy to reach every visitor.
+- The editor's preview and `archival run` don't ask for a password.
+- Only pages fetched from your site are protected. If your site federates with ActivityPub, its posts are still delivered to its followers.
+{% endraw %}
+"""
+
+[[sections]]
 title = "Hosting the static build yourself"
 content = """
 {% raw %}
