@@ -1,87 +1,61 @@
-// Comments for the updates feed and the update detail pages, backed by the Val
-// Town val in valtown/comments.ts. Counts on the feed come from one batched
-// request; a thread is only fetched once its section nears the viewport.
+// Comments for the updates feed and the update detail pages, backed by the
+// carrier in carriers/comments. A thread merges comments posted here by
+// passkey accounts with replies from the fediverse and webmentions from other
+// sites. Counts on the feed come from one batched request; a thread is only
+// fetched once its section nears the viewport.
 
+import {
+  account,
+  asUser,
+  changeName,
+  initAccount,
+  read,
+  requireAccount,
+  signOut,
+  type User,
+} from "./account";
 import { track } from "./analytics";
 
+type Source = "local" | "fediverse" | "webmention";
+
+interface Author {
+  name: string;
+  url: string | null;
+  handle: string | null;
+  icon: string | null;
+}
+
 interface Comment {
-  id: number;
-  parentId: number | null;
-  author: string;
-  body: string;
+  id: string;
+  parentId: string | null;
+  source: Source;
   role: "reader" | "team";
+  author: Author;
+  authorId: number | null;
+  body: string | null;
+  html: string | null;
+  url: string | null;
   createdAt: string;
-  replies?: Comment[];
+  replies: Comment[];
 }
 
-interface TurnstileApi {
-  render(
-    el: HTMLElement,
-    options: {
-      sitekey: string;
-      action?: string;
-      execution?: "render" | "execute";
-      appearance?: "always" | "execute" | "interaction-only";
-      callback: (token: string) => void;
-      "error-callback"?: () => void;
-      "expired-callback"?: () => void;
-    },
-  ): string;
-  execute(container: HTMLElement | string): void;
-  reset(widgetId: string): void;
+interface Thread {
+  count: number;
+  account: { handle: string; url: string } | null;
+  reactions: { likes: number; boosts: number; mentions: number };
+  comments: Comment[];
 }
 
-const TURNSTILE_ACTION = "update-comment";
-const NAME_KEY = "archival-comment-name";
-const TOKEN_KEY = "archival-comment-token";
-
-const turnstile = () =>
-  (window as unknown as { turnstile?: TurnstileApi }).turnstile;
-
-const store = {
-  get(key: string) {
-    try {
-      return localStorage.getItem(key);
-    } catch {
-      return null;
-    }
-  },
-  set(key: string, value: string) {
-    try {
-      localStorage.setItem(key, value);
-    } catch {
-      // Private browsing. The field just won't be remembered.
-    }
-  },
-  remove(key: string) {
-    try {
-      localStorage.removeItem(key);
-    } catch {
-      // Nothing was stored to begin with.
-    }
-  },
-};
-
-/**
- * The team's posting token arrives as a query param once and lives in local
- * storage after that, so an author replies from the same form everyone else
- * uses.
- */
-const adminToken = () => {
-  const url = new URL(window.location.href);
-  const fromUrl = url.searchParams.get("comment_token");
-  if (fromUrl) {
-    store.set(TOKEN_KEY, fromUrl);
-    url.searchParams.delete("comment_token");
-    history.replaceState(null, "", url.toString());
-    return fromUrl;
-  }
-  return store.get(TOKEN_KEY);
+const SOURCE_LABEL: Record<Source, string> = {
+  local: "",
+  fediverse: "from the fediverse",
+  webmention: "from another site",
 };
 
 const initials = (name: string) =>
   name
-    .split(/\s+/)
+    .replace(/^@/, "")
+    .split(/[\s@]+/)
     .filter(Boolean)
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase() ?? "")
@@ -107,14 +81,88 @@ const shortDate = (iso: string) => {
   });
 };
 
-const plural = (count: number) => `${count} comment${count === 1 ? "" : "s"}`;
+const plural = (count: number, noun: string) =>
+  `${count} ${noun}${count === 1 ? "" : "s"}`;
 
-const avatar = (name: string, extraClass = "") => {
+const isHttp = (value: string | null): value is string =>
+  !!value && /^https?:\/\//i.test(value);
+
+const ALLOWED_TAGS = new Set([
+  "p",
+  "br",
+  "em",
+  "strong",
+  "b",
+  "i",
+  "u",
+  "s",
+  "del",
+  "ul",
+  "ol",
+  "li",
+  "blockquote",
+  "code",
+  "pre",
+  "a",
+  "span",
+]);
+
+/**
+ * Archival already reduces remote content to a handful of tags before it
+ * keeps it. This keeps the page to the same list on the way in, so a reply
+ * can carry text and links and nothing else.
+ */
+const sanitize = (html: string) => {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const out = document.createDocumentFragment();
+  const copy = (from: Node, to: Node) => {
+    from.childNodes.forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        to.appendChild(document.createTextNode(node.textContent ?? ""));
+        return;
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
+      const tag = (node as Element).tagName.toLowerCase();
+      if (!ALLOWED_TAGS.has(tag)) {
+        copy(node, to);
+        return;
+      }
+      const el = document.createElement(tag);
+      if (tag === "a") {
+        const href = (node as Element).getAttribute("href");
+        if (isHttp(href)) {
+          el.setAttribute("href", href);
+          el.setAttribute("rel", "nofollow noopener noreferrer");
+          el.setAttribute("target", "_blank");
+        }
+      }
+      copy(node, el);
+      to.appendChild(el);
+    });
+  };
+  copy(doc.body, out);
+  return out;
+};
+
+const avatar = (author: Author, extraClass = "") => {
   const el = document.createElement("span");
   el.className = `comment-avatar ${extraClass}`.trim();
-  el.style.setProperty("--comment-hue", String(hue(name)));
+  el.style.setProperty("--comment-hue", String(hue(author.name)));
   el.setAttribute("aria-hidden", "true");
-  el.textContent = initials(name);
+  if (isHttp(author.icon)) {
+    const img = document.createElement("img");
+    img.src = author.icon;
+    img.alt = "";
+    img.loading = "lazy";
+    img.referrerPolicy = "no-referrer";
+    img.addEventListener("error", () => {
+      img.remove();
+      el.textContent = initials(author.name);
+    });
+    el.appendChild(img);
+  } else {
+    el.textContent = initials(author.name);
+  }
   return el;
 };
 
@@ -131,17 +179,14 @@ export const setupCommentCounts = () => {
 
   void (async () => {
     try {
-      const response = await fetch(
-        `${COMMENTS_URL}/counts?slugs=${encodeURIComponent(slugs.join(","))}`,
+      const { counts } = await read<{ counts: Record<string, number> }>(
+        "counts",
+        { slugs: slugs.join(",") },
       );
-      if (!response.ok) return;
-      const { counts } = (await response.json()) as {
-        counts: Record<string, number>;
-      };
       targets.forEach((el) => {
         const count = counts[el.dataset.commentSlug ?? ""] ?? 0;
         if (!count) return;
-        el.textContent = plural(count);
+        el.textContent = plural(count, "comment");
         el.hidden = false;
       });
     } catch {
@@ -158,9 +203,18 @@ export const setupCommentThread = () => {
   const list = root.querySelector<HTMLElement>("[data-comments-list]")!;
   const status = root.querySelector<HTMLElement>("[data-comments-status]")!;
   const total = root.querySelector<HTMLElement>("[data-comments-total]")!;
+  const reactions = root.querySelector<HTMLElement>(
+    "[data-comments-reactions]",
+  )!;
+  const fediverse = root.querySelector<HTMLElement>(
+    "[data-comments-fediverse]",
+  )!;
   const form = root.querySelector<HTMLFormElement>("[data-comment-form]")!;
-  const nameField = form.querySelector<HTMLInputElement>(
-    "[data-comment-name]",
+  const youAvatar = form.querySelector<HTMLElement>("[data-comment-you]")!;
+  const note = form.querySelector<HTMLElement>("[data-account-note]")!;
+  const noteName = form.querySelector<HTMLElement>("[data-account-name]")!;
+  const signedOutNote = form.querySelector<HTMLElement>(
+    "[data-account-signed-out]",
   )!;
   const bodyField = form.querySelector<HTMLTextAreaElement>(
     "[data-comment-body]",
@@ -174,16 +228,9 @@ export const setupCommentThread = () => {
   const cancelReply = form.querySelector<HTMLButtonElement>(
     "[data-comment-reply-cancel]",
   )!;
-  const challenge = form.querySelector<HTMLElement>(
-    "[data-comment-turnstile]",
-  )!;
-  const youAvatar = form.querySelector<HTMLElement>("[data-comment-you]")!;
 
-  let token = adminToken();
   let count = 0;
-  let parentId: number | null = null;
-  let widgetId: string | null = null;
-  let challengeReady: Promise<void> | null = null;
+  let parentId: string | null = null;
 
   form.hidden = false;
 
@@ -192,18 +239,30 @@ export const setupCommentThread = () => {
     total.textContent = count ? ` · ${count}` : "";
   };
 
-  const setYou = (name: string) => {
-    youAvatar.classList.toggle("is-empty", !name);
-    youAvatar.style.setProperty("--comment-hue", String(hue(name)));
-    youAvatar.textContent = name ? initials(name) : "?";
+  const renderYou = () => {
+    const user = account.user;
+    youAvatar.classList.toggle("is-empty", !user);
+    youAvatar.style.setProperty("--comment-hue", String(hue(user?.name ?? "")));
+    youAvatar.textContent = user ? initials(user.name) : "?";
+    note.hidden = !user;
+    signedOutNote.hidden = !!user;
+    noteName.textContent = user?.name ?? "";
+    list
+      .querySelectorAll<HTMLElement>("[data-comment-remove]")
+      .forEach((button) => {
+        button.hidden = !canRemove(
+          Number(button.dataset.commentAuthor),
+          user,
+        );
+      });
   };
-
-  const savedName = store.get(NAME_KEY);
-  if (savedName) {
-    nameField.value = savedName;
-    setYou(savedName);
-  }
-  nameField.addEventListener("input", () => setYou(nameField.value.trim()));
+  account.onChange(renderYou);
+  form
+    .querySelector("[data-account-rename]")
+    ?.addEventListener("click", () => void changeName());
+  form
+    .querySelector("[data-account-signout]")
+    ?.addEventListener("click", () => void signOut());
 
   const growBody = () => {
     bodyField.style.height = "auto";
@@ -211,49 +270,97 @@ export const setupCommentThread = () => {
   };
   bodyField.addEventListener("input", growBody);
 
+  const canRemove = (authorId: number | null, user: User | null) =>
+    !!user && authorId !== null && (user.role === "team" || user.id === authorId);
+
+  const renderAuthor = (comment: Comment) => {
+    const { author } = comment;
+    const name = document.createElement(isHttp(author.url) ? "a" : "span");
+    name.className = "comment-author";
+    name.textContent = author.name;
+    if (name instanceof HTMLAnchorElement) {
+      name.href = author.url!;
+      name.rel = "nofollow noopener noreferrer";
+      name.target = "_blank";
+      if (author.handle) name.title = author.handle;
+    }
+    return name;
+  };
+
   const renderComment = (comment: Comment, depth = 0) => {
     const item = document.createElement("li");
-    item.className = "comment";
-    item.dataset.commentId = String(comment.id);
+    item.className = `comment comment--${comment.source}`;
+    item.dataset.commentId = comment.id;
     if (comment.role === "team") item.classList.add("is-team");
 
     const head = document.createElement("div");
     head.className = "comment-head";
     head.appendChild(avatar(comment.author));
+    head.appendChild(renderAuthor(comment));
 
-    const author = document.createElement("span");
-    author.className = "comment-author";
-    author.textContent = comment.author;
-    head.appendChild(author);
+    const label = SOURCE_LABEL[comment.source];
+    if (label) {
+      const source = document.createElement("span");
+      source.className = "comment-source";
+      source.textContent = label;
+      head.appendChild(source);
+    }
 
-    const time = document.createElement("time");
+    const time = document.createElement(isHttp(comment.url) ? "a" : "time");
     time.className = "comment-date";
-    time.dateTime = comment.createdAt;
-    time.title = new Date(comment.createdAt).toLocaleString();
     time.textContent = shortDate(comment.createdAt);
+    time.title = new Date(comment.createdAt).toLocaleString();
+    if (time instanceof HTMLAnchorElement) {
+      time.href = comment.url!;
+      time.rel = "nofollow noopener noreferrer";
+      time.target = "_blank";
+    } else {
+      (time as HTMLTimeElement).dateTime = comment.createdAt;
+    }
     head.appendChild(time);
     item.appendChild(head);
 
     const bubble = document.createElement("div");
     bubble.className = "comment-bubble";
-    // textContent, so a comment can never introduce markup.
-    bubble.textContent = comment.body;
+    if (comment.html !== null) {
+      bubble.classList.add("is-html");
+      bubble.appendChild(sanitize(comment.html));
+    } else {
+      // textContent, so a comment can never introduce markup.
+      bubble.textContent = comment.body ?? "";
+    }
     item.appendChild(bubble);
 
+    const actions = document.createElement("div");
+    actions.className = "comment-actions";
     if (depth === 0) {
       const reply = document.createElement("button");
       reply.type = "button";
       reply.className = "comment-reply";
       reply.textContent = "Reply";
       reply.addEventListener("click", () =>
-        startReply(comment.id, comment.author, item),
+        startReply(comment.id, comment.author.name, item),
       );
-      item.appendChild(reply);
+      actions.appendChild(reply);
+    }
+    if (comment.source === "local") {
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "comment-remove";
+      remove.dataset.commentRemove = "";
+      remove.dataset.commentAuthor = String(comment.authorId);
+      remove.textContent = "Remove";
+      remove.hidden = !canRemove(comment.authorId, account.user);
+      remove.addEventListener("click", () => void removeComment(comment, item));
+      actions.appendChild(remove);
+    }
+    item.appendChild(actions);
 
+    if (depth === 0) {
       const replies = document.createElement("ol");
       replies.className = "comment-replies";
       replies.dataset.commentReplies = "";
-      comment.replies?.forEach((child) =>
+      comment.replies.forEach((child) =>
         replies.appendChild(renderComment(child, depth + 1)),
       );
       item.appendChild(replies);
@@ -262,7 +369,23 @@ export const setupCommentThread = () => {
     return item;
   };
 
-  const startReply = (id: number, author: string, item: HTMLElement) => {
+  const removeComment = async (comment: Comment, item: HTMLElement) => {
+    if (!window.confirm("Remove this comment?")) return;
+    try {
+      const { removed } = await asUser<{ removed: number }>("remove", {
+        id: comment.id,
+      });
+      if (form.parentElement === item || item.contains(form)) endReply();
+      item.remove();
+      setCount(Math.max(0, count - removed));
+      if (!list.children.length) status.textContent = "No comments yet. Go first.";
+    } catch (thrown) {
+      error.textContent =
+        thrown instanceof Error ? thrown.message : "That didn't work.";
+    }
+  };
+
+  const startReply = (id: string, author: string, item: HTMLElement) => {
     parentId = id;
     replyToName.textContent = author;
     replyTo.hidden = false;
@@ -284,151 +407,84 @@ export const setupCommentThread = () => {
       list.appendChild(renderComment(comment));
       return;
     }
-    const parent = list.querySelector<HTMLElement>(
-      `[data-comment-id="${comment.parentId}"] [data-comment-replies]`,
+    const parent = Array.from(
+      list.querySelectorAll<HTMLElement>("[data-comment-id]"),
+    ).find((el) => el.dataset.commentId === comment.parentId);
+    const replies = parent?.querySelector<HTMLElement>(
+      "[data-comment-replies]",
     );
-    if (parent) parent.appendChild(renderComment(comment, 1));
+    if (replies) replies.appendChild(renderComment(comment, 1));
     else list.appendChild(renderComment(comment));
+  };
+
+  const renderReactions = (thread: Thread) => {
+    const parts = [
+      thread.reactions.likes && plural(thread.reactions.likes, "like"),
+      thread.reactions.boosts && plural(thread.reactions.boosts, "boost"),
+      thread.reactions.mentions && plural(thread.reactions.mentions, "mention"),
+    ].filter((part): part is string => typeof part === "string");
+    reactions.textContent = parts.join(" · ");
+    reactions.hidden = !parts.length;
+
+    if (thread.account) {
+      fediverse.replaceChildren(
+        "Replies to ",
+        Object.assign(document.createElement("code"), {
+          textContent: thread.account.handle,
+        }),
+        " on Mastodon, Bluesky and the rest of the fediverse show up here too.",
+      );
+      fediverse.hidden = false;
+    }
   };
 
   const load = async () => {
     try {
-      const response = await fetch(
-        `${COMMENTS_URL}/thread?slug=${encodeURIComponent(slug)}`,
-      );
-      if (!response.ok) throw new Error(String(response.status));
-      const thread = (await response.json()) as {
-        count: number;
-        comments: Comment[];
-      };
+      const thread = await read<Thread>("thread", { slug });
       list.replaceChildren(
         ...thread.comments.map((comment) => renderComment(comment)),
       );
       setCount(thread.count);
+      renderReactions(thread);
       status.textContent = thread.count ? "" : "No comments yet. Go first.";
     } catch {
       status.textContent = "Couldn't load the comments. Reload to try again.";
     }
   };
 
-  const send = async (turnstileToken: string | null) => {
+  const send = async () => {
     try {
-      const response = await fetch(`${COMMENTS_URL}/comments`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          slug,
-          author: nameField.value.trim(),
-          body: bodyField.value,
-          parentId,
-          turnstileToken,
-        }),
+      await requireAccount("comment", post.closest(".comment-form-send"));
+      const { comment } = await asUser<{ comment: Comment }>("comment", {
+        slug,
+        body: bodyField.value,
+        parentId,
       });
-      if (!response.ok) {
-        const { error: message } = (await response
-          .json()
-          .catch(() => ({ error: "" }))) as { error?: string };
-        // A token the val no longer accepts would keep skipping the challenge
-        // on every retry, so drop it and let the next attempt take the widget.
-        if (token && response.status !== 429) {
-          store.remove(TOKEN_KEY);
-          token = null;
-          throw new Error("That token is no longer good. Try again.");
-        }
-        throw new Error(message || "That didn't post. Please try again.");
-      }
-      const { comment } = (await response.json()) as { comment: Comment };
       endReply();
       insert(comment);
       setCount(count + 1);
       status.textContent = "";
-      store.set(NAME_KEY, nameField.value.trim());
       bodyField.value = "";
       growBody();
       track("update-comment-post");
     } catch (thrown) {
-      error.textContent =
-        thrown instanceof Error
-          ? thrown.message
-          : "That didn't post. Please try again.";
+      const message =
+        thrown instanceof Error ? thrown.message : "That didn't post.";
+      if (message !== "Not signed in.") error.textContent = message;
     } finally {
       post.disabled = false;
-      if (widgetId) turnstile()?.reset(widgetId);
     }
   };
-
-  // The Turnstile script is only pulled in once someone starts writing, so a
-  // reader who never comments never loads it.
-  const prepareChallenge = () => {
-    challengeReady ??= new Promise<void>((resolve, reject) => {
-      if (turnstile()) {
-        resolve();
-        return;
-      }
-      (
-        window as unknown as { onloadCommentsTurnstile?: () => void }
-      ).onloadCommentsTurnstile = () => resolve();
-      const script = document.createElement("script");
-      script.src =
-        "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadCommentsTurnstile&render=explicit";
-      script.async = true;
-      script.defer = true;
-      script.addEventListener("error", () => reject(new Error("turnstile")));
-      document.head.appendChild(script);
-    }).then(() => {
-      widgetId ??=
-        turnstile()?.render(challenge, {
-          sitekey: COMMENTS_TURNSTILE_SITE_KEY,
-          action: TURNSTILE_ACTION,
-          execution: "execute",
-          appearance: "interaction-only",
-          callback: (value) => void send(value),
-          "error-callback": () => {
-            error.textContent = "The challenge failed. Please try again.";
-            post.disabled = false;
-          },
-          "expired-callback": () => {
-            error.textContent = "The challenge expired. Please try again.";
-            post.disabled = false;
-          },
-        }) ?? null;
-    });
-    return challengeReady;
-  };
-  if (!token) {
-    bodyField.addEventListener(
-      "focus",
-      () => void prepareChallenge().catch(() => {}),
-      {
-        once: true,
-      },
-    );
-  }
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     error.textContent = "";
-    if (!nameField.value.trim() || !bodyField.value.trim()) {
-      error.textContent = "A name and a comment, please.";
+    if (!bodyField.value.trim()) {
+      error.textContent = "Write a comment first.";
       return;
     }
     post.disabled = true;
-    if (token) {
-      void send(null);
-      return;
-    }
-    prepareChallenge()
-      .then(() => {
-        if (!widgetId) throw new Error("no widget");
-        turnstile()?.execute(challenge);
-      })
-      .catch(() => {
-        error.textContent = "Couldn't load the challenge. Please reload.";
-        post.disabled = false;
-      });
+    void send();
   });
 
   bodyField.addEventListener("keydown", (e) => {
@@ -437,6 +493,9 @@ export const setupCommentThread = () => {
       form.requestSubmit();
     }
   });
+
+  renderYou();
+  void initAccount();
 
   let loaded = false;
   const loadOnce = () => {

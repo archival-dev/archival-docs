@@ -12,7 +12,7 @@
   "scripts": {
     "build": "npm run build:schemas && npm run build:agent && npm run build:js && npm run tailwind",
     "dev": "npm-run-all -l --parallel \"watch:*\"",
-    "watch:site": "archival run --noserve",
+    "watch:site": "archival run",
     "watch:js": "./build.mjs --dev",
     "watch:css": "npm run tailwind -- --watch",
     "build:schemas": "./scripts/fetch-schemas.mjs",
