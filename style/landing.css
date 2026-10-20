@@ -138,17 +138,6 @@
   color: var(--color-primary-cta-highlight);
 }
 
-/* Under the buttons, so it reads as the terms of the CTA rather than another
-   selling line. */
-.lp-hero-note {
-  max-width: 34rem;
-  margin: 1rem 0 0;
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1.5;
-  color: var(--color-typography-secondary);
-}
-
 /* Template cards. The homepage mosaic's tile (main.css), held still: the same
    4:3 shot, ring and hover, but in a grid, at full opacity, and with none of
    the marquee's fixed widths or curve. */
@@ -157,7 +146,7 @@
   width: 100%;
   max-width: 64rem;
   margin: 0 auto;
-  /* The top padding separates the title from the hero's note. */
+  /* The top padding separates the title from the hero's CTAs. */
   padding: 2rem 1rem 0;
   /* With that padding, clears the fixed nav when the hero's link jumps here. */
   scroll-margin-top: 4rem;

@@ -3,7 +3,6 @@ description = "Compare Squarespace, Wix, and Archival plans side by side. Archiv
 headline = "Pay Less, Get More."
 subhead = "A $15/mo website builder with hosting, email, analytics, and AI editing included."
 cta_label = "Build your site now"
-hero_note = "Build and preview your site before you pay. $15/mo when you publish."
 templates_link_label = "See templates"
 templates_title = "Start from a real template"
 templates_intro = "Pick one, make it yours, and preview it before you pay."
@@ -16,7 +15,7 @@ archival_label = "Archival Pro"
 squarespace_label = "Squarespace Core"
 wix_label = "Wix Core"
 prices_checked = "Prices checked on October 13, 2026"
-faq_title = "Squarespace and Wix pricing questions"
+faq_title = "Pricing questions"
 final_line = "A $15/mo website builder for small businesses. Billed monthly. Cancel anytime."
 
 [[templates]]
@@ -58,9 +57,9 @@ Start from a template built by people, or describe your site and attach your fil
 
 [[features]]
 key = "editor"
-title = "Edit from your phone"
+title = "Edit without code"
 content = """
-Change text, photos, and pages from your phone or laptop, or describe the change and AI editing makes it for you.
+Change text, photos, and pages in a simple editor, or describe the change and AI editing makes it for you. Works on your phone, too.
 """
 
 [[features]]
@@ -142,27 +141,21 @@ squarespace_mark = "partly"
 wix_mark = "no"
 
 [[faq]]
-question = "How much does Squarespace cost?"
-answer = """
-Squarespace's Core plan is $39/mo billed monthly, or $29/mo if you prepay a year ($348). Email through Google Workspace is included for the first year, then paid per user.
-"""
-
-[[faq]]
-question = "How much does Wix cost?"
-answer = """
-Wix's Core plan is $36/mo billed monthly, or $29/mo if you prepay a year ($348). Email on your domain is not included and is sold separately.
-"""
-
-[[faq]]
-question = "Is Wix or Squarespace better?"
-answer = """
-Both are capable website builders at similar prices. The bigger differences are what's included and what you own: neither includes ongoing email on its Core plan, and you can't take your site's code with you if you leave. Archival includes email and analytics for $15/mo, and your site lives in a Git repo you own.
-"""
-
-[[faq]]
 question = "What does Archival cost?"
 answer = """
 Archival Pro is $15/mo, billed monthly. It includes hosting, a custom domain (renewal included when registered with us), 5 email addresses on your domain ($0.50/mo for each one after that), cookieless analytics, and $5 of AI editing usage each month (billed at cost after that).
+"""
+
+[[faq]]
+question = "How does that compare to Squarespace and Wix?"
+answer = """
+Squarespace's Core plan is $39/mo billed monthly and Wix's Core plan is $36/mo, or $29/mo for either if you prepay a year ($348). Squarespace includes Google Workspace email for the first year only; Wix doesn't include email on your domain.
+"""
+
+[[faq]]
+question = "Should I pick Squarespace, Wix, or Archival?"
+answer = """
+All three can build a good-looking site. Squarespace and Wix cost about twice as much, don't include ongoing email, and keep your site on their servers. Archival includes email and analytics for $15/mo, and your site lives in a Git repo you own.
 """
 
 [[faq]]
