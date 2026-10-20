@@ -6,6 +6,8 @@
   sections: a list of { key, title, content }. Keys with a frame here are
     prompt, editor, media, settings, history.
   id: optional anchor for the wrapper.
+  mode_callout: optional wording for the editor frame's first callout, the
+    Content/Task toggle, for a page whose copy never names the mode.
 
   The .product-page wrapper is load-bearing: every callout marker coordinate in
   style/product.css is a custom property scoped to it, so the whole stylesheet
@@ -160,7 +162,11 @@
               style="--i:1;"
             >
               <b>1</b>
-              Switch between editing content and task mode.
+              {% if mode_callout -%}
+                {{ mode_callout }}
+              {%- else -%}
+                Switch between editing content and task mode.
+              {%- endif %}
             </li>
             <li
               class="callout-item"

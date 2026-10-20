@@ -3,8 +3,11 @@ description = "Compare Squarespace, Wix, and Archival plans side by side. Archiv
 headline = "Pay Less, Get More."
 subhead = "A $15/mo website builder with hosting, email, analytics, and AI editing included."
 cta_label = "Build your site now"
-compare_link_label = "See the comparison"
+templates_link_label = "See templates"
+templates_title = "Start from a real template"
+templates_intro = "Pick one, make it yours, and preview it before you pay."
 features_title = "What you get with the $15/mo plan"
+mode_callout = "Switch between editing content yourself and describing a change for AI editing."
 features_intro = "Everything a small business website needs, in one monthly plan. Hosting, email, and analytics included."
 compare_title = "Squarespace vs. Wix vs. Archival"
 compare_intro = "Plans and pricing, side by side."
@@ -12,8 +15,38 @@ archival_label = "Archival Pro"
 squarespace_label = "Squarespace Core"
 wix_label = "Wix Core"
 prices_checked = "Prices checked on October 13, 2026"
-faq_title = "Squarespace and Wix pricing questions"
+faq_title = "Pricing questions"
 final_line = "A $15/mo website builder for small businesses. Billed monthly. Cancel anytime."
+
+[[templates]]
+name = "Small Business"
+slug = "small-business"
+template_id = "github/jesseditson/archival-website/templates%2Fsmallbiz-1/Small%20Business"
+
+[[templates]]
+name = "Bar & Restaurant"
+slug = "bar-restaurant"
+template_id = "github/jesseditson/archival-website/templates%2Fbar-restaurant-1/Bar%20%26%20Restaurant"
+
+[[templates]]
+name = "Professional"
+slug = "professional"
+template_id = "github/jesseditson/archival-website/templates%2Fprofessional-1/Professional"
+
+[[templates]]
+name = "Portfolio"
+slug = "portfolio"
+template_id = "github/jesseditson/archival-website/templates%2Fabout-1/Portfolio"
+
+[[templates]]
+name = "Photo Gallery"
+slug = "photo-gallery"
+template_id = "github/jesseditson/archival-website/templates%2Fphotographica-1/Photo%20Gallery"
+
+[[templates]]
+name = "Blog"
+slug = "blog"
+template_id = "github/jesseditson/archival-website/templates%2Fblog-1/Blog"
 
 [[features]]
 key = "prompt"
@@ -24,23 +57,23 @@ Start from a template built by people, or describe your site and attach your fil
 
 [[features]]
 key = "editor"
-title = "Edit from anywhere"
+title = "Edit without code"
 content = """
-Change text, photos, and pages from your phone or laptop. Or describe the change and AI editing makes it for you.
-"""
-
-[[features]]
-key = "settings"
-title = "Your repo, your domain"
-content = """
-Your site lives in a real repository you control. You get a timestamped deploy history and full control of your DNS.
+Change text, photos, and pages in a simple editor, or describe the change and AI editing makes it for you. Works on your phone, too.
 """
 
 [[features]]
 key = "history"
-title = "Undo anything"
+title = "Undo any mistake"
 content = """
 Every change is saved. See what changed and when, and roll back a single edit or a whole day's work.
+"""
+
+[[features]]
+key = "settings"
+title = "Your site, your domain"
+content = """
+Use your own domain and keep full control. Under the hood, your site lives in a Git repository you own, so you can take it with you anytime.
 """
 
 [[benefits]]
@@ -80,15 +113,6 @@ squarespace_mark = "partly"
 wix_mark = "no"
 
 [[rows]]
-label = "Cookieless analytics"
-archival = "Yes, included with Pro"
-squarespace = "Basic site metrics"
-wix = "Basic traffic analytics"
-archival_mark = "yes"
-squarespace_mark = "partly"
-wix_mark = "partly"
-
-[[rows]]
 label = "Domain renewal"
 archival = "Included yearly when registered with us (up to $40/yr)"
 squarespace = "Free first year on annual plans, then about $20/yr for .com"
@@ -98,25 +122,7 @@ squarespace_mark = "partly"
 wix_mark = "partly"
 
 [[rows]]
-label = "Who owns the code"
-archival = "You do"
-squarespace = "Squarespace. You own your content, not the templates"
-wix = "Wix. Sites “need to be hosted and operated on Wix’s servers”"
-archival_mark = "yes"
-squarespace_mark = "no"
-wix_mark = "no"
-
-[[rows]]
-label = "Who owns the company"
-archival = "Independent and self-funded. Answers to customers, not investors."
-squarespace = "Private equity. Taken private by Permira in October 2024 for $7.2 billion."
-wix = "Public company, traded on Nasdaq since 2013. Answers to shareholders."
-archival_mark = "yes"
-squarespace_mark = "no"
-wix_mark = "no"
-
-[[rows]]
-label = "Rollback history"
+label = "Undo any change"
 archival = "Every change, roll back any of them"
 # Not yet checked against a Squarespace page; verify before launch.
 squarespace = "No site version history"
@@ -135,25 +141,25 @@ squarespace_mark = "partly"
 wix_mark = "no"
 
 [[faq]]
-question = "How much does Squarespace cost?"
-answer = """
-Squarespace's Core plan is $39/mo billed monthly, or $29/mo if you prepay a year ($348). Email through Google Workspace is included for the first year, then paid per user.
-"""
-
-[[faq]]
-question = "How much does Wix cost?"
-answer = """
-Wix's Core plan is $36/mo billed monthly, or $29/mo if you prepay a year ($348). Email on your domain is not included and is sold separately.
-"""
-
-[[faq]]
-question = "Is Wix or Squarespace better?"
-answer = """
-Both are capable website builders at similar prices. The bigger differences are what's included and what you own: neither includes ongoing email on its Core plan, and you can't take your site's code with you if you leave. Archival includes email and analytics for $15/mo, and your site lives in a Git repo you own.
-"""
-
-[[faq]]
 question = "What does Archival cost?"
 answer = """
 Archival Pro is $15/mo, billed monthly. It includes hosting, a custom domain (renewal included when registered with us), 5 email addresses on your domain ($0.50/mo for each one after that), cookieless analytics, and $5 of AI editing usage each month (billed at cost after that).
+"""
+
+[[faq]]
+question = "How does that compare to Squarespace and Wix?"
+answer = """
+Squarespace's Core plan is $39/mo billed monthly and Wix's Core plan is $36/mo, or $29/mo for either if you prepay a year ($348). Squarespace includes Google Workspace email for the first year only; Wix doesn't include email on your domain.
+"""
+
+[[faq]]
+question = "Should I pick Squarespace, Wix, or Archival?"
+answer = """
+All three can build a good-looking site. Squarespace and Wix cost more than twice as much, don't include ongoing email, and keep your site on their servers. Archival includes email and analytics for $15/mo, and your site lives in a Git repo you own.
+"""
+
+[[faq]]
+question = "Who's behind Archival?"
+answer = """
+Archival is independent and self-funded, so we answer to customers, not investors. Your site lives in a repo you own, and the code is yours.
 """
