@@ -124,8 +124,14 @@ description = "string"
 headline = "string"
 subhead = "string"
 cta_label = "string"
-compare_link_label = "string"
+# The small line under the hero's buttons.
+hero_note = "string"
+templates_link_label = "string"
+templates_title = "string"
+templates_intro = "string"
 features_title = "string"
+# The editor frame's first callout, in place of the homepage's wording.
+mode_callout = "string"
 features_intro = "string"
 compare_title = "string"
 compare_intro = "string"
@@ -137,6 +143,19 @@ prices_checked = "string"
 faq_title = "string"
 # The line above the closing section's button.
 final_line = "string"
+
+# The template cards under the hero. Each opens that template in the editor's
+# gallery, so all three fields must match the editor's catalog
+# (editor.archival.dev/templates.json).
+[pay_less_get_more.templates]
+name = "string"
+# The editor's slug for the name (src/journey.ts slug()), used for the route
+# hash and for this page's image files: public/img/templates/<slug>-400.avif,
+# -400.webp, -640.avif and -640.webp.
+slug = "string"
+# TemplateObject::identifier(): provider, owner, repo, ref and name, each
+# percent-encoded, joined by "/". Stored encoded; the page encodes it again.
+template_id = "string"
 
 [pay_less_get_more.features]
 # Must be a product tour frame: prompt, editor, media, settings or history.

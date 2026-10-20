@@ -11,10 +11,11 @@
   Google Ads landing page. Every word on it comes from the pay_less_get_more
   object; the frames are the homepage's product tour partial and the cards
   under them its benefit cards. Every CTA, the nav's included, reports
-  cta_click to Rybbit with this page's name and its own label.
+  cta_click to Rybbit with this page's name and its own label; a template card
+  reports its template's name.
 
-  The comparison comes straight after the hero rather than after the product
-  tour, so its top edge shows in the first desktop viewport.
+  The template cards come straight after the hero, then the comparison, so a
+  visitor sees what they would be building before what it costs.
 {% endcomment %}
 
 <section class="lp-hero">
@@ -32,15 +33,69 @@
     </a>
     <a
       class="lp-compare-link"
-      href="#compare"
+      href="#templates"
       data-rybbit-event="cta_click"
       data-rybbit-prop-page="pay-less-get-more"
-      data-rybbit-prop-cta_text="{{ lp.compare_link_label | escape }}"
+      data-rybbit-prop-cta_text="{{ lp.templates_link_label | escape }}"
     >
-      {{ lp.compare_link_label }}
+      {{ lp.templates_link_label }}
       <span aria-hidden="true">&darr;</span>
     </a>
   </div>
+  <p class="lp-hero-note">{{ lp.hero_note }}</p>
+</section>
+
+<section class="lp-templates" id="templates" aria-labelledby="templates-title">
+  <h2 class="section-title lp-section-title" id="templates-title">{{ lp.templates_title }}</h2>
+  <p class="lp-section-intro">{{ lp.templates_intro }}</p>
+
+  {% comment %}
+    Each card opens its template's confirm screen in the editor. The editor
+    picks a template from ?template= alone; the hash is the route it lands on
+    anyway, carried so the link reads as that screen. The layout's script adds
+    the ad click and campaign tags to the query, ahead of the hash.
+
+    The images are the editor's own gallery thumbnails, resized: 400 and 640
+    wide, 4:3 like the originals. The name under each says which template it
+    is, so the image itself is decorative.
+  {% endcomment %}
+  <ul class="lp-template-grid" role="list">
+    {% for template in lp.templates %}
+      <li>
+        <a
+          class="lp-template"
+          href="https://editor.archival.dev/new?template={{ template.template_id | url_encode }}#/new/choose-template/{{ template.slug }}"
+          data-rybbit-event="cta_click"
+          data-rybbit-prop-page="pay-less-get-more"
+          data-rybbit-prop-cta_text="{{ template.name | escape }}"
+        >
+          <span class="lp-template-shot">
+            <picture>
+              <source
+                type="image/avif"
+                srcset="/img/templates/{{ template.slug }}-400.avif 400w, /img/templates/{{ template.slug }}-640.avif 640w"
+                sizes="(max-width: 640px) 50vw, 20rem"
+              >
+              <source
+                type="image/webp"
+                srcset="/img/templates/{{ template.slug }}-400.webp 400w, /img/templates/{{ template.slug }}-640.webp 640w"
+                sizes="(max-width: 640px) 50vw, 20rem"
+              >
+              <img
+                src="/img/templates/{{ template.slug }}-640.webp"
+                width="640"
+                height="480"
+                alt=""
+                loading="lazy"
+                decoding="async"
+              >
+            </picture>
+          </span>
+          <span class="lp-template-name">{{ template.name }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
 </section>
 
 <section class="lp-compare" id="compare" aria-labelledby="compare-title">
@@ -93,7 +148,7 @@
 <section class="lp-features" aria-labelledby="features-title">
   <h2 class="section-title lp-section-title" id="features-title">{{ lp.features_title }}</h2>
   <p class="lp-section-intro">{{ lp.features_intro }}</p>
-  {% include "product-tour", sections: lp.features %}
+  {% include "product-tour", sections: lp.features, mode_callout: lp.mode_callout %}
 
   <div class="benefit-grid benefit-grid--compact lp-benefits">
     {% for benefit in lp.benefits %}
