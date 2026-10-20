@@ -155,7 +155,7 @@ Squarespace's Core plan is $39/mo billed monthly and Wix's Core plan is $36/mo, 
 [[faq]]
 question = "Should I pick Squarespace, Wix, or Archival?"
 answer = """
-All three can build a good-looking site. Squarespace and Wix cost about twice as much, don't include ongoing email, and keep your site on their servers. Archival includes email and analytics for $15/mo, and your site lives in a Git repo you own.
+All three can build a good-looking site. Squarespace and Wix cost more than twice as much, don't include ongoing email, and keep your site on their servers. Archival includes email and analytics for $15/mo, and your site lives in a Git repo you own.
 """
 
 [[faq]]
