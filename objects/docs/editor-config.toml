@@ -8,7 +8,7 @@ This file is most useful when creating an archival template or for customizing t
 
 Place `archival_editor.toml` in the root of your repo, alongside `archival_objects.toml` and `archival.toml`. The editor reads it automatically when your site loads, and re-reads it whenever the file changes.
 
-It is also where you turn on [ActivityPub](#ActivityPub), which publishes your content to Mastodon and the rest of the fediverse whenever your site deploys, and [Webmention](#Webmention), which lets your pages and pages on other sites tell each other when one links to the other.
+It is also where you turn on [ActivityPub](#ActivityPub), which publishes your content to Mastodon and the rest of the fediverse whenever your site deploys and gives the people who work on the site accounts of their own there, and [Webmention](#Webmention), which lets your pages and pages on other sites tell each other when one links to the other.
 """
 
 [[sections]]
@@ -158,14 +158,14 @@ A draft can outlive the shape it was started in. Every time one is opened it is 
 [[sections]]
 title = "ActivityPub"
 content = """
-An `activitypub` section turns your site into an account people can follow from Mastodon, Threads, Ghost, and anything else that speaks [ActivityPub](https://www.w3.org/TR/activitypub/). Every object you map becomes a post on that account, and each time your site deploys, the people following it see what you added, changed, or removed.
+An `activitypub` list gives your site accounts people can follow from Mastodon, Threads, Ghost, and anything else that speaks [ActivityPub](https://www.w3.org/TR/activitypub/). One account publishes your content: every object you map becomes a post on it, and each time your site deploys, the people following it see what you added, changed, or removed. The other accounts are the people who work on the site. Each is a handle of its own on your domain that its owner can follow, like, boost and reply from while reading anywhere on the fediverse.
 
 ActivityPub is part of Archival's hosting. Publishing runs when Archival deploys your site, so a site you build with the CLI and host elsewhere does not federate.
 
 ```toml
-[activitypub]
+[[activitypub]]
 username = "blog"
-domain = "example.com"
+domain = "jesse.news"
 
 [activitypub.actor]
 object = "site"
@@ -180,23 +180,31 @@ name = "title"
 content = "body"
 published = "published_at"
 image = "cover"
+
+[[activitypub]]
+username = "jesse"
+email = "jesse@jesse.news"
+follow = ["@bsky.brid.gy@bsky.brid.gy"]
 ```
 
-With this file, a site at `example.com` is followed as `@blog@example.com`.
+With this file, a site at `example.com` is followed as `@blog@example.com`, and whoever was invited to the site as `jesse@example.com` is `@jesse@example.com`.
 
-Every value in the section other than `username`, `domain`, `follow`, `type` and the actor's `object` names a field of your object, exactly as it appears in `archival_objects.toml` — or, under `attachment`, one of its child lists and that list's fields. Nothing you write here is itself published: what goes out is whatever your content says.
+Each `[[activitypub]]` table is one account. Every value in it other than `username`, `domain`, `email`, `follow`, `type` and the actor's `object` names a field of your object, exactly as it appears in `archival_objects.toml` — or, under `attachment`, one of its child lists and that list's fields. Nothing you write here is itself published: what goes out is whatever your content says.
+
+A single `[activitypub]` table, as earlier sites wrote it, still works and means a list with one account.
 
 `activitypub` is reserved at the top level of this file, so an object type named `activitypub` cannot be configured here.
 
-### The account
+### Accounts
 
-- `username` (optional) — the part of the handle before the domain. It may hold letters, numbers and underscores, with dots and dashes allowed between them, up to 64 characters. Left out, the first part of the account's domain is used, with anything else turned into underscores, so `my-site.com` is followed as `@my_site@my-site.com`. A domain that starts with `www` gives you `@www`, so set a username if yours does.
+- `username` (required when there is more than one account) — the part of the handle before the domain. It may hold letters, numbers and underscores, with dots and dashes allowed between them, up to 64 characters, and no two accounts may share one. With a single account it may be left out, and the first part of the account's domain is used, with anything else turned into underscores, so `my-site.com` is followed as `@my_site@my-site.com`. A domain that starts with `www` gives you `@www`, so set a username if yours does.
 - `domain` (optional) — which of your site's domains the account lives on. It is the part of the handle after the username, and every post's address is written against it. Give a bare hostname such as `example.com`, with no `https://`, port or path. It must be one of your site's own domains. Left out, your site's primary domain is used. That is normally the domain the site was created with, not a custom domain you added later, so a site that started on an `onarchival.dev` address federates from that address unless you set this.
-- `follow` (optional) — accounts your site follows, up to 20, each a handle such as `@user@example.com` or the https address of an account. Each deploy follows every account newly on the list and unfollows every one taken off it. Your site does not show posts from the accounts it follows: following is how you opt in to services that ask for it, such as the [Bluesky bridge](#bluesky). An account that cannot be found is tried again on the next deploy, and does not hold up publishing.
+- `email` (optional) — whose account this is: the address a [collaborator](/docs/deploying) was invited to the site with. Only that person can act from the account. Left out, anyone who can edit the site can. The account's name and avatar come from `actor` when it is set, and otherwise from that person's Archival profile, or the site's name.
+- `follow` (optional) — accounts this account follows, up to 20, each a handle such as `@user@example.com` or the https address of an account. Each deploy follows every account newly on the list and unfollows every one taken off it. Your site does not show posts from the accounts it follows: following is how you opt in to services that ask for it, such as the [Bluesky bridge](#bluesky), and how a person's account is seen by the people they read. An account that cannot be found is tried again on the next deploy, and does not hold up publishing. Pressing Follow from the editor, described under [Acting from your account](#Acting%20from%20your%20account), edits this list for you.
 
-Settle on a domain before you start federating. If the account's domain changes afterwards — by setting or changing `domain`, or by renaming or removing your primary domain while `domain` is left out — it is published as a new account, and the followers you already have are not carried over.
+Settle on a domain before you start federating. If an account's domain changes afterwards — by setting or changing `domain`, or by renaming or removing your primary domain while `domain` is left out — it is published as a new account, and the followers you already have are not carried over. Renaming an account's `username` does the same.
 
-`[activitypub.actor]` is optional, and sets the profile other servers show for the account. `object` is required, and names an object your site has exactly one of — a site settings or about object is the usual choice. The rest name its fields:
+`[activitypub.actor]` is optional on any account, and sets the profile other servers show for it. `object` is required, and names an object your site has exactly one of — a site settings or about object for the account that publishes, or an author's entry for a person's. The rest name its fields:
 
 - `name` — the display name. A `string`, `markdown` or `enum` field. Left out, the `site_name` in `archival.toml` is used, and failing that the domain.
 - `summary` — the bio. A `string`, `markdown` or `enum` field.
@@ -205,21 +213,21 @@ Settle on a domain before you start federating. If the account's domain changes 
 
 ### Bluesky
 
-[Bridgy Fed](https://fed.brid.gy) bridges fediverse accounts into Bluesky, and your site opts in by following its bot:
+[Bridgy Fed](https://fed.brid.gy) bridges fediverse accounts into Bluesky, and an account opts in by following its bot:
 
 ```toml
-[activitypub]
+[[activitypub]]
 follow = ["@bsky.brid.gy@bsky.brid.gy"]
 ```
 
-Bridgy Fed only bridges an account with a profile picture, so map the actor's `icon` first. Once the bot follows your site back, new posts appear on Bluesky from `@<username>.<domain>.ap.brid.gy`, so `@blog@example.com` becomes `@blog.example.com.ap.brid.gy`. Posts older than two weeks are not bridged, apart from the newest [featured](#posts) post, which becomes the account's pinned post. Taking the bot off the list stops bridging.
+Bridgy Fed only bridges an account with a profile picture, so map the actor's `icon` first. Once the bot follows the account back, new posts appear on Bluesky from `@<username>.<domain>.ap.brid.gy`, so `@blog@example.com` becomes `@blog.example.com.ap.brid.gy`. Posts older than two weeks are not bridged, apart from the newest [featured](#posts) post, which becomes the account's pinned post. Taking the bot off the list stops bridging.
 
 ### Posts
 
-The section must map at least one object type under `activitypub.objects`. Each table there is keyed by an object type your site has many of, and every object of that type is published unless `when` says otherwise:
+One account must map at least one object type under its `objects`, and an object type may be mapped by only one account, which is the account its posts come from. Each table there is keyed by an object type your site has many of, and every object of that type is published unless `when` says otherwise:
 
 - `when` (optional) — a `boolean` field deciding which objects are published. Only objects where it is true are federated, and one whose field turns false is deleted from the servers that received it. Left out, every object of the type is published.
-- `featured` (optional) — a `boolean` field choosing the account's featured posts: the five newest posts where it is true, by `published` date, across every type you map. Mastodon, Pleroma, Akkoma and GoToSocial show them as pinned posts on the account's profile, and Bluesky, through [Bridgy Fed](#bluesky), pins the newest one. Misskey, Sharkey and Iceshrimp pin only notes, so featured articles are not pinned there. Featuring or unfeaturing a post updates the account's profile, not the post. Left out, none of the type's posts are featured.
+- `featured` (optional) — a `boolean` field choosing the account's featured posts: the five newest posts where it is true, by `published` date, across every type the account maps. Mastodon, Pleroma, Akkoma and GoToSocial show them as pinned posts on the account's profile, and Bluesky, through [Bridgy Fed](#bluesky), pins the newest one. Misskey, Sharkey and Iceshrimp pin only notes, so featured articles are not pinned there. Featuring or unfeaturing a post updates the account's profile, not the post. Left out, none of the type's posts are featured.
 - `type` (optional) — `"Article"` (the default) or `"Note"`. An article is a piece of writing with a title. Mastodon never shows an article's body: it shows the title, the summary and a link to the post, with the post's image or, when it has none, a preview of the linked page. Servers such as Misskey show the whole article. A note is a short post like a status update, and is shown in full wherever it is read. A note has no title: its `name` is published only when it has no `content`, and then as its body, in plain text.
 - `name` — the title. A `string`, `markdown` or `enum` field.
 - `content` — the body. A `string`, `markdown` or `enum` field. Markdown is rendered to HTML.
@@ -248,25 +256,36 @@ When an object type has a [page template](/docs/page-templates), each post links
 
 Publishing happens when your site deploys, however the change reached it — from the editor, a shortcut, or a git push. Nothing is sent while you are still editing.
 
-- **Added objects** are posted, **changed objects** are updated, and **removed objects** are deleted from the servers that received them. An object whose `when` field turns false is deleted the same way, and so is every object of a type you remove from `activitypub.objects`, as long as another type is still mapped.
-- **An object only counts as changed when its post would come out different.** Editing a field you have not mapped sends nothing, and changing this section re-renders every post and updates each one that comes out different. Renaming an object's file deletes its post and publishes a new one.
-- **The first deploy with `activitypub` configured sends nothing** to anyone. Your existing content is published to the account, but it will not arrive in anyone's timeline as though it were new.
-- **Servers that discover the account do not pull in its older posts.** They show the featured posts they can pin, and each post delivered after someone there follows it. Any other post with a page can still be found by pasting the page's address into their search.
-- **A single deploy delivers at most 10 new posts and 20 updates**, choosing the posts with the latest `published` dates, so importing a backlog does not flood your followers. Every other new post is still published, and one with a page can be found by the page's address. A server that already has a post keeps the version it last received. Deletions, and changes to the account's profile or to which posts are featured, are always delivered.
+- **Added objects** are posted, **changed objects** are updated, and **removed objects** are deleted from the servers that received them. An object whose `when` field turns false is deleted the same way, and so is every object of a type you take out of an account's `objects`, as long as some account still maps a type.
+- **An object only counts as changed when its post would come out different.** Editing a field you have not mapped sends nothing, and changing this section re-renders every post and updates each one that comes out different. Renaming an object's file deletes its post and publishes a new one, and so does moving a type from one account to another.
+- **The first deploy of an account sends nothing** to anyone. Your existing content is published to the account, but it will not arrive in anyone's timeline as though it were new.
+- **Servers that discover an account do not pull in its older posts.** They show the featured posts they can pin, and each post delivered after someone there follows it. Any other post with a page can still be found by pasting the page's address into their search.
+- **A single deploy delivers at most 10 new posts and 20 updates** per account, choosing the posts with the latest `published` dates, so importing a backlog does not flood your followers. Every other new post is still published, and one with a page can be found by the page's address. A server that already has a post keeps the version it last received. Deletions, and changes to an account's profile or to which posts are featured, are always delivered.
 
-Any mistake in the section stops publishing: a setting it does not recognise, a `username` that is not allowed or a `domain` that is not one of your site's domains, a `follow` entry that is not an account, an object your site does not have (or a list where a single object is expected, or the reverse), or a field your object does not have or whose type cannot fill it (such as a `when` or `featured` field that is not a `boolean`). That deploy publishes nothing to the fediverse, and neither does any later one until you correct it. An account that is already federating keeps showing what it last published. One that has not federated yet, or that you are turning back on, stays unreachable. Your site itself still deploys as usual. Nothing in the editor reports these mistakes yet, so if new posts stop arriving, check the section against `archival_objects.toml`.
+Any mistake in the section stops publishing: a setting it does not recognise, a `username` that is not allowed or that two accounts share, a `domain` that is not one of your site's domains, an `email` that is not a collaborator's, a `follow` entry that is not an account, an object type mapped by two accounts, an object your site does not have (or a list where a single object is expected, or the reverse), or a field your object does not have or whose type cannot fill it (such as a `when` or `featured` field that is not a `boolean`). That deploy publishes nothing to the fediverse, and neither does any later one until you correct it. An account that is already federating keeps showing what it last published. One that has not federated yet, or that you are turning back on, stays unreachable. Your site itself still deploys as usual. Nothing in the editor reports these mistakes yet, so if new posts stop arriving, check the section against `archival_objects.toml`.
+
+### Acting from your account
+
+A person's account is used from the [Archival editor](https://editor.archival.dev), signed in as yourself. Nothing is installed anywhere else, and there is no password for the account: whoever can sign in to the editor and matches the account's `email` is the account.
+
+The way in is the one every Mastodon-compatible server offers. Reading on any of them while logged out, press Follow on a profile, or Star, Boost or Reply on a post. The server asks which account you want to act from; give your handle, `jesse@example.com`, and it sends you to the editor, which shows the profile or post and a button for the action. Most servers remember the handle, so after the first time it is a single click. The same page in the editor takes a pasted handle or address, so you can act on anything without going through another server first.
+
+- **Follow and Unfollow** edit the account's `follow` list in this file and commit the change, so the follow is sent when your site next deploys. Following in the editor and editing the list by hand are the same thing.
+- **Like, Boost and Reply**, and taking any of them back, are sent at once from your account. A reply is published as a post of the account, kept by Archival and shown under the original wherever its author's server shows replies. When the page you are replying to or liking also takes [Webmention](#Webmention), the same reply or like is sent as a mention.
+
+An account without `email` can be used by anyone who can edit the site, so the account that publishes your posts can reply from the editor too. There is no timeline: following an account does not bring its posts into the editor.
 
 ### Followers, likes, boosts and replies
 
-Archival keeps what the fediverse does with your account: who follows it, and the likes, boosts and public replies its posts get, including replies to those replies. Followers-only replies and direct messages are not kept. Edits, deletions and taken-back likes apply as they arrive, and an account that is deleted takes everything it did with it.
+Archival keeps what the fediverse does with each account: who follows it, and the likes, boosts and public replies its posts get, including replies to those replies. Followers-only replies and direct messages are not kept. Edits, deletions and taken-back likes apply as they arrive, and an account that is deleted takes everything it did with it.
 
 Your pages are built before any of that happens, so they cannot show it. A [carrier](/docs/carriers) can: `site.activitypub` reads each post's likes, boosts and replies when a visitor asks, so a post's page can fetch them and show the conversation under it. See [Reading the fediverse](/docs/carriers#Reading%20the%20fediverse).
 
 ### Turning it off
 
-Removing the `activitypub` section and deploying stops the account from answering. Its followers, posts, the accounts it follows and the likes, boosts and replies it has received are kept, and adding the section back resumes it where it left off. While it is off, a carrier reads the account as not federating, with nothing on any list. The same happens while a site's subscription is cancelled: the account stops answering, and the next deploy after it is reactivated brings it back.
+Taking an account out of the list and deploying stops it answering; removing the whole `activitypub` list stops every account. Their followers, posts, the accounts they follow and the likes, boosts and replies they have received are kept, and adding an account back with the same `username` and `domain` resumes it where it left off. While it is off, a carrier reads the account as not federating, with nothing on any list. The same happens while a site's subscription is cancelled: the accounts stop answering, and the next deploy after it is reactivated brings them back.
 
-Archival reserves the paths under `/_archival/ap/` on every site it hosts, whether or not the site federates, so your site cannot serve its own files there. While a site federates, Archival also answers `/.well-known/webfinger` for its account and requests for ActivityPub documents on its behalf. It answers `/.well-known/nodeinfo`, `/api/v1/instance` and `/api/v2/instance` as well, describing the site as a single-account server. Any of those requests it does not recognise is passed on to your site.
+Archival reserves the paths under `/_archival/ap/` on every site it hosts, whether or not the site federates, so your site cannot serve its own files there. While a site federates, Archival also answers `/.well-known/webfinger` for its accounts and requests for ActivityPub documents on their behalf. It answers `/.well-known/nodeinfo`, `/api/v1/instance` and `/api/v2/instance` as well, describing the site as a server with as many users as it has accounts and registrations closed. Any of those requests it does not recognise is passed on to your site. What exactly is served, for people writing servers and tools, is on the [Federation](/docs/federation) page.
 """
 
 [[sections]]
@@ -327,7 +346,7 @@ Each table under `webmention.objects` is keyed by an object type your site has m
 
 Each type must map at least one of `content`, `in_reply_to` or `like_of`, since those are what name the pages a mention reaches. A `secret` field cannot be mapped.
 
-`[webmention.author]` is optional, and sets who the receiving site shows as the mention's author. `object` names an object your site has exactly one of; `name` is a `string`, `markdown` or `enum` field and `photo` an `image` field. Left out, the author is your site, named by its domain.
+`[webmention.author]` is optional, and sets who the receiving site shows as the mention's author. `object` names an object your site has exactly one of; `name` is a `string`, `markdown` or `enum` field and `photo` an `image` field. Instead of an object, `account` names the `username` of one of your [ActivityPub accounts](#ActivityPub), and the author is that account's profile. Left out, the author is your site, named by its domain.
 
 `domain` (optional) is which of your site's domains mentions are sent from. Give a bare hostname such as `example.com`, with no `https://`, port or path; it must be one of your site's own domains. Left out, your site's primary domain is used, which is normally the one the site was created with. Each mention is sent from a small page Archival serves on that domain holding your object's content as microformats. It is what the receiving site reads to verify the mention, so your own pages need no microformats of their own.
 

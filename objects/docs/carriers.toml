@@ -73,7 +73,7 @@ The package exports the whole contract, so you can name any part of it explicitl
 | `CarrierEmail` | `site.email`: `send()`. |
 | `CarrierSql` | `site.sql`: `exec()` and `transaction()`. |
 | `CarrierSqlRow` | One row a query returns, keyed by column name. |
-| `CarrierActivityPub` | `site.activitypub`: `account()`, `followers()`, `counts()`, `likes()`, `boosts()`, `replies()` and `setLocalLikes()`. |
+| `CarrierActivityPub` | `site.activitypub`: `account()`, `accounts()`, `followers()`, `counts()`, `likes()`, `boosts()`, `replies()` and `setLocalLikes()`. |
 | `CarrierWebmentions` | `site.webmentions`: `counts()` and `list()`. |
 | `CarrierReply` | One reply to a post, as `replies()` lists them. |
 | `CarrierEmailMessage` | What `send()` takes: `from`, `to`, `subject`, `text`, `html` and `replyTo`. |
@@ -472,9 +472,10 @@ A post is one of your objects, or its `path` (`"post/hello-world"`) — the same
 
 | Method | Resolves to |
 | --- | --- |
-| `account()` | Your site's own account, or `null` when it doesn't federate: `{ handle, id, url, followers, following, posts }`. `handle` is what people search for to follow it (`@blog@example.com`), and the three counts are its followers, the accounts it follows that have accepted, and its published posts. |
+| `account()` | The first of your site's accounts, or `null` when it doesn't federate: `{ handle, id, url, followers, following, posts }`. `handle` is what people search for to follow it (`@blog@example.com`), and the three counts are its followers, the accounts it follows that have accepted, and its published posts. |
+| `accounts()` | Every account on your site, in the order `archival_editor.toml` lists them, each shaped like `account()`. Empty when the site doesn't federate. |
 | `counts(posts)` | `{ likes, boosts, replies }` for each of up to 100 posts, in the order given. `replies` counts the whole thread. |
-| `followers(page?)` | A page of `{ account, followedAt }`, newest first. |
+| `followers(page?)` | A page of `{ account, follows, followedAt }` across every account, newest first. `follows` is the handle of yours they follow. |
 | `likes(post, page?)` | A page of `{ account, at }`, most recent first. |
 | `boosts(post, page?)` | A page of `{ account, at }`, most recent first. |
 | `replies(post, page?)` | A page of replies in the order they arrived — every reply in the post's thread, including replies to replies. |

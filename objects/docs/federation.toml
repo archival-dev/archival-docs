@@ -1,0 +1,169 @@
+order = 19
+title = "Open Web & Federation"
+include_in_llm_docs = true
+description = """
+Archival sites hosted by archival.dev can be used as first-class citizens in the Federated/Open Web/Indieweb universe. This document outlines how and what we implement, so that other hosts can mirror this behavior if desired by reading archival config files.
+
+The three specs that Archival implements to enable this are:
+- [ActivityPub](https://www.w3.org/TR/activitypub/)
+  - This enables archival sites to be *Actors*, which can act on federated content - e.g. Follows, Likes, and Shares.
+- [WebFinger](https://www.rfc-editor.org/rfc/rfc7033)
+  - This allows sites to authenticate themselves to other sites. e.g. so that other sites can verify our actions or mentions
+- [Webmention](https://www.w3.org/TR/webmention/)
+  - This allows sites to interact with each other, e.g. a blog post can mention another blog post, and they can become linked together.
+
+These are implemented under an _archival path where needed, and are configured via archival_editor.toml.
+
+Turning federation on is described in [Archival Editor Configuration](/docs/editor-config#ActivityPub). Reading what comes back from a site's own code is described in [Carriers](/docs/carriers#Reading%20the%20fediverse).
+"""
+
+[[sections]]
+title = "Abstract/Why"
+content = """
+The existing world of social media has an identity problem: pseudonomymous accounts allow for rich interaction between people online without risk of being persecuted for their views or otherwise creating personal risk. But the other side of this coin is that by providing anonymity, the platforms allow bad actors to post hate speech, misinformation or worse without being accountable - and worse, because it's so low friction to create accounts en masse, this type of content can create noise and abuse through sheer numbers.
+
+The cause of this paradox is that large platforms seek to monopolize the platform in which posting happens. This also has an unfortunate side effect of allowing the platform itself to become compromised (e.g. Twitter to X).
+
+Archival sites take a different approach to identity and interaction:
+- Each domain is its own federated publisher. This means that unlike on major platforms, the domain itself is accountable for the content posted on it. This sidesteps political issues like [section 230](https://en.wikipedia.org/wiki/Section_230) which has long been a double-edged sword for American websites.
+- Each domain can have one or more actors (e.g. your co-publishers on Archival), which can each individually take actions. These identities are pseudononymous. You can choose to say who you are or not. However, the domain still is owned by someone, and the domain registrar or the reseller must maintain KYC/information, so that in the case of illegal or hateful activity, they can choose to assign consequences like unpublishing or turning information over to authorities.
+- These domains can interact with other sites that implement the same (open) protocols. Today, platforms like Threads, Bluesky, Mastodon, and a constelation of independent websites already implement these protocols - so you can comment on someone's blog post on their site from your own. This solves for identity and citizenship without monopolization or surveilance.
+"""
+
+[[sections]]
+title = "Accounts on a site"
+content = """
+An Archival site is a host with one or more accounts, each configured as an entry of the site's `activitypub` list. A site at `jesse.news` with the accounts `news` and `jesse` is reached as `@news@jesse.news` and `@jesse@jesse.news`. Each account is a separate ActivityPub actor with its own keypair, followers, following list and outbox. There is no account that stands for the site itself: a site that publishes its posts does so from whichever account maps them, which on a personal site is usually also its owner's account.
+
+Accounts are created and removed by the site's owner editing a file and deploying. There is no registration, no client API and no way to sign in to a site from another server. A person acts as an account by signing in to the Archival editor, as described under [Interacting from another server](#Interacting%20from%20another%20server).
+"""
+
+[[sections]]
+title = "Discovery"
+content = """
+**WebFinger.** `GET https://<domain>/.well-known/webfinger?resource=acct:<username>@<domain>` answers for every account on that domain with `application/jrd+json`:
+
+```json
+{
+  "subject": "acct:jesse@jesse.news",
+  "aliases": ["https://jesse.news/_archival/ap/jesse"],
+  "links": [
+    { "rel": "self",
+      "type": "application/activity+json",
+      "href": "https://jesse.news/_archival/ap/jesse" },
+    { "rel": "http://webfinger.net/rel/profile-page",
+      "type": "text/html",
+      "href": "https://jesse.news/" },
+    { "rel": "http://ostatus.org/schema/1.0/subscribe",
+      "template": "https://editor.archival.dev/interact?as=jesse%40jesse.news&uri={uri}" }
+  ]
+}
+```
+
+The `resource` may also be the actor's own url. An unknown account, a domain the site does not federate from, or a `resource` of another form answers 404. The request supports CORS, so web clients may make it from a page.
+
+**NodeInfo.** `/.well-known/nodeinfo` lists a 2.1 document and then a 2.0 one, and each describes the host as running `archival`, with registrations closed, as many users as the site has accounts and as many posts as those accounts have live. Mastodon's `/api/v1/instance` and `/api/v2/instance` are served too, enough for a server that reads them before showing a host, with a `version` of the form `archival/<version>`: there is no Mastodon client API behind them.
+
+**Pages.** A GET of a post's own page with `Accept: application/activity+json` or `application/ld+json; profile="https://www.w3.org/ns/activitystreams"` answers with the post's ActivityStreams document rather than the HTML, so a page's address can be pasted into a server's search. A page that is not a federated post answers as it does to a browser.
+
+Everything under `/_archival/ap/` on every Archival site is reserved for this purpose. Paths there answer with JSON-LD and never with a page of the site.
+"""
+
+[[sections]]
+title = "Actors"
+content = """
+An actor is served at `https://<domain>/_archival/ap/<username>` as `application/activity+json`:
+
+```json
+{
+  "@context": ["https://www.w3.org/ns/activitystreams", "https://w3id.org/security/v1", { "toot": "http://joinmastodon.org/ns#", "featured": { "@id": "toot:featured", "@type": "@id" }, "discoverable": "toot:discoverable" }],
+  "id": "https://jesse.news/_archival/ap/jesse",
+  "type": "Person",
+  "preferredUsername": "jesse",
+  "name": "Jesse",
+  "summary": "<p>…</p>",
+  "url": "https://jesse.news/",
+  "icon": { "type": "Image", "mediaType": "image/jpeg", "url": "https://…" },
+  "inbox": "https://jesse.news/_archival/ap/jesse/inbox",
+  "outbox": "https://jesse.news/_archival/ap/jesse/outbox",
+  "followers": "https://jesse.news/_archival/ap/jesse/followers",
+  "following": "https://jesse.news/_archival/ap/jesse/following",
+  "featured": "https://jesse.news/_archival/ap/jesse/featured",
+  "endpoints": { "sharedInbox": "https://jesse.news/_archival/ap/inbox" },
+  "manuallyApprovesFollowers": false,
+  "discoverable": true,
+  "publicKey": {
+    "id": "https://jesse.news/_archival/ap/jesse#main-key",
+    "owner": "https://jesse.news/_archival/ap/jesse",
+    "publicKeyPem": "-----BEGIN PUBLIC KEY-----…"
+  }
+}
+```
+
+- The type is `Person`. An account that only publishes a site's posts, with no person behind it, is still a `Person`, because that is what every server shows and lets people follow.
+- `name`, `summary`, `icon` and `image` come from the site's content when the account maps them, and otherwise from the profile of the person the account belongs to, and failing that the site's name. `summary` is HTML.
+- `url` is the site's home page, or the page the account's profile object has.
+- `followers` and `following` are collections that publish only `totalItems`. Who follows an account is not listed.
+- `featured` is an ordered collection of up to five of the account's post ids, newest first, which servers that support pinning show pinned to the profile.
+- `endpoints.sharedInbox` is one inbox for the whole host. An activity delivered there is handled for every account it concerns.
+
+Every actor, object and activity id is on the account's domain, and a GET of any of them answers with its document. A deleted post answers 410 with a `Tombstone`.
+"""
+
+[[sections]]
+title = "What an account publishes"
+content = """
+An account's posts are the objects of the site that its configuration maps. They are published when the site deploys, not when they are written, so a server following an account receives activities in batches, when the site's owner publishes.
+
+- Each post is an `Article` or a `Note`, `attributedTo` the account, addressed `to` the public collection and `cc` the account's followers, with `published` and `updated` as the content says. An article has a `name`, a `content` body in HTML and a `url` to its page. A note has `content` and no `name`. Either may carry an `image` and up to a site's own limit of `attachment` documents of type `Image`, `Video` or `Audio` with `mediaType`, `url` and `name` as alt text.
+- A new post is delivered as `Create`, a changed one as `Update`, and a removed one as `Delete` with the post's id as its object, and a `Tombstone` left at the id. A post that stops being published is deleted the same way.
+- A served post carries `replies`, `likes` and `shares` collections. `likes` and `shares` carry only `totalItems`; `replies` pages the ids of every public reply the site has kept.
+- The outbox is an `OrderedCollection` whose `totalItems` is the number of live posts and whose pages list one `Create` per live post, newest first, with the post's current document embedded. Updates and deletes are served at their own ids but never listed.
+- The first deploy of an account delivers nothing: its existing posts are served, but no server receives them as new. Later deploys deliver at most ten new posts and twenty updates each, so a server will not receive a backlog at once.
+- Changes to the actor's profile, and to which posts are featured, are delivered as one `Update` of the actor.
+
+An account whose configuration lists accounts to follow sends each one a `Follow` after a deploy, an `Undo` of that `Follow` when the account is taken off the list, and the `Follow` again while it has not been answered. The account's following count rises only on an `Accept`.
+"""
+
+[[sections]]
+title = "Interacting from another server"
+content = """
+When an Archival site collaborator interacts with an object in the wild, it will trigger a "remote-intraction flow", implemented by most platforms (Mastodon, Pleroma, Akkoma, Misskey, Friendica, etc):
+
+1. On any server, logged out, the person presses Follow on a profile or Star, Boost or Reply on a post, and the server asks which account they want to act from. They give an Archival handle such as `jesse@jesse.news`.
+2. The server looks the handle up through WebFinger (e.g. GET https://jesse.news/.well-known/webfinger?resource=acct:jesse@jesse.news) and takes the `template` of the link with `rel` `http://ostatus.org/schema/1.0/subscribe`.
+3. It replaces `{uri}` in the template with the url of the profile or post and sends the person's browser there.
+
+The template an Archival account publishes points at the editor, and already names the account: `https://editor.archival.dev/interact?as=<username>%40<domain>&uri={uri}`. The editor checks that the person signed in there is allowed to act as that account, resolves the `uri` as any server would (WebFinger for a handle, a signed GET with the ActivityStreams `Accept` types for a url), and offers the actions its type allows. 
+
+Note that following sends the account's `Follow` once the site next deploys, since its following list lives in the site's configuration. Liking, boosting and replying are managed by the editor's data storage and so they change immediately.
+"""
+
+[[sections]]
+title = "What an account sends and accepts"
+content = """
+**Requests are signed.** Every request an Archival account makes is signed with the account's key, in the form that Mastodon sends and every implementation accepts: an [HTTP Signature](https://datatracker.ietf.org/doc/html/draft-cavage-http-signatures-12) over `(request-target)`, `host`, `date` and, for a request with a body, `digest`, with the algorithm `rsa-sha256` and the key named by `keyId`. Its GETs are signed too, so a server in authorized-fetch mode can serve it. The `User-Agent` is `Archival/<version> (+https://archival.dev)`.
+
+**Deliveries.** Each activity is delivered once per inbox, with followers on one server de-duplicated by their shared inbox. A 408, 429, 5xx or a connection failure is retried with increasing delay; any other answer is taken as final.
+
+**The inbox** accepts a `POST` of `application/activity+json` or `application/ld+json` that carries a valid signature from an actor on the host that served its key, with a recent `Date` and a `Digest` that matches the body. A request that fails any of those answers 401. One that passes answers 202 and is handled as follows:
+
+- `Follow` of an account is accepted at once with an `Accept`, and the actor added to the account's followers. `Undo` of a `Follow` removes it.
+- `Accept` and `Reject` of a `Follow` the account sent settle that follow.
+- `Like` and `Announce` of one of the account's posts, and `Undo` of either, are kept and reflected in the post's `likes` and `shares` counts.
+- `Create` of a public `Note` whose `inReplyTo` is one of the account's posts, or a reply already kept, is kept as a reply, as is an `Update` or `Delete` of it from its own author. A reply addressed to followers only, or sent as a direct message, is not kept.
+- `Delete` of an actor forgets that actor's follow and everything it did.
+- `Move`, `Block`, `Flag`, mentions, direct messages and any other activity are accepted and ignored. An account never sends a mention or direct message either, and cannot be messaged.
+
+An account's replies, likes and boosts, sent from the editor, are ordinary activities from the account's actor: a `Like` or `Announce` with the target's id as object, delivered to the target's author and, for a boost, the account's followers; a `Create` of a `Note` with `inReplyTo`, addressed to the public collection, the parent's author and the account's followers, served at an id under the account; and an `Undo` of any of them.
+"""
+
+[[sections]]
+title = "Webmention"
+content = """
+Webmention is per site, not per account. A site that takes mentions advertises its endpoint on every page it serves with a `Link: <https://<domain>/_archival/webmention>; rel="webmention"` header, and the endpoint takes a form-encoded `POST` of `source` and `target`. It answers 202 at once, 400 for a `source` that is not https or a `target` that is not a page of the site, and 429 past thirty requests a minute from one source host. Verification happens later: the source is fetched, checked for a link to the target, and read for microformats to learn whether the mention is a reply, like, repost, bookmark or plain mention, and from which h-card. A source that no longer links to the target removes the mention.
+
+A site that sends mentions does so from source documents it serves at `/_archival/webmention/<type>/<file>`, one per published object: an `h-entry` with `u-url` the object's page, its `p-author h-card`, `dt-published`, `e-content`, and `u-in-reply-to` or `u-like-of` when the object has them. A site's configuration may name an account as the author, in which case the h-card is that person, with `u-url` the account's profile page. A mention is sent for every link in the content, found by [endpoint discovery](https://www.w3.org/TR/webmention/#sender-discovers-receiver-webmention-endpoint) on the target. An object that stops being published keeps its source document as a 410, so the receiver can take the mention back.
+
+When a person likes or replies to a page from the editor, and the page advertises a webmention endpoint, the same like or reply is sent as a mention too, with a source document for the note served the same way.
+"""
