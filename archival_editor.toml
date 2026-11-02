@@ -2,7 +2,7 @@
 name = "Post Update"
 path = "update"
 
-[activitypub]
+[[activitypub]]
 domain = "archival.dev"
 username = "archival"
 follow = ["@bsky.brid.gy@bsky.brid.gy", "@threads@threads.net"]
