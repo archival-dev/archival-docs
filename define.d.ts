@@ -8,3 +8,5 @@ declare const API_URL: string;
 declare const TURNSTILE_SITE_KEY: string;
 /** URL of the comments carrier (carriers/comments), usually site-relative. */
 declare const COMMENTS_URL: string;
+/** URL of the office hours carrier (carriers/office-hours), usually site-relative. */
+declare const OFFICE_HOURS_URL: string;

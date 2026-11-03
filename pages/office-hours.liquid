@@ -1,0 +1,75 @@
+{% comment %}
+  An object with a secret field is not a Liquid global, so it has to be
+  assigned before the layout tag can read its title.
+{% endcomment %}
+{% assign office_hours = objects.office_hours %}
+{%
+  layout 'theme' title: office_hours.title
+  , area: "office-hours"
+  , description: office_hours.description
+  , path: "office-hours"
+%}
+
+<div class="oh-page">
+  <div id="header" class="oh-hero">
+    <h1 class="hero-message oh-headline" data-tilt-hero>
+      <span class="hero-line-1">{{ office_hours.headline }}</span>
+    </h1>
+    <p class="oh-tagline">{{ office_hours.tagline }}</p>
+  </div>
+
+  <section class="oh-events" aria-labelledby="oh-events-title">
+    <h2 id="oh-events-title" class="oh-section-title">{{ office_hours.events_title }}</h2>
+
+    {% comment %}
+      The list is filled from the carrier, which reads the team's Notion
+      calendar. Without script there is nothing to fill it with, so the
+      Discord invite stands in.
+    {% endcomment %}
+    <ol class="oh-list" data-oh-list data-rsvp-label="{{ office_hours.rsvp_label | escape }}">
+      <li class="oh-status" data-oh-status>Loading the calendar…</li>
+    </ol>
+    <p class="oh-empty" data-oh-empty hidden>{{ office_hours.empty_message }}</p>
+    <noscript>
+      <p class="oh-empty">
+        The calendar needs JavaScript to load. Until then,
+        <a href="{{ objects.home.discord_url }}" rel="noopener">join us on Discord</a>.
+      </p>
+    </noscript>
+  </section>
+
+  <section class="oh-hosts" aria-labelledby="oh-hosts-title" data-oh-hosts hidden>
+    <h2 id="oh-hosts-title" class="oh-section-title">{{ office_hours.hosts_title }}</h2>
+    <ul class="oh-host-list" data-oh-host-list></ul>
+  </section>
+
+  <dialog id="oh-rsvp" class="oh-dialog" aria-labelledby="oh-rsvp-title">
+    <form class="oh-form" data-oh-form novalidate>
+      <button type="button" class="oh-close" data-oh-close aria-label="Close">&times;</button>
+      <h2 id="oh-rsvp-title" class="oh-dialog-title">{{ office_hours.rsvp_label }}</h2>
+      <p class="oh-dialog-event" data-oh-form-event></p>
+
+      <label class="oh-field">
+        <span>Name</span>
+        <input type="text" name="name" autocomplete="name" required maxlength="100" />
+      </label>
+      <label class="oh-field">
+        <span>Email</span>
+        <input type="email" name="email" autocomplete="email" required maxlength="254" />
+      </label>
+      <label class="oh-field">
+        <span>What do you want to work on?</span>
+        <textarea name="plan" rows="4" required maxlength="1000"></textarea>
+      </label>
+
+      <p class="oh-form-error" data-oh-form-error role="alert" hidden></p>
+      <div class="oh-form-actions">
+        <button type="submit" class="primary-cta oh-submit" data-oh-submit>
+          {{- office_hours.rsvp_label -}}
+        </button>
+      </div>
+    </form>
+  </dialog>
+</div>
+
+<script type="module" src="/scripts/office-hours.js"></script>

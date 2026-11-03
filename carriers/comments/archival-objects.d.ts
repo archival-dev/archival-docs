@@ -218,6 +218,104 @@ export interface SocialWebBenefitsObject {
   content: string | null;
 }
 
+export interface PayLessGetMoreObject {
+  /** `<object name>/<file name>` this object was read from. */
+  path: string;
+  /** The object's `order`, or null when it is unordered. */
+  order: number | null;
+  /** Page <title> before the " | Archival" suffix, and the meta description. */
+  title: string | null;
+  description: string | null;
+  headline: string | null;
+  subhead: string | null;
+  cta_label: string | null;
+  templates_link_label: string | null;
+  templates_title: string | null;
+  templates_intro: string | null;
+  features_title: string | null;
+  /** The editor frame's first callout, in place of the homepage's wording. */
+  mode_callout: string | null;
+  features_intro: string | null;
+  compare_title: string | null;
+  compare_intro: string | null;
+  /** Column headers for the comparison table. */
+  archival_label: string | null;
+  squarespace_label: string | null;
+  wix_label: string | null;
+  prices_checked: string | null;
+  faq_title: string | null;
+  /** The line above the closing section's button. */
+  final_line: string | null;
+  /**
+   * The template cards under the hero. Each opens that template in the editor's
+   * gallery, so all three fields must match the editor's catalog
+   * (editor.archival.dev/templates.json).
+   */
+  templates: PayLessGetMoreTemplatesObject[];
+  features: PayLessGetMoreFeaturesObject[];
+  /** The row of cards under the product tour. */
+  benefits: PayLessGetMoreBenefitsObject[];
+  rows: PayLessGetMoreRowsObject[];
+  faq: PayLessGetMoreFaqObject[];
+}
+
+// Child objects are read from their parent's file, so they have no path/order.
+/**
+ * The template cards under the hero. Each opens that template in the editor's
+ * gallery, so all three fields must match the editor's catalog
+ * (editor.archival.dev/templates.json).
+ */
+export interface PayLessGetMoreTemplatesObject {
+  name: string | null;
+  /**
+   * The editor's slug for the name (src/journey.ts slug()), used for the route
+   * hash and for this page's image files: public/img/templates/<slug>-400.avif,
+   * -400.webp, -640.avif and -640.webp.
+   */
+  slug: string | null;
+  /**
+   * TemplateObject::identifier(): provider, owner, repo, ref and name, each
+   * percent-encoded, joined by "/". Stored encoded; the page encodes it again.
+   */
+  template_id: string | null;
+}
+
+// Child objects are read from their parent's file, so they have no path/order.
+export interface PayLessGetMoreFeaturesObject {
+  /** Must be a product tour frame: prompt, editor, media, settings or history. */
+  key: string | null;
+  title: string | null;
+  content: string | null;
+}
+
+// Child objects are read from their parent's file, so they have no path/order.
+/** The row of cards under the product tour. */
+export interface PayLessGetMoreBenefitsObject {
+  title: string | null;
+  content: string | null;
+}
+
+// Child objects are read from their parent's file, so they have no path/order.
+export interface PayLessGetMoreRowsObject {
+  label: string | null;
+  archival: string | null;
+  squarespace: string | null;
+  wix: string | null;
+  /**
+   * Optional icon before each cell's text: yes, no, partly, lower or higher
+   * (for prices), or empty for none.
+   */
+  archival_mark: string | null;
+  squarespace_mark: string | null;
+  wix_mark: string | null;
+}
+
+// Child objects are read from their parent's file, so they have no path/order.
+export interface PayLessGetMoreFaqObject {
+  question: string | null;
+  answer: string | null;
+}
+
 export interface ShowcaseObject {
   /** `<object name>/<file name>` this object was read from. */
   path: string;
@@ -299,6 +397,38 @@ export interface UpdateMediaObject {
   file: { type: "image"; value: ArchivalFile | null } | { type: "video"; value: ArchivalFile | null } | null;
 }
 
+export interface OfficeHoursObject {
+  /** `<object name>/<file name>` this object was read from. */
+  path: string;
+  /** The object's `order`, or null when it is unordered. */
+  order: number | null;
+  /** Page <title> before the " | Archival" suffix, and the meta description. */
+  title: string | null;
+  description: string | null;
+  headline: string | null;
+  tagline: string | null;
+  events_title: string | null;
+  /** Shown when no office hours are scheduled. */
+  empty_message: string | null;
+  hosts_title: string | null;
+  rsvp_label: string | null;
+  /**
+   * The Notion database the events are read from: its URL or id. The database
+   * must be shared with the integration that owns notion_token.
+   */
+  notion_database: string | null;
+  /**
+   * An internal Notion integration token with read content, update content and
+   * read user information capabilities. Set it from the editor so it is stored
+   * encrypted.
+   */
+  notion_token: string | null;
+  /** IANA time zone the confirmation and reminder emails spell event times in. */
+  timezone: string | null;
+  /** Where replies to those emails go. Empty sends them to the from address. */
+  reply_to: string | null;
+}
+
 /** Every object in the site, keyed by name. */
 export interface ArchivalObjects {
   home: HomeObject;
@@ -311,10 +441,12 @@ export interface ArchivalObjects {
   privacy_policy: PrivacyPolicyObject;
   product: ProductObject;
   social_web: SocialWebObject;
+  pay_less_get_more: PayLessGetMoreObject;
   showcase: ShowcaseObject;
   comments: CommentsObject;
   author: AuthorObject[];
   update: UpdateObject[];
+  office_hours: OfficeHoursObject;
 }
 
 declare module "@archival/carrier" {

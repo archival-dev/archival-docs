@@ -1,0 +1,422 @@
+/* Office hours page (pages/office-hours.liquid) and its cancel page. The hero
+   is the homepage's; the rows are the compact glass cards from the tour. */
+
+.oh-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+}
+
+.oh-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding-top: 11rem;
+  text-align: center;
+}
+
+.oh-hero-small {
+  padding-top: 8rem;
+}
+
+.oh-headline .hero-line-1 {
+  font-size: clamp(3rem, 12vw, 7.5rem);
+}
+
+.oh-tagline {
+  position: relative;
+  z-index: 1;
+  max-width: 38rem;
+  margin: 0 auto;
+  font-size: var(--typo-body-size-large);
+  line-height: 1.5;
+  color: var(--color-typography-secondary);
+}
+
+.oh-section-title {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0 0 1.5rem;
+  font-feature-settings: "ss01" on;
+}
+
+.oh-events,
+.oh-hosts {
+  position: relative;
+  z-index: 1;
+  margin-top: 5rem;
+}
+
+.oh-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.oh-status,
+.oh-empty {
+  color: var(--color-typography-secondary);
+  line-height: 1.6;
+}
+
+.oh-empty a,
+.oh-cancel-done a {
+  color: var(--color-secondary-interactive);
+}
+
+.oh-event {
+  --benefit-radius: 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "date body action"
+    "date hosts action";
+  column-gap: 1.5rem;
+  row-gap: 0.75rem;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  cursor: default;
+}
+
+.oh-event > * {
+  position: relative;
+  z-index: 2;
+}
+
+.oh-event-date {
+  grid-area: date;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 4rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-transparent-border);
+  text-align: center;
+  line-height: 1.1;
+}
+
+.oh-event-month {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-primary-cta-highlight);
+}
+
+.oh-event-day {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.oh-event-body {
+  grid-area: body;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.oh-event-name {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.oh-event-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-typography-primary);
+}
+
+.oh-event-type svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.oh-event-type--discord {
+  background: rgba(88, 101, 242, 0.25);
+}
+
+.oh-event-type--in-person {
+  background: rgba(6, 214, 160, 0.2);
+}
+
+.oh-event-when {
+  color: var(--color-typography-secondary);
+  font-size: 0.95rem;
+}
+
+.oh-event-hosts {
+  grid-area: hosts;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-typography-secondary);
+  font-size: 0.875rem;
+}
+
+.oh-avatars {
+  display: flex;
+}
+
+.oh-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  overflow: hidden;
+  background: hsl(var(--oh-hue, 200) 45% 35%);
+  box-shadow: 0 0 0 2px var(--color-main-bg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.oh-avatars .oh-avatar + .oh-avatar {
+  margin-left: -0.5rem;
+}
+
+.oh-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.oh-avatar--large {
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 1.125rem;
+}
+
+.oh-event-action {
+  grid-area: action;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.oh-event-done {
+  max-width: 14rem;
+  text-align: right;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--color-typography-secondary);
+}
+
+.oh-event-done strong {
+  color: var(--color-typography-primary);
+}
+
+.oh-host-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+}
+
+.oh-host {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+}
+
+/* ============ RSVP dialog ============ */
+
+.oh-dialog {
+  width: min(32rem, calc(100% - 2rem));
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--color-transparent-border);
+  border-radius: 1rem;
+  background: rgb(18, 18, 18);
+  color: var(--color-typography-primary);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+
+.oh-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+}
+
+.oh-form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.oh-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background: none;
+  color: var(--color-typography-secondary);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.oh-close:hover {
+  color: var(--color-typography-primary);
+}
+
+.oh-dialog-title {
+  margin: 0;
+  font-family: "Build", system-ui, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.oh-dialog-event {
+  margin: -0.5rem 0 0;
+  color: var(--color-typography-secondary);
+}
+
+.oh-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.oh-field input,
+.oh-field textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-typography-primary);
+  font: inherit;
+  font-weight: 400;
+}
+
+.oh-field textarea {
+  resize: vertical;
+}
+
+.oh-field input:focus-visible,
+.oh-field textarea:focus-visible {
+  outline: 2px solid var(--color-primary-cta-highlight);
+  outline-offset: 1px;
+}
+
+.oh-form-error {
+  margin: 0;
+  color: #ff8a80;
+  font-size: 0.9rem;
+}
+
+.oh-form-error[hidden] {
+  display: none;
+}
+
+.oh-form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ============ Cancel page ============ */
+
+.oh-cancel {
+  position: relative;
+  z-index: 1;
+  max-width: 36rem;
+  margin: 4rem auto 0;
+}
+
+.oh-cancel-card {
+  --benefit-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.oh-cancel-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.oh-cancel-lead {
+  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+.oh-cancel-plan {
+  margin: 0;
+  color: var(--color-typography-secondary);
+  line-height: 1.5;
+}
+
+.oh-cancel-done {
+  line-height: 1.6;
+}
+
+.oh-cancel-done[hidden],
+.oh-cancel-card[hidden],
+.oh-hosts[hidden],
+.oh-empty[hidden] {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .oh-page {
+    padding-inline: 1rem;
+  }
+
+  .oh-event {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "date body"
+      "hosts hosts"
+      "action action";
+  }
+
+  .oh-event-action {
+    align-items: stretch;
+  }
+
+  .oh-event-action .primary-cta {
+    width: 100%;
+  }
+
+  .oh-event-done {
+    max-width: none;
+    text-align: left;
+  }
+}
