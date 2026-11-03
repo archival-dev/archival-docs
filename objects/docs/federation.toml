@@ -140,6 +140,23 @@ Note that following sends the account's `Follow` once the site next deploys, sin
 """
 
 [[sections]]
+title = "Mastodon client API"
+content = """
+A site whose `archival_editor.toml` has `allow_mastodon_clients = true` answers enough of the [Mastodon client API](https://docs.joinmastodon.org/client/intro/) on its own domain for an app to sign in as one of its accounts and read that account's home timeline. The paths are the ones apps hardcode, on the account's domain:
+
+- `GET /api/v1/instance` and `GET /api/v2/instance` describe the server, with a `version` of `4.3.0 (compatible; archival/<version>)` and a `configuration` saying a status is 5000 characters with no media. These two are answered by every federating site, whether or not it allows apps.
+- `POST /api/v1/apps` registers an app: `client_name`, `redirect_uris` (one per line, or `urn:ietf:wg:oauth:2.0:oob`), `scopes` from `read`, `write`, `follow`, `push` and `profile` and their granular forms, and `website`, as form fields or JSON. It answers the Application entity with `client_id` and `client_secret`.
+- `GET /oauth/authorize?response_type=code&client_id=…&redirect_uri=…&scope=…&state=…` sends the person to the Archival editor to sign in and choose an account, and back to `redirect_uri` with `code` and `state`, or shows the code for the out-of-band redirect. The code is good for ten minutes, once.
+- `POST /oauth/token` with `grant_type=authorization_code`, the `code`, the same `redirect_uri`, `client_id` and `client_secret` answers a Token entity; `grant_type=client_credentials` gives the app a token that acts as no account. `POST /oauth/revoke` takes a token back. A token is a bearer token in the `Authorization` header, and only its hash is stored.
+- `GET /api/v1/accounts/verify_credentials`, `GET /api/v1/apps/verify_credentials`, `GET /api/v1/accounts/:id`, `GET /api/v1/accounts/:id/statuses`, `GET /api/v1/accounts/relationships`, `GET /api/v1/timelines/home`, `GET /api/v1/statuses/:id` and `GET /api/v1/statuses/:id/context` are answered as Mastodon answers them, with `max_id`, `since_id`, `min_id` and `limit` (at most 40) paging and a `Link` header. Ids are strings of digits that mean nothing outside the site.
+- Lists the site does not keep — notifications, the public timelines, lists, filters, bookmarks, favourites, trends and the like — answer empty rather than 404, so an app's other screens stay quiet. Any other path under `/api/v1/` or `/api/v2/` answers 404 with `{"error": "Record not found"}`, and a `GET` the site itself could answer is passed on to it.
+
+A token acts as the account it was approved for, under the scopes the app asked for and registered. Writing — statuses, favourites, reblogs and follows — is not answered yet; a write answers 404.
+
+The timeline an app reads is what the account's inbox has received from the accounts it follows: a `Create` from one of them is kept as a post, with its visibility read from its addressing, and an `Announce` as a boost, for which the boosted object and its author are fetched with a signed `GET`. An `Update`, `Delete` or `Undo` from the author applies to the kept copy, and a deleted actor takes everything it wrote or boosted with it. Two thousand entries are kept per account.
+"""
+
+[[sections]]
 title = "What an account sends and accepts"
 content = """
 **Requests are signed.** Every request an Archival account makes is signed with the account's key, in the form that Mastodon sends and every implementation accepts: an [HTTP Signature](https://datatracker.ietf.org/doc/html/draft-cavage-http-signatures-12) over `(request-target)`, `host`, `date` and, for a request with a body, `digest`, with the algorithm `rsa-sha256` and the key named by `keyId`. Its GETs are signed too, so a server in authorized-fetch mode can serve it. The `User-Agent` is `Archival/<version> (+https://archival.dev)`.

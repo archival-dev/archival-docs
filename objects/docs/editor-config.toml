@@ -191,9 +191,7 @@ With this file, a site at `example.com` is followed as `@blog@example.com`, and 
 
 Each `[[activitypub]]` table is one account. Every value in it other than `username`, `domain`, `email`, `follow`, `type` and the actor's `object` names a field of your object, exactly as it appears in `archival_objects.toml` — or, under `attachment`, one of its child lists and that list's fields. Nothing you write here is itself published: what goes out is whatever your content says.
 
-A single `[activitypub]` table, as earlier sites wrote it, still works and means a list with one account.
-
-`activitypub` is reserved at the top level of this file, so an object type named `activitypub` cannot be configured here.
+`activitypub` is reserved at the top level of this file, so an object type named `activitypub` cannot be configured here. So is `allow_mastodon_clients`, described under [Mastodon apps](#Mastodon%20apps).
 
 ### Accounts
 
@@ -273,7 +271,24 @@ The way in is the one every Mastodon-compatible server offers. Reading on any of
 - **Follow and Unfollow** edit the account's `follow` list in this file and commit the change, so the follow is sent when your site next deploys. Following in the editor and editing the list by hand are the same thing.
 - **Like, Boost and Reply**, and taking any of them back, are sent at once from your account. A reply is published as a post of the account, kept by Archival and shown under the original wherever its author's server shows replies. When the page you are replying to or liking also takes [Webmention](#Webmention), the same reply or like is sent as a mention.
 
-An account without `email` can be used by anyone who can edit the site, so the account that publishes your posts can reply from the editor too. There is no timeline: following an account does not bring its posts into the editor.
+An account without `email` can be used by anyone who can edit the site, so the account that publishes your posts can reply from the editor too. The editor shows no timeline: to read what an account follows, use a Mastodon app, described next.
+
+### Mastodon apps
+
+```toml
+allow_mastodon_clients = true
+
+[[activitypub]]
+username = "jesse"
+email = "jesse@example.com"
+follow = ["@someone@mastodon.social"]
+```
+
+With `allow_mastodon_clients = true` at the top of this file, any app made for Mastodon (Ivory, Tusky, Elk, Phanpy, and most others) can sign in to one of your site's accounts. In the app, add a server and give your site's domain, `example.com`. The app opens the Archival editor in a browser, where you sign in as yourself and choose which of the site's accounts the app may act as: your own, when its `email` is yours, or any account without one. Approve, and the app is signed in. Nothing else is set up, and there is no password: approving is what lets the app in, and it keeps a key of its own that you can take back by signing out in the app.
+
+What the app shows is the account's home timeline: every post and boost from the accounts on its `follow` list, kept by Archival as they arrive, so it starts empty and fills from the moment the follows are accepted. The last two thousand are kept. Posts addressed to followers only are shown; direct messages are not. The app can also open any account or post from that timeline. Posting, starring, boosting, replying and following from the app are not available yet; the editor still does those, as described above. Notifications, lists, filters, bookmarks and searching are empty, and the app's other screens show nothing, since the site keeps none of that.
+
+Turning on apps reserves three more paths on every domain of the site, `/oauth/`, `/api/v1/` and `/api/v2/`, because that is where Mastodon apps look. A page or file of yours at one of those paths is still served when the app's request is one Archival does not answer, but a path there cannot be relied on. Set the line to `false` or remove it, and deploy, to turn apps off; every app that was signed in stops working at once.
 
 ### Followers, likes, boosts and replies
 
