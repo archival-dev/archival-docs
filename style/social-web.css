@@ -359,6 +359,10 @@
   fill: var(--sw-blue);
 }
 
+.sw-diagram .sw-avatar--teal {
+  fill: var(--sw-teal);
+}
+
 .sw-diagram .sw-avatar--yellow {
   fill: var(--sw-yellow);
 }

@@ -77,7 +77,7 @@
             <svg class="sw-diagram" viewBox="0 0 560 400" role="img" aria-labelledby="sw-d1-title">
               <title id="sw-d1-title">
                 Your content is published by Archival to followers on Mastodon, Threads, Bluesky and other ActivityPub servers,
-                and their follows, likes, boosts and replies come back.
+                and their follows, likes, boosts and replies come back. Archival also lets Mastodon apps sign in to the account.
               </title>
               <defs>
                 <marker
@@ -137,7 +137,7 @@
                 <text x="326" y="124"><tspan class="sw-check">&#10003;</tspan> Actor profile</text>
                 <text x="326" y="146"><tspan class="sw-check">&#10003;</tspan> Inbox and outbox</text>
                 <text x="326" y="168"><tspan class="sw-check">&#10003;</tspan> Delivery on every deploy</text>
-                <text class="sw-mono sw-dim sw-tiny" x="326" y="190">/.well-known/webfinger &middot; /_archival/ap/</text>
+                <text x="326" y="190"><tspan class="sw-check">&#10003;</tspan> Sign-in for Mastodon apps</text>
                 <rect class="sw-pill sw-pill--teal" x="314" y="212" width="226" height="26" rx="13"></rect>
                 <text class="sw-mono sw-handle" x="427" y="229" text-anchor="middle">@blog@example.com</text>
               </g>
@@ -206,11 +206,154 @@
             </li>
             <li class="callout-item" data-callout="2" id="sw1-2" style="--i:2;">
               <b>2</b>
-              Archival serves WebFinger, the actor, inbox and outbox, and delivers each deploy.
+              Archival serves WebFinger, the actor, inbox and outbox, delivers each deploy, and lets Mastodon apps sign in.
             </li>
             <li class="callout-item" data-callout="3" id="sw1-3" style="--i:3;">
               <b>3</b>
               Followed from anything that speaks ActivityPub, and Bluesky through Bridgy Fed.
+            </li>
+          </ol>
+        {% elsif section.key == "apps" %}
+          <div class="sw-frame">
+            <div class="sw-frame-glow" aria-hidden="true"></div>
+            <svg class="sw-diagram" viewBox="0 0 560 400" role="img" aria-labelledby="sw-d5-title">
+              <title id="sw-d5-title">
+                A Mastodon app signs in with your domain as its server. The Archival editor asks which of the site's accounts
+                it may act as, and the app then reads that account's home timeline and stars, boosts and replies from it.
+              </title>
+              <defs>
+                <marker
+                  id="sw5-head"
+                  viewBox="0 0 10 10"
+                  refX="9"
+                  refY="5"
+                  markerWidth="7"
+                  markerHeight="7"
+                  orient="auto"
+                >
+                  <path d="M0 0 L10 5 L0 10 z" fill="#06d6a0"></path>
+                </marker>
+                <marker
+                  id="sw5-head-back"
+                  viewBox="0 0 10 10"
+                  refX="9"
+                  refY="5"
+                  markerWidth="7"
+                  markerHeight="7"
+                  orient="auto"
+                >
+                  <path d="M0 0 L10 5 L0 10 z" fill="#118ab2"></path>
+                </marker>
+              </defs>
+
+              <g data-callout-target="1">
+                <rect class="sw-card" x="20" y="40" width="180" height="326" rx="22"></rect>
+                <rect class="sw-wire" x="88" y="50" width="44" height="6" rx="3"></rect>
+                <text class="sw-kicker" x="36" y="80">HOME</text>
+                <text class="sw-mono sw-dim sw-tiny" x="36" y="96">@jesse@example.com</text>
+                <line class="sw-divider" x1="36" y1="108" x2="184" y2="108"></line>
+
+                <circle class="sw-avatar sw-avatar--pink" cx="46" cy="130" r="10"></circle>
+                <text class="sw-strong sw-small" x="62" y="128">Ana</text>
+                <text class="sw-dim sw-tiny" x="62" y="141">@ana@mastodon.social</text>
+                <rect class="sw-wire" x="36" y="152" width="140" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="36" y="162" width="100" height="5" rx="2.5"></rect>
+                <text class="sw-dim sw-small" x="36" y="186">&#8617;&#160;&#160;&#160;&#8635;&#160;&#160;&#160;<tspan class="sw-check">&#9733;</tspan></text>
+                <line class="sw-divider" x1="36" y1="198" x2="184" y2="198"></line>
+
+                <text class="sw-dim sw-tiny" x="36" y="214">&#8635; Ana boosted</text>
+                <circle class="sw-avatar sw-avatar--blue" cx="46" cy="234" r="10"></circle>
+                <text class="sw-strong sw-small" x="62" y="232">Kai</text>
+                <text class="sw-dim sw-tiny" x="62" y="245">@kai@pixelfed.social</text>
+                <rect class="sw-wire" x="36" y="256" width="130" height="5" rx="2.5"></rect>
+                <text class="sw-dim sw-small" x="36" y="280">&#8617;&#160;&#160;&#160;<tspan class="sw-check">&#8635;</tspan>&#160;&#160;&#160;&#9734;</text>
+                <line class="sw-divider" x1="36" y1="292" x2="184" y2="292"></line>
+
+                <circle class="sw-avatar sw-avatar--yellow" cx="46" cy="314" r="10"></circle>
+                <text class="sw-strong sw-small" x="62" y="312">Sam</text>
+                <text class="sw-dim sw-tiny" x="62" y="325">@sam@sams.blog</text>
+                <rect class="sw-wire" x="36" y="336" width="120" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="36" y="346" width="80" height="5" rx="2.5"></rect>
+                <text class="sw-dim sw-tiny" x="110" y="388" text-anchor="middle">Ivory &middot; Tusky &middot; Elk &middot; Phanpy</text>
+              </g>
+
+              <path class="sw-arrow" d="M200 96 H298" marker-end="url(#sw5-head)"></path>
+              <text class="sw-dim sw-small" x="249" y="88" text-anchor="middle">sign in</text>
+              <text class="sw-mono sw-dim sw-tiny" x="249" y="112" text-anchor="middle">example.com</text>
+              <path class="sw-arrow sw-arrow--back" d="M300 150 H204" marker-end="url(#sw5-head-back)"></path>
+              <text class="sw-dim sw-small" x="252" y="166" text-anchor="middle">approved</text>
+
+              <g data-callout-target="2">
+                <rect class="sw-card" x="300" y="40" width="240" height="152" rx="10"></rect>
+                <path class="sw-card-head" d="M310 40h220a10 10 0 0 1 10 10v16H300V50a10 10 0 0 1 10-10z"></path>
+                <text class="sw-kicker" x="312" y="58">ARCHIVAL EDITOR</text>
+                <text class="sw-small" x="312" y="90">Let Ivory act as</text>
+                <rect class="sw-pill sw-pill--teal" x="312" y="100" width="216" height="24" rx="12"></rect>
+                <text class="sw-mono sw-handle" x="420" y="116" text-anchor="middle">@jesse@example.com</text>
+                <rect class="sw-pill" x="312" y="132" width="216" height="24" rx="12"></rect>
+                <text class="sw-mono" x="420" y="148" text-anchor="middle">@blog@example.com</text>
+                <text class="sw-dim sw-tiny" x="312" y="178">no password &middot; the app keeps a key of its own</text>
+              </g>
+
+              <path class="sw-arrow sw-arrow--back" d="M300 268 H204" marker-end="url(#sw5-head-back)"></path>
+              <text class="sw-dim sw-small" x="252" y="260" text-anchor="middle">timeline</text>
+              <path class="sw-arrow" d="M200 318 H298" marker-end="url(#sw5-head)"></path>
+              <text class="sw-dim sw-small" x="249" y="310" text-anchor="middle">star &middot; reply</text>
+              <text class="sw-dim sw-small" x="249" y="336" text-anchor="middle">boost &middot; follow</text>
+
+              <g data-callout-target="3">
+                <rect class="sw-card" x="300" y="220" width="240" height="160" rx="10"></rect>
+                <path class="sw-card-head" d="M310 220h220a10 10 0 0 1 10 10v16H300v-16a10 10 0 0 1 10-10z"></path>
+                <text class="sw-kicker" x="312" y="238">ARCHIVAL HOSTING</text>
+                <text x="312" y="270"><tspan class="sw-check">&#10003;</tspan> Home timeline from follows</text>
+                <text x="312" y="292"><tspan class="sw-check">&#10003;</tspan> Stars, boosts and replies sent</text>
+                <text x="312" y="314"><tspan class="sw-check">&#10003;</tspan> Follows sent on deploy</text>
+                <text x="312" y="336"><tspan class="sw-check">&#10003;</tspan> Search by handle or address</text>
+                <text class="sw-mono sw-dim sw-tiny" x="312" y="364">/oauth/ &middot; /api/v1/ &middot; /api/v2/</text>
+              </g>
+            </svg>
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--cx:35.7%;--cy:10%;--i:1;"
+              aria-describedby="sw5-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--cx:96.4%;--cy:10%;--i:2;"
+              aria-describedby="sw5-2"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="3"
+              style="--cx:96.4%;--cy:55%;--i:3;"
+              aria-describedby="sw5-3"
+            >
+              3
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li class="callout-item" data-callout="1" id="sw5-1" style="--i:1;">
+              <b>1</b>
+              Add a server in any Mastodon app, and give it your domain.
+            </li>
+            <li class="callout-item" data-callout="2" id="sw5-2" style="--i:2;">
+              <b>2</b>
+              The Archival editor asks which of the site's accounts the app may act as.
+            </li>
+            <li class="callout-item" data-callout="3" id="sw5-3" style="--i:3;">
+              <b>3</b>
+              Archival keeps the home timeline and sends what you do from the app.
             </li>
           </ol>
         {% elsif section.key == "webmention" %}
@@ -376,7 +519,7 @@
             <svg class="sw-diagram" viewBox="0 0 560 400" role="img" aria-labelledby="sw-d3-title">
               <title id="sw-d3-title">
                 Replies from Mastodon, likes from Bluesky and webmentions from blogs are kept by Archival and read by a
-                carrier, which shows them as a thread under the post on your own site.
+                carrier, which shows them as a thread under the post on your own site, with your own reply from a Mastodon app.
               </title>
               <defs>
                 <marker
@@ -458,12 +601,13 @@
                 <rect class="sw-wire sw-wire--bright" x="424" y="225" width="60" height="5" rx="2.5"></rect>
                 <rect class="sw-wire" x="424" y="235" width="104" height="4" rx="2"></rect>
                 <rect class="sw-wire" x="424" y="243" width="80" height="4" rx="2"></rect>
-                <circle class="sw-avatar sw-avatar--pink" cx="410" cy="276" r="7"></circle>
+                <circle class="sw-avatar sw-avatar--teal" cx="410" cy="276" r="7"></circle>
                 <rect class="sw-wire sw-wire--bright" x="424" y="269" width="44" height="5" rx="2.5"></rect>
                 <rect class="sw-wire" x="424" y="279" width="92" height="4" rx="2"></rect>
                 <line class="sw-divider" x1="402" y1="306" x2="528" y2="306"></line>
                 <text class="sw-dim sw-small" x="402" y="330">12 likes &middot; 4 boosts</text>
                 <text class="sw-dim sw-tiny" x="402" y="348">1 from Bluesky</text>
+                <text class="sw-dim sw-tiny" x="402" y="366">your reply, from Ivory</text>
               </g>
             </svg>
 
@@ -507,7 +651,7 @@
             </li>
             <li class="callout-item" data-callout="3" id="sw3-3" style="--i:3;">
               <b>3</b>
-              A carrier reads them when a visitor asks, and your page shows the thread.
+              A carrier reads them when a visitor asks, and your page shows the thread, your replies from a Mastodon app included.
             </li>
           </ol>
         {% elsif section.key == "config" %}
@@ -520,7 +664,9 @@
               Whitespace inside the pre is the code, so this block is written
               flush left and the liquid tags around it strip their own.
             {%- endcomment -%}
-            <pre class="sw-code"><code><span class="sw-code-block" data-callout-target="1"><span class="t">[activitypub]</span>
+            <pre class="sw-code"><code><span class="sw-code-block" data-callout-target="1"><span class="k">allow_mastodon_clients</span> = <span class="s">true</span></span>
+
+<span class="sw-code-block" data-callout-target="2"><span class="t">[[activitypub]]</span>
 <span class="k">username</span> = <span class="s">"blog"</span>
 <span class="k">follow</span> = [<span class="s">"@bsky.brid.gy@bsky.brid.gy"</span>]
 
@@ -529,13 +675,13 @@
 <span class="k">summary</span> = <span class="s">"bio"</span>
 <span class="k">icon</span> = <span class="s">"logo"</span></span>
 
-<span class="sw-code-block" data-callout-target="2"><span class="t">[activitypub.objects.post]</span>
+<span class="sw-code-block" data-callout-target="3"><span class="t">[activitypub.objects.post]</span>
 <span class="k">name</span> = <span class="s">"title"</span>
 <span class="k">content</span> = <span class="s">"body"</span>
 <span class="k">published</span> = <span class="s">"published_at"</span>
 <span class="k">featured</span> = <span class="s">"pinned"</span></span>
 
-<span class="sw-code-block" data-callout-target="3"><span class="t">[webmention]</span>
+<span class="sw-code-block" data-callout-target="4"><span class="t">[webmention]</span>
 
 <span class="t">[webmention.objects.post]</span>
 <span class="k">name</span> = <span class="s">"title"</span>
@@ -546,14 +692,18 @@
           <ol class="callout-legend">
             <li class="callout-item" data-callout="1" id="sw4-1" style="--i:1;">
               <b>1</b>
-              The account: a handle on your domain, a profile from your site object, and the Bridgy Fed bot for Bluesky.
+              Mastodon apps: one line lets them sign in to the site's accounts.
             </li>
             <li class="callout-item" data-callout="2" id="sw4-2" style="--i:2;">
               <b>2</b>
-              Posts: the fields that make up each one. A boolean pins it.
+              The account: a handle on your domain, a profile from your site object, and the Bridgy Fed bot for Bluesky.
             </li>
             <li class="callout-item" data-callout="3" id="sw4-3" style="--i:3;">
               <b>3</b>
+              Posts: the fields that make up each one. A boolean pins it.
+            </li>
+            <li class="callout-item" data-callout="4" id="sw4-4" style="--i:4;">
+              <b>4</b>
               Webmention: receive with an empty section, send by mapping a post type.
             </li>
           </ol>

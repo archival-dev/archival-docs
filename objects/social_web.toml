@@ -34,13 +34,13 @@ extra_label = ""
 extra_url = ""
 
 [[standards]]
-kicker = "Stewards of the social web"
-name = "Social Web Foundation"
-url = "https://socialwebfoundation.org"
-link_label = "Visit the foundation"
-blurb = "The nonprofit working to grow a healthy, open social web on ActivityPub. We build to the standards it stewards, and we read its blog to see where the web is going next."
-extra_label = "Read their blog"
-extra_url = "https://socialwebfoundation.org/blog/"
+kicker = "Works with Mastodon apps"
+name = "Your website is your identity"
+url = "/docs/editor-config#Mastodon%20apps"
+link_label = "Sign in from an app"
+blurb = "Your handle is your domain, and so is your server. Sign in to it from Ivory, Tusky, Elk, Phanpy or most other Mastodon apps to read the accounts you follow and star, boost and reply as yourself."
+extra_label = ""
+extra_url = ""
 
 [[sections]]
 key = "federate"
@@ -49,6 +49,15 @@ content = """
 Add an `activitypub` section to your site and it becomes something people can follow: `@blog@example.com`, from Mastodon, Threads, Misskey, Micro.blog and [hundreds of other apps](/update/activitypub). Follow the Bridgy Fed bot and your posts reach Bluesky too.
 
 There is nothing to run. Archival answers WebFinger and serves your actor, inbox and outbox. Every time your site deploys, the people following it get what you added, changed or removed. Pin a post with a single boolean field.
+"""
+
+[[sections]]
+key = "apps"
+title = "Sign in from any Mastodon app"
+content = """
+Turn on `allow_mastodon_clients` and your site is a server Mastodon apps can sign in to. In Ivory, Tusky, Elk, Phanpy or most others, add a server and give it your domain. The app opens the Archival editor, you choose which of the site's accounts it acts as, and you approve. There is no password to make and nothing else to set up.
+
+The app shows the account's home timeline: every post and boost from the accounts it follows, kept by Archival as they arrive. Star, boost and reply from wherever you read. A reply is published as a post of your account, and a follow is added to your site's configuration and sent on its next deploy. Your posts are still your site's content, written in the site.
 """
 
 [[sections]]
@@ -75,7 +84,7 @@ title = "Turned on in one file"
 content = """
 Both protocols are configured the same way: name the fields of your objects that make up a post, and Archival does the rest. Everything it publishes is your content, read from the files already in your repo. Nothing in the section is itself sent anywhere.
 
-Write it by hand, or ask the editor's task mode to add it for you. Remove the section and your site stops federating. Add it back and it picks up where it left off, followers and all.
+One more line, `allow_mastodon_clients = true`, lets Mastodon apps sign in to your accounts. Write it by hand, or ask the editor's task mode to add it for you. Remove the section and your site stops federating. Add it back and it picks up where it left off, followers and all.
 """
 
 [[benefits]]
