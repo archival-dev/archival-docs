@@ -403,6 +403,13 @@
   stroke: #ef476f;
 }
 
+/* On the trade pages the table's edge is a benefit card's: one 1px line and a
+   soft drop shadow, without the double ring. */
+.lp-compare--card .lp-table {
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
 .lp-checked {
   margin: 1rem 0 0;
   text-align: center;
@@ -508,10 +515,19 @@
   }
 }
 
-/* A trade page's four "what you get" cards: the homepage's compact row of
-   four, with the section's own padding standing in for the row's margin. */
+/* A trade page's four "what you get" cards: the homepage's compact cards, at
+   the comparison table's width (same max-width and gutter), with the
+   section's own padding standing in for the row's margin. Two by two, since
+   four across at that width wraps every title onto two or three lines. */
 .lp-body .lp-trade-benefits {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 64rem;
   margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.lp-body .lp-trade-benefits .section-title {
+  min-height: 0;
 }
 
 .lp-body .lp-trade-benefits .section-content p {
@@ -520,7 +536,7 @@
 
 @media (max-width: 640px) {
   .lp-body .lp-trade-benefits {
-    padding: 0 1rem;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

@@ -4,7 +4,7 @@ headline = "Show Off Your Work"
 subhead = "A $15/mo portfolio website builder for artists and designers, with hosting, your own domain, email, and analytics included."
 cta_label = "Build your portfolio"
 templates_intro = "Pick a template and build your whole site. No signup until you go live."
-final_line = "A $15/mo portfolio website builder. Billed monthly. Cancel anytime."
+final_line = "A $15/mo portfolio website builder."
 
 [[templates]]
 slug = "portfolio"
@@ -16,12 +16,12 @@ slug = "photo-gallery"
 slug = "blog"
 
 [[benefits]]
-title = "Your work, front and center."
-content = "Galleries and project pages that put the images first."
+title = "Custom domain, with email."
+content = "yourname.com, plus 5 email addresses on it, included in your plan."
 
 [[benefits]]
-title = "Your own domain."
-content = "yourname.com, with email on it."
+title = "Website analytics."
+content = "See how many people visit and which pages they look at. Nothing to install."
 
 [[benefits]]
 title = "Update from your phone."

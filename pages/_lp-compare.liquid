@@ -1,13 +1,18 @@
 {% comment %}
   The Archival / Squarespace / Wix comparison, every word of it from
   landing_shared, so all landing pages show the same table. title is
-  optional, in place of landing_shared's compare_title.
+  optional, in place of landing_shared's compare_title, and so is
+  section_class, an extra class on the section.
 
   Explicit roles because the phone layout restyles the rows as blocks, and
   some browsers drop table semantics from a table whose display is changed.
 {% endcomment %}
 {% assign shared = objects.landing_shared %}
-<section class="lp-compare" id="compare" aria-labelledby="compare-title">
+<section
+  class="lp-compare{% if section_class %} {{ section_class }}{% endif %}"
+  id="compare"
+  aria-labelledby="compare-title"
+>
   <h2 class="section-title lp-section-title" id="compare-title">
     {%- if title %}{{ title }}{% else %}{{ shared.compare_title }}{% endif -%}
   </h2>
