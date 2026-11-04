@@ -34,16 +34,44 @@ const isPageId = (value: unknown): value is string =>
 const line = (name: string, email: string, plan: string) =>
   `${name} <${email}> — ${plan.replace(/\s+/g, " ").trim()}`;
 
-/** What the page shows: no link, no address. Those come with the RSVP. */
-const publicEvent = (event: Event) => ({
+const isInPerson = (event: Event) =>
+  !!event.place || event.types.includes("in-person");
+
+const isDiscordLink = (event: Event) =>
+  !!event.link &&
+  (event.types.includes("discord") ||
+    /(^|\.)discord(app)?\.(gg|com)$/i.test(hostOf(event.link)));
+
+const hostOf = (url: string) => {
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return "";
+  }
+};
+
+const hasStarted = (event: Event, at: Date) =>
+  new Date(event.start).getTime() <= at.getTime();
+
+const isLive = (event: Event, at: Date) =>
+  hasStarted(event, at) && endOf(event) > at;
+
+/**
+ * What the page shows. The address only goes out with the RSVP, and the link
+ * only while the session is on, when anyone may join.
+ */
+const publicEvent = (event: Event, at = new Date()) => ({
   id: event.id,
   name: event.name,
   start: event.start,
   end: event.end,
+  endsAt: endOf(event).toISOString(),
   allDay: event.allDay,
   types: event.types,
   place: event.place?.name ?? null,
   hosts: event.hosts,
+  inPerson: isInPerson(event),
+  joinUrl: isLive(event, at) && isDiscordLink(event) ? event.link : null,
 });
 
 const notionFailure = (error: unknown) => {
@@ -58,13 +86,14 @@ export const events = async (context: Context): Promise<Response> => {
   const client = notion(context);
   if (!client.configured) return json({ events: [], hosts: [] });
   try {
-    const upcoming = await client.upcoming(new Date());
+    const now = new Date();
+    const upcoming = await client.upcoming(now);
     const hosts = new Map<string, Host>();
     upcoming.forEach((event) =>
       event.hosts.forEach((host) => hosts.set(host.id, host)),
     );
     return json({
-      events: upcoming.map(publicEvent),
+      events: upcoming.map((event) => publicEvent(event, now)),
       hosts: [...hosts.values()],
     });
   } catch (error) {
@@ -107,6 +136,8 @@ export const create = async (context: Context): Promise<Response> => {
   if (!event || !event.start) return fail("That session is gone.", 404);
   if (endOf(event) < new Date())
     return fail("That session has already happened.");
+  if (isInPerson(event) && hasStarted(event, new Date()))
+    return fail("That session has already started.");
 
   const existing = await context.db.one<RsvpRow>(
     `SELECT * FROM rsvps WHERE event_id = ? AND email = ?`,
