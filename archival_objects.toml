@@ -170,6 +170,7 @@ squarespace_label = "string"
 wix_label = "string"
 prices_checked = "string"
 # Section titles on the trade pages, which bring only their own copy.
+trade_compare_title = "string"
 trade_features_title = "string"
 trade_faq_title = "string"
 

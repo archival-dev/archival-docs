@@ -8,11 +8,17 @@
   /pay-less-get-more uses.
 {% endcomment %}
 
-{% include "lp-hero", headline: trade.headline, subhead: trade.subhead, cta_label: trade.cta_label, lp_page: lp_page %}
+{% include "lp-hero",
+  headline: trade.headline,
+  headline_class: "lp-headline--large",
+  subhead: trade.subhead,
+  cta_label: trade.cta_label,
+  lp_page: lp_page
+%}
 
 {% include "lp-templates", cards: trade.templates, intro: trade.templates_intro, lp_page: lp_page %}
 
-{% include "lp-compare" %}
+{% include "lp-compare", title: objects.landing_shared.trade_compare_title %}
 
 {% comment %}
   Four short points as the compact benefit cards, the lead in the card's

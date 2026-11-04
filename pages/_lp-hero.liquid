@@ -1,10 +1,11 @@
 {% comment %}
   A landing page's hero. Takes headline, subhead, cta_label and lp_page (the
   page's path, reported to Rybbit as "page"). link_label is optional: a second,
-  quieter link down to the template cards.
+  quieter link down to the template cards. headline_class is optional: an extra
+  class on the h1, such as lp-headline--large.
 {% endcomment %}
 <section class="lp-hero">
-  <h1 class="hero-message lp-headline">{{ headline }}</h1>
+  <h1 class="hero-message lp-headline{% if headline_class %} {{ headline_class }}{% endif %}">{{ headline }}</h1>
   <p class="lp-subhead">{{ subhead }}</p>
   <div class="lp-actions">
     <a

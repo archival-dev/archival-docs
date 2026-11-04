@@ -98,6 +98,11 @@
   padding-bottom: 0.1em;
 }
 
+/* The trade pages' hero headline: shorter lines, so it can run larger. */
+.lp-body .lp-headline--large {
+  font-size: clamp(4rem, 14vw, 9.5rem);
+}
+
 .lp-subhead {
   max-width: 34rem;
   margin: 1.25rem 0 0;
