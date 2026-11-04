@@ -1,6 +1,3 @@
-# Settings for the office hours page (pages/office-hours.liquid) and its
-# carrier (carriers/office-hours). Set notion_token from the editor so it is
-# stored encrypted; see carriers/office-hours/README.md.
 title = "Office Hours"
 description = "Come build your site with us. The Archival team will help you with questions or ideas about Archival, on Discord or in person."
 headline = "Office hours"
@@ -10,6 +7,6 @@ empty_message = "Nothing on the calendar right now. Check back soon, or say hi o
 hosts_title = "Who'll be there"
 rsvp_label = "RSVP"
 notion_database = "https://app.notion.com/p/40d18d83bc9680db9042d038bf6b7bf8"
-notion_token = ""
+notion_token = "archival-secret-v1:Ag4I6LJRe_XTdu_Qt3epY6QpNuZlJKRCwM7rcL9fj8sYtBULwU46P7O3H7tzJ5nBwyuNtgVZ0OZvx16pj1bd8FZOdS_3Vj8pe82p4eHi"
 timezone = "America/Los_Angeles"
-reply_to = ""
+reply_to = "office-hours@archival.dev"
