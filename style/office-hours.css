@@ -219,6 +219,29 @@
   gap: 0.5rem;
 }
 
+/* Scoped so it beats .primary-cta's display, which main.css sets later. */
+.oh-event-action .oh-join {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.oh-event-action .oh-join svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.oh-event-action .primary-cta:disabled {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-typography-secondary);
+  text-shadow: none;
+  box-shadow:
+    0 0 0 2px #000,
+    0 0 0 6px rgba(255, 255, 255, 0.08);
+  opacity: 1;
+}
+
 .oh-event-done {
   max-width: 14rem;
   text-align: right;
@@ -413,6 +436,10 @@
 
   .oh-event-action .primary-cta {
     width: 100%;
+  }
+
+  .oh-event-action .oh-join {
+    display: flex;
   }
 
   .oh-event-done {

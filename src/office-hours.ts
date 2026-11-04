@@ -22,6 +22,11 @@ interface OfficeHoursEvent {
   types: EventType[];
   place: string | null;
   hosts: Host[];
+  /** When the session is over: its end, or the carrier's default length. */
+  endsAt: string;
+  inPerson: boolean;
+  /** The Discord link, sent only while the session is on. */
+  joinUrl: string | null;
 }
 
 interface Rsvp {
@@ -276,27 +281,84 @@ const row = (event: OfficeHoursEvent, rsvpLabel: string) => {
   }
   item.appendChild(hosts);
 
+  item.appendChild(actionFor(event, rsvpLabel));
+  return item;
+};
+
+const rsvped = new Set<string>();
+
+const onTheList = () => {
+  const done = make("p", "oh-event-done");
+  done.innerHTML =
+    "<strong>You're on the list.</strong> Check your email for the details.";
+  return done;
+};
+
+const actionFor = (event: OfficeHoursEvent, rsvpLabel: string) => {
   const action = make("div", "oh-event-action");
+  const started = new Date(event.start).getTime() <= Date.now();
+
+  if (event.joinUrl) {
+    const join = make("a", "primary-cta oh-join");
+    join.href = event.joinUrl;
+    join.target = "_blank";
+    join.rel = "noopener";
+    join.dataset.rybbitEvent = "office-hours-join";
+    join.appendChild(svg(ICONS.discord.markup));
+    join.appendChild(document.createTextNode("Join"));
+    action.appendChild(join);
+    return action;
+  }
+  if (rsvped.has(event.id)) {
+    action.appendChild(onTheList());
+    return action;
+  }
+
   const button = make("button", "primary-cta", rsvpLabel);
   button.type = "button";
+  if (event.inPerson && started) {
+    button.disabled = true;
+    button.title = "This session has already started.";
+    action.appendChild(button);
+    action.appendChild(make("p", "oh-event-done", "Happening now"));
+    return action;
+  }
   button.dataset.rybbitEvent = "office-hours-open-rsvp";
   button.addEventListener("click", () =>
     openForm(event, () => {
-      const done = make("p", "oh-event-done");
-      done.innerHTML =
-        "<strong>You're on the list.</strong> Check your email for the details.";
-      action.replaceChildren(done);
+      rsvped.add(event.id);
+      action.replaceChildren(onTheList());
     }),
   );
   action.appendChild(button);
-  item.appendChild(action);
-  return item;
+  return action;
+};
+
+// setTimeout overflows past about 24.8 days.
+const MAX_DELAY_MS = 2 ** 31 - 1;
+let refresh: ReturnType<typeof setTimeout> | undefined;
+
+/** Reloads the list the moment a session starts or ends, so its button changes. */
+const scheduleRefresh = (events: OfficeHoursEvent[]) => {
+  if (refresh) clearTimeout(refresh);
+  const now = Date.now();
+  const next = events
+    .flatMap((event) => [new Date(event.start), new Date(event.endsAt)])
+    .map((date) => date.getTime())
+    .filter((time) => time > now)
+    .sort((a, b) => a - b)[0];
+  if (next === undefined) return;
+  refresh = setTimeout(
+    () => void loadEvents(),
+    Math.min(next - now + 1000, MAX_DELAY_MS),
+  );
 };
 
 const renderHosts = (hosts: Host[]) => {
   const section = el<HTMLElement>("[data-oh-hosts]");
   const target = el<HTMLUListElement>("[data-oh-host-list]");
   if (!section || !target || !hosts.length) return;
+  target.replaceChildren();
   hosts.forEach((host) => {
     const item = make("li", "oh-host");
     item.appendChild(avatar(host, true));
@@ -317,8 +379,9 @@ const loadEvents = async () => {
       hosts: Host[];
     }>("events");
     list.replaceChildren(...events.map((event) => row(event, rsvpLabel)));
-    if (!events.length && empty) empty.hidden = false;
+    if (empty) empty.hidden = events.length > 0;
     renderHosts(hosts);
+    scheduleRefresh(events);
   } catch (thrown) {
     if (status) {
       status.textContent =
