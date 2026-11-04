@@ -4,7 +4,7 @@ headline = "Let your photos do the talking."
 subhead = "A $15/mo website builder for photographers, with gallery templates, hosting, your own domain, email, and analytics included."
 cta_label = "Build your photography site"
 templates_intro = "Pick a template and build your whole site. No signup until you go live."
-final_line = "A $15/mo photography website. Billed monthly. Cancel anytime."
+final_line = "A $15/mo photography website."
 
 [[templates]]
 slug = "photo-gallery"
