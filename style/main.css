@@ -92,6 +92,44 @@ body {
   background-color: rgba(254, 131, 0, 0.35);
 }
 
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease-in-out,
+    visibility 0.2s;
+}
+
+/* Bridges the gap so the menu stays open while the pointer crosses it. */
+.nav-dropdown-menu::before {
+  content: "";
+  position: absolute;
+  inset: -0.75rem 0 100%;
+}
+
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown:focus-within .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+}
+
 .nav-active,
 .nav-text:hover {
   background: linear-gradient(45deg, #ef476f, #ffd166, #06d6a0, #118ab2);
@@ -1387,13 +1425,29 @@ h1.pricing-title {
   height: auto;
 }
 
+.section-content.email-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.section-content a.rss-link {
+  color: var(--color-typography-primary);
+  opacity: 0.5;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.section-content a.rss-link:hover {
+  opacity: 1;
+}
+
 .section-content a.email-link {
   display: block;
   color: var(--color-typography-primary);
   font-size: var(--typo-body-size);
   font-weight: var(--typo-body-weight);
   width: fit-content;
-  margin: 0 auto;
   text-align: center;
   padding-left: 2.5rem;
   background: transparent url(/img/email-icon.svg) left center no-repeat;
@@ -1720,6 +1774,31 @@ h1.pricing-title {
   margin-bottom: 1rem;
 }
 
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 6rem;
+  margin-top: 2.5rem;
+}
+
+.footer-section {
+  text-align: left;
+}
+
+.footer-section-title {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--color-typography-primary);
+}
+
+.footer-section li {
+  margin: 0.4rem 0;
+}
+
+.footer-section a:hover {
+  color: var(--color-typography-primary);
+}
+
 .footer-mark {
   display: block;
   margin: 0 auto 2rem;
@@ -1932,6 +2011,24 @@ h1.pricing-title {
   display: block;
 }
 
+#mobile-menu .mobile-nav-group {
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+#mobile-menu .mobile-nav-group-title {
+  font-size: var(--typo-body-size);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.5;
+  padding: 0.5rem 0;
+}
+
+#mobile-menu .mobile-nav-group-items a {
+  display: block;
+  padding: 0.4rem 0;
+}
+
 #mobile-menu .mobile-nav-item-cta {
   background: linear-gradient(
     180deg,
@@ -1979,7 +2076,8 @@ h1.pricing-title {
 
 @media only screen {
   .docs-cta,
-  .section-content a.email-link {
+  .section-content a.email-link,
+  .section-content a.rss-link {
     opacity: 1;
   }
 }
@@ -2175,6 +2273,10 @@ h1.pricing-title {
   .footer {
     margin-top: 0;
     padding: 4rem;
+  }
+
+  .footer-links {
+    gap: 3rem;
   }
 }
 
