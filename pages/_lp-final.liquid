@@ -1,0 +1,19 @@
+{% comment %}
+  The closing section. Takes headline, line, cta_label and lp_page.
+{% endcomment %}
+<section class="lp-final">
+  <a class="lp-logo lp-final-logo" href="/" aria-label="Archival home">
+    {% include "logo-svg-2" %}
+  </a>
+  <h2 class="hero-message lp-headline">{{ headline }}</h2>
+  <p class="lp-final-line">{{ line }}</p>
+  <a
+    class="primary-cta lp-cta"
+    href="https://editor.archival.dev/new"
+    data-rybbit-event="cta_click"
+    data-rybbit-prop-page="{{ lp_page }}"
+    data-rybbit-prop-cta_text="{{ cta_label | escape }}"
+  >
+    {{- cta_label -}}
+  </a>
+</section>

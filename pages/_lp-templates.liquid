@@ -1,0 +1,60 @@
+{% comment %}
+  The template cards. Takes cards (a list of objects with a slug, each one in
+  landing_shared's templates), intro and lp_page. The name and editor id come
+  from landing_shared, so every page shows a template the same way.
+
+  Each card opens its template's confirm screen in the editor. The editor
+  picks a template from ?template= alone; the hash is the route it lands on
+  anyway, carried so the link reads as that screen. The layout's script adds
+  the ad click and campaign tags to the query, ahead of the hash.
+
+  The images are the editor's own gallery thumbnails, resized: 400 and 640
+  wide, 4:3 like the originals. The name under each says which template it
+  is, so the image itself is decorative.
+{% endcomment %}
+{% assign shared = objects.landing_shared %}
+<section class="lp-templates" id="templates" aria-labelledby="templates-title">
+  <h2 class="section-title lp-section-title" id="templates-title">{{ shared.templates_title }}</h2>
+  <p class="lp-section-intro">{{ intro }}</p>
+
+  <ul class="lp-template-grid lp-template-grid--{{ cards.size }}" role="list">
+    {% for card in cards %}
+      {% assign template = shared.templates | where: "slug", card.slug | first %}
+      {% if template %}
+        <li>
+          <a
+            class="lp-template"
+            href="https://editor.archival.dev/new?template={{ template.template_id | url_encode }}#/new/choose-template/{{ template.slug }}"
+            data-rybbit-event="cta_click"
+            data-rybbit-prop-page="{{ lp_page }}"
+            data-rybbit-prop-cta_text="{{ template.name | escape }}"
+          >
+            <span class="lp-template-shot">
+              <picture>
+                <source
+                  type="image/avif"
+                  srcset="/img/templates/{{ template.slug }}-400.avif 400w, /img/templates/{{ template.slug }}-640.avif 640w"
+                  sizes="(max-width: 640px) 50vw, 20rem"
+                >
+                <source
+                  type="image/webp"
+                  srcset="/img/templates/{{ template.slug }}-400.webp 400w, /img/templates/{{ template.slug }}-640.webp 640w"
+                  sizes="(max-width: 640px) 50vw, 20rem"
+                >
+                <img
+                  src="/img/templates/{{ template.slug }}-640.webp"
+                  width="640"
+                  height="480"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                >
+              </picture>
+            </span>
+            <span class="lp-template-name">{{ template.name }}</span>
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</section>

@@ -1,0 +1,50 @@
+title = "Portfolio Website Builder for Artists & Designers, $15/mo"
+description = "A portfolio website builder for artists and designers. Hosting, your own domain, email, and analytics for $15/mo. Build your whole site before you sign up."
+headline = "A portfolio site that shows your work."
+subhead = "A $15/mo portfolio website builder for artists and designers, with hosting, your own domain, email, and analytics included."
+cta_label = "Build your portfolio"
+templates_intro = "Pick a template and build your whole site. No signup until you go live."
+final_line = "A $15/mo portfolio website builder. Billed monthly. Cancel anytime."
+
+[[templates]]
+slug = "portfolio"
+
+[[templates]]
+slug = "photo-gallery"
+
+[[templates]]
+slug = "blog"
+
+[[benefits]]
+title = "Your work, front and center."
+content = "Galleries and project pages that put the images first."
+
+[[benefits]]
+title = "Your own domain."
+content = "yourname.com, with email on it."
+
+[[benefits]]
+title = "Update from your phone."
+content = "Add a new piece in minutes."
+
+[[benefits]]
+title = "Undo anything."
+content = "Every change is saved, so you can roll back."
+
+[[faq]]
+shared = "cost"
+
+[[faq]]
+question = "Can I build my portfolio before paying?"
+answer = """
+Yes. Build and preview your whole site first. You only sign up and pay when you go live.
+"""
+
+[[faq]]
+question = "Can I sell my art through Archival?"
+answer = """
+Archival doesn't have a built-in store. You can link to wherever you sell, like an online shop or a print service.
+"""
+
+[[faq]]
+shared = "about"

@@ -1,0 +1,8 @@
+{% assign trade = objects.trade | where: "path", "trade/portfolios" | first %}
+{%
+  layout 'landing' title: trade.title
+  , description: trade.description
+  , path: "portfolios"
+  , nav_cta_label: trade.cta_label
+%}
+{% include "trade-landing", trade: trade, lp_page: "portfolios" %}

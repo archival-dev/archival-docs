@@ -219,6 +219,11 @@
   color: var(--color-typography-primary);
 }
 
+/* Four cards read as one row of four rather than three and a stray. */
+.lp-template-grid--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 /* Phones: two across, so all six fit in three short rows. */
 @media (max-width: 640px) {
   .lp-template-grid {
@@ -232,6 +237,17 @@
 
   .lp-template-name {
     font-size: 0.9375rem;
+  }
+
+  .lp-template-grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* An odd last card sits centered under the pair above it, at their width. */
+  .lp-template-grid > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 0.5rem);
   }
 }
 
@@ -483,6 +499,22 @@
 
 @media (max-width: 640px) {
   .lp-body .lp-benefits {
+    padding: 0 1rem;
+  }
+}
+
+/* A trade page's four "what you get" cards: the homepage's compact row of
+   four, with the section's own padding standing in for the row's margin. */
+.lp-body .lp-trade-benefits {
+  margin: 0 auto;
+}
+
+.lp-body .lp-trade-benefits .section-content p {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .lp-body .lp-trade-benefits {
     padding: 0 1rem;
   }
 }

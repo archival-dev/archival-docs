@@ -1,0 +1,32 @@
+{% comment %}
+  A landing page's hero. Takes headline, subhead, cta_label and lp_page (the
+  page's path, reported to Rybbit as "page"). link_label is optional: a second,
+  quieter link down to the template cards.
+{% endcomment %}
+<section class="lp-hero">
+  <h1 class="hero-message lp-headline">{{ headline }}</h1>
+  <p class="lp-subhead">{{ subhead }}</p>
+  <div class="lp-actions">
+    <a
+      class="primary-cta lp-cta"
+      href="https://editor.archival.dev/new"
+      data-rybbit-event="cta_click"
+      data-rybbit-prop-page="{{ lp_page }}"
+      data-rybbit-prop-cta_text="{{ cta_label | escape }}"
+    >
+      {{- cta_label -}}
+    </a>
+    {% if link_label %}
+      <a
+        class="lp-compare-link"
+        href="#templates"
+        data-rybbit-event="cta_click"
+        data-rybbit-prop-page="{{ lp_page }}"
+        data-rybbit-prop-cta_text="{{ link_label | escape }}"
+      >
+        {{ link_label }}
+        <span aria-hidden="true">&darr;</span>
+      </a>
+    {% endif %}
+  </div>
+</section>
