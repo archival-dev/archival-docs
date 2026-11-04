@@ -25,11 +25,27 @@ content = "See how many people visit and which pages they look at. Nothing to in
 
 [[benefits]]
 title = "Update from your phone."
-content = "Add a new piece in minutes."
+content = "Update your site with a new piece from anywhere."
 
 [[benefits]]
-title = "Undo anything."
+title = "Track changes, undo anything."
 content = "Every change is saved, so you can roll back."
+
+[[benefits]]
+title = "Free yearly domain renewal."
+content = "Registered with us, limit $40/yr."
+
+[[benefits]]
+title = "Interactive Content Editor."
+content = "Change text, photos, and pages in a simple editor, from any device."
+
+[[benefits]]
+title = "AI-assisted site updates."
+content = "Describe the change you want and AI editing makes it. Includes $5 of AI usage each month."
+
+[[benefits]]
+title = "Generous traffic limits."
+content = "1 million requests a month included. A typical site uses under 2% of that."
 
 [[faq]]
 shared = "cost"

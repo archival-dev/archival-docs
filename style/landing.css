@@ -515,7 +515,7 @@
   }
 }
 
-/* A trade page's four "what you get" cards: the homepage's compact cards, at
+/* A trade page's "what you get" cards: the homepage's compact cards, at
    the comparison table's width (same max-width and gutter), with the
    section's own padding standing in for the row's margin. Four across, two
    by two below 1100px, one column on phones. */
@@ -527,8 +527,8 @@
 }
 
 /* Four across, titles wrap to different heights. Each card spans two rows
-   of a subgrid, so every title gets the tallest title's height and the
-   bodies start on one line, whatever the copy. */
+   of a subgrid, so every title in a row of cards gets the tallest one's
+   height and the bodies start on one line, whatever the copy. */
 .lp-body .lp-trade-benefits .benefit {
   display: grid;
   grid-row: span 2;

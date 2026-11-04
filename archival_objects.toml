@@ -221,7 +221,7 @@ final_line = "string"
 [trade.templates]
 slug = "string"
 
-# The four "what you get" cards: a short lead, then a sentence or two.
+# The "what you get" cards, four to a row: a short lead, then a sentence or two.
 [trade.benefits]
 title = "string"
 content = "string"
