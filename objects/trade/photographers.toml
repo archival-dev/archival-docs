@@ -1,0 +1,66 @@
+title = "Website Builder for Photographers, $15/mo"
+description = "A photography website builder with gallery templates. Hosting, your own domain, email, and analytics for $15/mo. Build your whole site before you sign up."
+headline = "Let your photos do the talking."
+subhead = "A $15/mo website builder for photographers, with gallery templates, hosting, your own domain, email, and analytics included."
+cta_label = "Build your photography site"
+templates_intro = "Pick a template and build your whole site. No signup until you go live."
+final_line = "A $15/mo photography website. Billed monthly. Cancel anytime."
+
+[[templates]]
+slug = "photo-gallery"
+
+[[templates]]
+slug = "portfolio"
+
+[[templates]]
+slug = "blog"
+
+[[benefits]]
+title = "Custom domain, with email."
+content = "yourname.com, plus 5 email addresses on it, included in your plan."
+
+[[benefits]]
+title = "Website analytics."
+content = "See how many people visit and which galleries they look at. Nothing to install."
+
+[[benefits]]
+title = "Update from your phone."
+content = "Post a new shoot or add to a gallery from anywhere."
+
+[[benefits]]
+title = "Track changes, undo anything."
+content = "Every change is saved, so you can roll back."
+
+[[benefits]]
+title = "Free yearly domain renewal."
+content = "Registered with us, limit $40/yr."
+
+[[benefits]]
+title = "Interactive Content Editor."
+content = "Change text, photos, and pages in a simple editor, from any device."
+
+[[benefits]]
+title = "AI-assisted site updates."
+content = "Describe the change you want and AI editing makes it. Includes $5 of AI usage each month."
+
+[[benefits]]
+title = "Generous traffic limits."
+content = "1 million requests a month included. A typical site uses under 2% of that."
+
+[[faq]]
+shared = "cost"
+
+[[faq]]
+question = "Can I build my site before paying?"
+answer = """
+Yes. Build and preview your whole site first. You only sign up and pay when you go live.
+"""
+
+[[faq]]
+question = "Can clients proof or buy prints through my site?"
+answer = """
+Archival doesn't include client proofing or print sales. You can link to the proofing or print service you already use.
+"""
+
+[[faq]]
+shared = "about"
