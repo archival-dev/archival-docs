@@ -1,0 +1,36 @@
+{%
+  layout 'theme' title: "Cancel your RSVP"
+  , area: "office-hours"
+  , description: "Can't make it to office hours? Cancel your RSVP here."
+  , path: "office-hours/cancel"
+  , noindex: true
+  , nofooter: true
+%}
+
+<div class="oh-page oh-cancel-page">
+  <div id="header" class="oh-hero oh-hero-small">
+    <h1 class="hero-message oh-headline" data-tilt-hero>
+      <span class="hero-line-1">Office hours</span>
+    </h1>
+  </div>
+
+  <section class="oh-cancel" data-oh-cancel>
+    <p class="oh-status" data-oh-cancel-status>Looking up your RSVP…</p>
+    <div class="oh-cancel-card benefit" data-oh-cancel-card hidden>
+      <p class="oh-cancel-lead">
+        Hi <span data-oh-cancel-name></span>, you're on the list for
+        <strong data-oh-cancel-event></strong>
+        <span data-oh-cancel-when></span>.
+      </p>
+      <p class="oh-cancel-plan"><span>You said you wanted to work on:</span> <q data-oh-cancel-plan></q></p>
+      <p class="oh-form-error" data-oh-cancel-error role="alert" hidden></p>
+      <button type="button" class="primary-cta" data-oh-cancel-button>Un-RSVP</button>
+    </div>
+    <div class="oh-cancel-done" data-oh-cancel-done hidden>
+      <p>Your RSVP is cancelled. Sorry to miss you this time.</p>
+      <p><a href="/office-hours">See the other upcoming office hours &rarr;</a></p>
+    </div>
+  </section>
+</div>
+
+<script type="module" src="/scripts/office-hours.js"></script>

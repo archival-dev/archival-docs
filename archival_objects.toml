@@ -233,3 +233,26 @@ type = "image"
 [[update.media.file]]
 name = "video"
 type = "video"
+
+[office_hours]
+# Page <title> before the " | Archival" suffix, and the meta description.
+title = "string"
+description = "string"
+headline = "string"
+tagline = "string"
+events_title = "string"
+# Shown when no office hours are scheduled.
+empty_message = "string"
+hosts_title = "string"
+rsvp_label = "string"
+# The Notion database the events are read from: its URL or id. The database
+# must be shared with the integration that owns notion_token.
+notion_database = "string"
+# An internal Notion integration token with read content, update content and
+# read user information capabilities. Set it from the editor so it is stored
+# encrypted.
+notion_token = "secret"
+# IANA time zone the confirmation and reminder emails spell event times in.
+timezone = "string"
+# Where replies to those emails go. Empty sends them to the from address.
+reply_to = "string"

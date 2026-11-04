@@ -25,6 +25,10 @@ const EDITOR_URL = dev
 // The carrier in carriers/comments, served beside the site. Override with
 // COMMENTS_URL to point a build somewhere else.
 const COMMENTS_URL = process.env.COMMENTS_URL ?? "/carriers/comments";
+// The carrier in carriers/office-hours, served beside the site. Override with
+// OFFICE_HOURS_URL to point a build somewhere else.
+const OFFICE_HOURS_URL =
+  process.env.OFFICE_HOURS_URL ?? "/carriers/office-hours";
 const TURNSTILE_SITE_KEY = dev
   ? "1x00000000000000000000AA"
   : staging
@@ -37,6 +41,7 @@ const ctx = await esbuild.context({
     "build-with-claude": "src/build-with-claude.ts",
     link: "src/link.ts",
     updates: "src/updates.ts",
+    "office-hours": "src/office-hours.ts",
   },
   bundle: true,
   outdir: "dist/scripts",
@@ -47,6 +52,7 @@ const ctx = await esbuild.context({
     API_URL: `"${API_URL}"`,
     TURNSTILE_SITE_KEY: `"${TURNSTILE_SITE_KEY}"`,
     COMMENTS_URL: `"${COMMENTS_URL}"`,
+    OFFICE_HOURS_URL: `"${OFFICE_HOURS_URL}"`,
   },
   format: "esm",
   target: "es2022",

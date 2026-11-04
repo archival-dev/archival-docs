@@ -1,0 +1,14 @@
+{
+  "name": "archival-docs-office-hours",
+  "private": true,
+  "type": "module",
+  "main": "index.ts",
+  "archival": {
+    "carrier": 2,
+    "schedule": "*/5 * * * *"
+  },
+  "devDependencies": {
+    "@archival/carrier": "^1.5.0",
+    "typescript": "^5.8.0"
+  }
+}
