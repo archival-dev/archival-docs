@@ -70,7 +70,7 @@
     <li class="nav-text {% if area == 'cli' %}nav-active{% endif %}">
       <a href="/{{ cli_link.path }}" data-rybbit-event="nav-cli">CLI</a>
     </li>
-    {% assign community_areas = "office-hours,updates,manifesto,social-web" | split: "," %}
+    {% assign community_areas = "manifesto,office-hours,updates,social-web" | split: "," %}
     <li class="nav-dropdown">
       <button
         type="button"
@@ -80,14 +80,14 @@
         Community
       </button>
       <ul class="nav-dropdown-menu">
+        <li class="nav-text {% if area == 'manifesto' %}nav-active{% endif %}">
+          <a href="/manifesto" data-rybbit-event="nav-manifesto">Manifesto</a>
+        </li>
         <li class="nav-text {% if area == 'office-hours' %}nav-active{% endif %}">
           <a href="/office-hours" data-rybbit-event="nav-office-hours">Office Hours</a>
         </li>
         <li class="nav-text {% if area == 'updates' %}nav-active{% endif %}">
           <a href="/updates" data-rybbit-event="nav-updates">Updates</a>
-        </li>
-        <li class="nav-text {% if area == 'manifesto' %}nav-active{% endif %}">
-          <a href="/manifesto" data-rybbit-event="nav-manifesto">Manifesto</a>
         </li>
         <li class="nav-text {% if area == 'social-web' %}nav-active{% endif %}">
           <a href="/social-web" data-rybbit-event="nav-social-web">Social Web</a>
@@ -192,13 +192,13 @@
       <div class="mobile-nav-group-title">Community</div>
       <ul class="mobile-nav-group-items">
         <li>
+          <a href="/manifesto" data-rybbit-event="mobile-nav-manifesto">Manifesto</a>
+        </li>
+        <li>
           <a href="/office-hours" data-rybbit-event="mobile-nav-office-hours">Office Hours</a>
         </li>
         <li>
           <a href="/updates" data-rybbit-event="mobile-nav-updates">Updates</a>
-        </li>
-        <li>
-          <a href="/manifesto" data-rybbit-event="mobile-nav-manifesto">Manifesto</a>
         </li>
         <li>
           <a href="/social-web" data-rybbit-event="mobile-nav-social-web">Social Web</a>
