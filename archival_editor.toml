@@ -1,3 +1,5 @@
+allow_mastodon_clients = true
+
 [[shortcuts]]
 name = "Post Update"
 path = "update"
