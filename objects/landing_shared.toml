@@ -39,6 +39,16 @@ name = "Blog"
 slug = "blog"
 template_id = "github/jesseditson/archival-website/templates%2Fblog-1/Blog"
 
+[[templates]]
+name = "Band"
+slug = "band"
+template_id = "github/jesseditson/archival-website/templates%2Fband-1/Band"
+
+[[templates]]
+name = "Video Premiere"
+slug = "video-premiere"
+template_id = "github/jesseditson/archival-website/templates%2Ftheatre-1/Video%20Premiere"
+
 [[rows]]
 label = "Monthly plan price"
 archival = "$15/mo"
