@@ -517,13 +517,23 @@
 
 /* A trade page's four "what you get" cards: the homepage's compact cards, at
    the comparison table's width (same max-width and gutter), with the
-   section's own padding standing in for the row's margin. Two by two, since
-   four across at that width wraps every title onto two or three lines. */
+   section's own padding standing in for the row's margin. Four across, two
+   by two below 1100px, one column on phones. */
 .lp-body .lp-trade-benefits {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   max-width: 64rem;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+/* Four across, titles wrap to different heights. Each card spans two rows
+   of a subgrid, so every title gets the tallest title's height and the
+   bodies start on one line, whatever the copy. */
+.lp-body .lp-trade-benefits .benefit {
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  row-gap: 0;
 }
 
 .lp-body .lp-trade-benefits .section-title {
@@ -532,6 +542,12 @@
 
 .lp-body .lp-trade-benefits .section-content p {
   margin: 0;
+}
+
+@media (max-width: 1100px) {
+  .lp-body .lp-trade-benefits {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 640px) {
