@@ -226,6 +226,23 @@
           All rights reserved.
         </p>
         <nav class="footer-links">
+          {% assign docs_link = objects.docs | first %}
+          {% assign cli_link = objects.cli | first %}
+          <div class="footer-section">
+            <h3 class="footer-section-title">Product</h3>
+            <ul>
+              <li><a href="/#product" data-rybbit-event="footer-features">Features</a></li>
+              <li><a href="/pricing" data-rybbit-event="footer-pricing">Pricing</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3 class="footer-section-title">Build</h3>
+            <ul>
+              <li><a href="/{{ docs_link.path }}" data-rybbit-event="footer-docs">Docs</a></li>
+              <li><a href="/{{ cli_link.path }}" data-rybbit-event="footer-cli">CLI</a></li>
+              <li><a href="https://github.com/archival-dev/archival" data-rybbit-event="footer-github">GitHub</a></li>
+            </ul>
+          </div>
           <div class="footer-section">
             <h3 class="footer-section-title">Community</h3>
             <ul>

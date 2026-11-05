@@ -44,31 +44,61 @@
     </button>
   </div>
   <ul class="flex-shrink justify-end gap-8 items-center flex-nowrap whitespace-nowrap hidden navbar:flex">
-    {% comment %}
-      The tour lives on the homepage now, so this item has no page of its own to
-      match on. index.liquid scroll-spies it instead: active while the tour is
-      actually on screen. Desktop only — the mobile item sits in a closed menu,
-      where an active state has nothing to tell anyone.
-    {% endcomment %}
-    <li class="nav-text" data-nav-product>
-      {% comment %}
-        Bare "#product" on the homepage itself. "/#product" is a different
-        document from "/index.html", so the browser reloads the whole page and
-        only then jumps — which reads as a long stall followed by a snap.
-      {% endcomment %}
-      <a
-        href="{% if area == 'home' %}#product{% else %}/#product{% endif %}"
-        data-rybbit-event="nav-product"
-        >Product</a
+    {% assign product_areas = "home,pricing" | split: "," %}
+    <li class="nav-dropdown">
+      <button
+        type="button"
+        class="nav-text {% if product_areas contains area %}nav-active{% endif %}"
+        aria-haspopup="true"
       >
+        Product
+      </button>
+      <ul class="nav-dropdown-menu">
+        {% comment %}
+          The tour lives on the homepage now, so this item has no page of its own
+          to match on. index.liquid scroll-spies it instead: active while the
+          tour is actually on screen. Desktop only — the mobile item sits in a
+          closed menu, where an active state has nothing to tell anyone.
+        {% endcomment %}
+        <li class="nav-text" data-nav-product>
+          {% comment %}
+            Bare "#product" on the homepage itself. "/#product" is a different
+            document from "/index.html", so the browser reloads the whole page
+            and only then jumps — which reads as a long stall followed by a snap.
+          {% endcomment %}
+          <a
+            href="{% if area == 'home' %}#product{% else %}/#product{% endif %}"
+            data-rybbit-event="nav-product"
+            >Features</a
+          >
+        </li>
+        <li class="nav-text {% if area == 'pricing' %}nav-active{% endif %}">
+          <a href="/pricing" data-rybbit-event="nav-pricing">Pricing</a>
+        </li>
+      </ul>
     </li>
     {% assign docs_link = objects.docs | first %}
-    <li class="nav-text {% if area == 'docs' %}nav-active{% endif %}">
-      <a href="/{{ docs_link.path }}" data-rybbit-event="nav-docs">Docs</a>
-    </li>
     {% assign cli_link = objects.cli | first %}
-    <li class="nav-text {% if area == 'cli' %}nav-active{% endif %}">
-      <a href="/{{ cli_link.path }}" data-rybbit-event="nav-cli">CLI</a>
+    {% assign open_source_areas = "docs,cli" | split: "," %}
+    <li class="nav-dropdown">
+      <button
+        type="button"
+        class="nav-text {% if open_source_areas contains area %}nav-active{% endif %}"
+        aria-haspopup="true"
+      >
+        Build
+      </button>
+      <ul class="nav-dropdown-menu">
+        <li class="nav-text {% if area == 'docs' %}nav-active{% endif %}">
+          <a href="/{{ docs_link.path }}" data-rybbit-event="nav-docs">Docs</a>
+        </li>
+        <li class="nav-text {% if area == 'cli' %}nav-active{% endif %}">
+          <a href="/{{ cli_link.path }}" data-rybbit-event="nav-cli">CLI</a>
+        </li>
+        <li class="nav-text">
+          <a href="https://github.com/archival-dev/archival" data-rybbit-event="nav-github">GitHub</a>
+        </li>
+      </ul>
     </li>
     {% assign community_areas = "manifesto,office-hours,updates,social-web" | split: "," %}
     <li class="nav-dropdown">
@@ -93,9 +123,6 @@
           <a href="/social-web" data-rybbit-event="nav-social-web">Social Web</a>
         </li>
       </ul>
-    </li>
-    <li class="nav-text {% if area == 'pricing' %}nav-active{% endif %}">
-      <a href="/pricing" data-rybbit-event="nav-pricing">Pricing</a>
     </li>
     <li class="nav-text">
       <a href="https://editor.archival.dev" data-rybbit-event="nav-dashboard">Dashboard</a>
@@ -169,24 +196,36 @@
   class="hidden fixed backdrop-blur-md translate-y-full transition opacity-0 shadow-up w-full pb-10 px-4 bottom-0 z-40 text-xl rounded-lg navbar:hidden max-h-full overflow-y-auto"
 >
   <ul class="flex flex-col">
-    <li class="mobile-nav-item">
-      <a
-        class="flex-1"
-        href="{% if area == 'home' %}#product{% else %}/#product{% endif %}"
-        data-rybbit-event="mobile-nav-product"
-        >Product</a
-      >
+    <li class="mobile-nav-group">
+      <div class="mobile-nav-group-title">Product</div>
+      <ul class="mobile-nav-group-items">
+        <li>
+          <a
+            href="{% if area == 'home' %}#product{% else %}/#product{% endif %}"
+            data-rybbit-event="mobile-nav-product"
+            >Features</a
+          >
+        </li>
+        <li>
+          <a href="/pricing" data-rybbit-event="mobile-nav-pricing">Pricing</a>
+        </li>
+      </ul>
     </li>
     {% assign docs_link = objects.docs | first %}
-    <li class="mobile-nav-item">
-      <a class="flex-1" href="/{{ docs_link.path }}" data-rybbit-event="mobile-nav-docs">Docs</a>
-    </li>
     {% assign cli_link = objects.cli | first %}
-    <li class="mobile-nav-item">
-      <a class="flex-1" href="/{{ cli_link.path }}" data-rybbit-event="mobile-nav-cli">CLI</a>
-    </li>
-    <li class="mobile-nav-item">
-      <a class="flex-1" href="/pricing" data-rybbit-event="mobile-nav-pricing">Pricing</a>
+    <li class="mobile-nav-group">
+      <div class="mobile-nav-group-title">Build</div>
+      <ul class="mobile-nav-group-items">
+        <li>
+          <a href="/{{ docs_link.path }}" data-rybbit-event="mobile-nav-docs">Docs</a>
+        </li>
+        <li>
+          <a href="/{{ cli_link.path }}" data-rybbit-event="mobile-nav-cli">CLI</a>
+        </li>
+        <li>
+          <a href="https://github.com/archival-dev/archival" data-rybbit-event="mobile-nav-github">GitHub</a>
+        </li>
+      </ul>
     </li>
     <li class="mobile-nav-group">
       <div class="mobile-nav-group-title">Community</div>
