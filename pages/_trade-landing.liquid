@@ -1,0 +1,45 @@
+{% comment %}
+  The landing page for one trade, rendered from a trade object (objects/trade).
+  Takes trade and lp_page, the page's path, which every CTA reports to Rybbit
+  as "page" so the trades can be told apart.
+
+  Hero, template cards, the shared comparison, what you get, questions, then
+  the closing CTA. Every section but "what you get" is the same partial
+  /pay-less-get-more uses.
+{% endcomment %}
+
+{% include "lp-hero",
+  headline: trade.headline,
+  headline_class: "lp-headline--large",
+  subhead: trade.subhead,
+  cta_label: trade.cta_label,
+  lp_page: lp_page
+%}
+
+{% include "lp-templates", cards: trade.templates, intro: trade.templates_intro, lp_page: lp_page %}
+
+{% include "lp-compare", title: objects.landing_shared.trade_compare_title, section_class: "lp-compare--card" %}
+
+{% comment %}
+  Four short points as the compact benefit cards, the lead in the card's
+  title. No product tour: these pages show the templates instead.
+{% endcomment %}
+<section class="lp-features lp-trade-features" aria-labelledby="features-title">
+  <h2 class="section-title lp-section-title" id="features-title">{{ objects.landing_shared.trade_features_title }}</h2>
+  <div class="benefit-grid benefit-grid--compact lp-trade-benefits">
+    {% for benefit in trade.benefits %}
+      <div class="benefit" data-glow>
+        <h3 class="section-title">{{ benefit.title }}</h3>
+        <div class="section-content">
+          <p>{{ benefit.content }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% include "lp-faq", title: objects.landing_shared.trade_faq_title, items: trade.faq %}
+
+{% include "lp-final", headline: trade.headline, line: trade.final_line, cta_label: trade.cta_label, lp_page: lp_page %}
+
+{% include "lp-glow" %}

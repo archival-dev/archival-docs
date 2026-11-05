@@ -1,0 +1,58 @@
+{% comment %}
+  The Archival / Squarespace / Wix comparison, every word of it from
+  landing_shared, so all landing pages show the same table. title is
+  optional, in place of landing_shared's compare_title, and so is
+  section_class, an extra class on the section.
+
+  Explicit roles because the phone layout restyles the rows as blocks, and
+  some browsers drop table semantics from a table whose display is changed.
+{% endcomment %}
+{% assign shared = objects.landing_shared %}
+<section
+  class="lp-compare{% if section_class %} {{ section_class }}{% endif %}"
+  id="compare"
+  aria-labelledby="compare-title"
+>
+  <h2 class="section-title lp-section-title" id="compare-title">
+    {%- if title %}{{ title }}{% else %}{{ shared.compare_title }}{% endif -%}
+  </h2>
+  <p class="lp-section-intro">{{ shared.compare_intro }}</p>
+
+  <table class="lp-table" role="table">
+    <thead role="rowgroup">
+      <tr role="row">
+        <td class="lp-corner" role="presentation"></td>
+        <th class="lp-col-archival" scope="col" role="columnheader">{{ shared.archival_label }}</th>
+        <th scope="col" role="columnheader">{{ shared.squarespace_label }}</th>
+        <th scope="col" role="columnheader">{{ shared.wix_label }}</th>
+      </tr>
+    </thead>
+    <tbody role="rowgroup">
+      {% for row in shared.rows %}
+        <tr role="row">
+          <th scope="row" role="rowheader">{{ row.label }}</th>
+          <td class="lp-col-archival" role="cell" data-col="{{ shared.archival_label | escape }}">
+            <span class="lp-cell">
+              {%- include "compare-mark", mark: row.archival_mark -%}
+              <span>{{ row.archival }}</span>
+            </span>
+          </td>
+          <td role="cell" data-col="{{ shared.squarespace_label | escape }}">
+            <span class="lp-cell">
+              {%- include "compare-mark", mark: row.squarespace_mark -%}
+              <span>{{ row.squarespace }}</span>
+            </span>
+          </td>
+          <td role="cell" data-col="{{ shared.wix_label | escape }}">
+            <span class="lp-cell">
+              {%- include "compare-mark", mark: row.wix_mark -%}
+              <span>{{ row.wix }}</span>
+            </span>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p class="lp-checked">{{ shared.prices_checked }}</p>
+</section>
