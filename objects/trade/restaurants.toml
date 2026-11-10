@@ -1,19 +1,19 @@
 title = "Restaurant Website Templates, $15/mo"
 description = "Restaurant website templates with your menu, hours, and map. Hosting, your own domain, email, and analytics for $15/mo. Build your whole site before you sign up."
 headline = "Your menu, online tonight."
-subhead = "Restaurant, bar, and cafe website templates for $15/mo, with hosting, your own domain, email, and analytics included."
+subhead = "Restaurant, bar, café, and food truck website templates for $15/mo, with hosting, your own domain, email, and analytics included."
 cta_label = "Build your restaurant site"
 templates_intro = "Pick a template and build your whole site. No signup until you go live."
 final_line = "A $15/mo restaurant website."
 
 [[templates]]
+slug = "cafe"
+
+[[templates]]
+slug = "food-truck"
+
+[[templates]]
 slug = "bar-restaurant"
-
-[[templates]]
-slug = "small-business"
-
-[[templates]]
-slug = "blog"
 
 [[benefits]]
 title = "Custom domain, with email."

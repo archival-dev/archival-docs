@@ -7,13 +7,13 @@ templates_intro = "Pick a template and build your whole site. No signup until yo
 final_line = "A $15/mo photography website."
 
 [[templates]]
+slug = "sessions"
+
+[[templates]]
+slug = "series"
+
+[[templates]]
 slug = "photo-gallery"
-
-[[templates]]
-slug = "portfolio"
-
-[[templates]]
-slug = "blog"
 
 [[benefits]]
 title = "Custom domain, with email."

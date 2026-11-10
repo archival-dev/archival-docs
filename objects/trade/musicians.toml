@@ -7,13 +7,13 @@ templates_intro = "Pick a template and build your whole site. No signup until yo
 final_line = "A $15/mo website for musicians."
 
 [[templates]]
+slug = "liner-notes"
+
+[[templates]]
+slug = "repertoire"
+
+[[templates]]
 slug = "band"
-
-[[templates]]
-slug = "video-premiere"
-
-[[templates]]
-slug = "blog"
 
 [[benefits]]
 title = "Custom domain, with email."

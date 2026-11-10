@@ -45,9 +45,39 @@ slug = "band"
 template_id = "github/jesseditson/archival-website/templates%2Fband-1/Band"
 
 [[templates]]
-name = "Video Premiere"
-slug = "video-premiere"
-template_id = "github/jesseditson/archival-website/templates%2Ftheatre-1/Video%20Premiere"
+name = "Case Studies"
+slug = "case-studies"
+template_id = "github/jesseditson/archival-website/templates%2Fcase-studies-1/Case%20Studies"
+
+[[templates]]
+name = "Food Truck"
+slug = "food-truck"
+template_id = "github/jesseditson/archival-website/templates%2Ffood-truck-1/Food%20Truck"
+
+[[templates]]
+name = "Café"
+slug = "cafe"
+template_id = "github/jesseditson/archival-website/templates%2Fcafe-1/Caf%C3%A9"
+
+[[templates]]
+name = "Sessions"
+slug = "sessions"
+template_id = "github/jesseditson/archival-website/templates%2Fsessions-1/Sessions"
+
+[[templates]]
+name = "Series"
+slug = "series"
+template_id = "github/jesseditson/archival-website/templates%2Fseries-1/Series"
+
+[[templates]]
+name = "Liner Notes"
+slug = "liner-notes"
+template_id = "github/jesseditson/archival-website/templates%2Fliner-notes-1/Liner%20Notes"
+
+[[templates]]
+name = "Repertoire"
+slug = "repertoire"
+template_id = "github/jesseditson/archival-website/templates%2Frepertoire-1/Repertoire"
 
 [[rows]]
 label = "Monthly plan price"
