@@ -1,51 +1,52 @@
 {%
-  layout 'theme' title: showcase.title
+  layout 'theme' title: showcase_page.title
   , area: "showcase"
-  , description: showcase.tagline
+  , description: showcase_page.tagline
   , path: "showcase"
-  , noindex: true
 %}
 
-<div class="w-full flex flex-col justify-center items-center gap-6 pt-60 relative">
-  <h1 class="hero-message" data-tilt-hero>
-    <span class="hero-line-1">built with</span>
-    <span class="hero-line-2">archival</span>
-  </h1>
-  <p class="build-description">{{ showcase.tagline }}</p>
-</div>
+{% assign sorted_studies = objects.showcase | reverse %}
 
-<div class="benefit-grid md:max-w-[1200px] md:mt-40 md:mb-40 mt-20 mb-20">
-  {% for site in showcase.sites %}
-    <div class="benefit" data-tilt>
-      <a
-        href="{{ site.url }}"
-        target="_blank"
-        rel="noopener"
-        data-rybbit-event="showcase-site"
-        data-rybbit-prop-site="{{ site.name }}"
-      >
-        {% unless site.screenshot.url == blank %}
-          <img src="{{ site.screenshot.url }}" alt="Screenshot of {{ site.name }}" class="w-full rounded-lg mb-4" />
-        {% endunless %}
-        <h2 class="section-title">{{ site.name }}</h2>
-        <div class="section-content">
-          <p>{{ site.description }}</p>
-          {% unless site.built_by == blank %}
-            <p class="text-sm opacity-70">Built by {{ site.built_by }}</p>
-          {% endunless %}
-        </div>
-      </a>
+<div class="updates-page showcase-page">
+  <header class="updates-hero showcase-hero">
+    <h1 class="hero-message" data-tilt-hero>
+      <span class="hero-line-1">built with</span>
+      <span class="hero-line-2">archival</span>
+    </h1>
+    <p class="build-description">
+      {{ showcase_page.tagline }}
+      <a href="/showcase.rss" data-rybbit-event="showcase-rss-hero">Subscribe with RSS</a>, or follow
+      <span class="updates-handle">@showcase@archival.dev</span> from Mastodon.
+    </p>
+  </header>
+
+  <div class="updates-layout">
+    <div class="updates-list showcase-list">
+      {% for study in sorted_studies %}
+        {% assign study_slug = study.path | split: "/" | last %}
+        {% render "showcase-shot", study: study, href: study.path, id: study_slug, eager: forloop.first %}
+      {% endfor %}
     </div>
-  {% endfor %}
-</div>
 
-<div class="benefit-grid md:max-w-[1200px] mb-40">
-  {% for quote in showcase.quotes %}
-    <div class="benefit" data-tilt>
-      <div class="section-content">
-        {{ quote.quote }}
-        <p class="text-sm opacity-70">— {{ quote.author }}, {{ quote.role }}</p>
+    <nav class="updates-timeline" aria-label="Case studies" data-timeline>
+      <div class="updates-timeline-rail">
+        <span class="updates-timeline-line" aria-hidden="true"></span>
+        <span class="updates-timeline-fill" data-timeline-fill aria-hidden="true"></span>
+        <span class="updates-timeline-thumb" data-timeline-thumb aria-hidden="true"></span>
+        <ol class="updates-timeline-dots" data-timeline-dots>
+          {% for study in sorted_studies %}
+            {% assign study_slug = study.path | split: "/" | last %}
+            <li class="updates-timeline-item" data-timeline-item data-timeline-target="{{ study_slug }}">
+              <a class="updates-timeline-dot" href="#{{ study_slug }}">
+                <span class="updates-timeline-mark" aria-hidden="true"></span>
+                <span class="updates-timeline-label">
+                  <span class="updates-timeline-title">{{ study.site_name }}</span>
+                </span>
+              </a>
+            </li>
+          {% endfor %}
+        </ol>
       </div>
-    </div>
-  {% endfor %}
+    </nav>
+  </div>
 </div>

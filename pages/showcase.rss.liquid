@@ -1,0 +1,39 @@
+{%- assign sorted_studies = objects.showcase | sort: "publish_date" | reverse -%}
+{%- assign latest = sorted_studies | first -%}
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Archival Showcase</title>
+    <link>{{ site_url }}/showcase</link>
+    <atom:link href="{{ site_url }}/showcase.rss" rel="self" type="application/rss+xml" />
+    <description>{{ showcase_page.tagline | escape }}</description>
+    <language>en-us</language>
+    <lastBuildDate>{{ latest.publish_date | date: "%a, %d %b %Y %H:%M:%S %z" }}</lastBuildDate>
+    {%- comment %}
+      Bodies are written with site-relative links, which a feed reader has no
+      base to resolve against. Absolute them on the way out.
+    {%- endcomment %}
+    {%- assign href_prefix = 'href="' | append: site_url | append: "/" %}
+    {%- for study in sorted_studies %}
+    {%- assign study_author = objects.author | where: "key", study.author | first %}
+    {%- assign study_body = study.body | replace: 'href="/', href_prefix %}
+    <item>
+      <title>{{ study.title | escape }}</title>
+      <link>{{ site_url }}/{{ study.path }}</link>
+      <guid isPermaLink="true">{{ site_url }}/{{ study.path }}</guid>
+      <pubDate>{{ study.publish_date | date: "%a, %d %b %Y %H:%M:%S %z" }}</pubDate>
+      {%- if study_author %}
+      <dc:creator>{{ study_author.name | escape }}</dc:creator>
+      {%- endif %}
+      {%- unless study.summary == blank %}
+      <description>{{ study.summary | escape }}</description>
+      {%- endunless %}
+      <content:encoded><![CDATA[
+        {%- if study.screenshot and study.screenshot.url != blank -%}
+          <p><img src="{{ study.screenshot.url }}" alt="Screenshot of {{ study.site_name | escape }}"></p>
+        {%- endif -%}
+        {{ study_body }}]]></content:encoded>
+    </item>
+    {%- endfor %}
+  </channel>
+</rss>

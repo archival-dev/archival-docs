@@ -1,0 +1,16 @@
+order = 5
+title = ""
+site_name = "Jesse Ditson"
+site_url = "https://jesseditson.com"
+built_by = ""
+publish_date = 2026-11-09T00:00:00.0
+author = ""
+summary = ""
+body = ""
+pinned = false
+
+[screenshot]
+display_type = "image"
+filename = "jesseditson.jpg"
+sha = "12821418d0dca1cdc0db2e575545e4fd60ff9b433051926d33159e2b429e3144"
+mime = "image/jpeg"

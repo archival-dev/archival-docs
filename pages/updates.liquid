@@ -18,7 +18,7 @@
   </header>
 
   <div class="updates-layout">
-    <div class="updates-list" data-updates-list>
+    <div class="updates-list">
       {% for update in sorted_updates %}
         {% assign update_slug = update.path | split: "/" | last %}
         <article
@@ -80,7 +80,7 @@
       Dots are laid out evenly by CSS and repositioned by date once the script
       runs, so the rail still reads as a timeline with scripting off.
     {% endcomment %}
-    <nav class="updates-timeline" aria-label="Updates by date" data-updates-timeline>
+    <nav class="updates-timeline" aria-label="Updates by date" data-timeline>
       <div class="updates-timeline-rail">
         <span class="updates-timeline-line" aria-hidden="true"></span>
         <span class="updates-timeline-fill" data-timeline-fill aria-hidden="true"></span>

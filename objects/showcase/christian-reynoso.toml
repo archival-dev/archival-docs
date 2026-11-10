@@ -1,0 +1,16 @@
+order = 1
+title = ""
+site_name = "Christian Reynoso"
+site_url = "https://christianreynoso.com"
+built_by = ""
+publish_date = 2026-11-09T00:00:00.0
+author = ""
+summary = ""
+body = ""
+pinned = false
+
+[screenshot]
+display_type = "image"
+filename = "christian-reynoso.jpg"
+sha = "9d348129abde52342162ba42a3bb0efac998cdd67c096a30eb31ae98d88ed3c9"
+mime = "image/jpeg"

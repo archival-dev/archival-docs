@@ -1,0 +1,16 @@
+order = 7
+title = ""
+site_name = "Much Ado"
+site_url = "https://muchadojt.com"
+built_by = ""
+publish_date = 2026-11-09T00:00:00.0
+author = ""
+summary = ""
+body = ""
+pinned = false
+
+[screenshot]
+display_type = "image"
+filename = "much-ado.jpg"
+sha = "8b551ee05d45aaac993b858c8ba17656dcc1c26b936fe1902009edce70c624bb"
+mime = "image/jpeg"

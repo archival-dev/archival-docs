@@ -1,0 +1,16 @@
+order = 3
+title = ""
+site_name = "Criollo de Oaxaca"
+site_url = "https://criollodeoaxaca.com"
+built_by = ""
+publish_date = 2026-11-09T00:00:00.0
+author = ""
+summary = ""
+body = ""
+pinned = false
+
+[screenshot]
+display_type = "image"
+filename = "criollo-de-oaxaca.jpg"
+sha = "d02d13c1786861c49998130ac98dd19a4b6dbb903a3de09da5a8809e0fac7849"
+mime = "image/jpeg"

@@ -4,6 +4,10 @@ allow_mastodon_clients = true
 name = "Post Update"
 path = "update"
 
+[[shortcuts]]
+name = "New Case Study"
+path = "showcase"
+
 [[activitypub]]
 domain = "archival.dev"
 username = "updates"
@@ -20,8 +24,26 @@ name = "title"
 content = "body"
 published = "publish_date"
 
-# Mentions of any page are received. Each update also sends a mention to every
-# page it links to, authored as the site.
+[[activitypub]]
+domain = "archival.dev"
+username = "showcase"
+follow = ["@bsky.brid.gy@bsky.brid.gy", "@threads@threads.net"]
+
+[activitypub.actor]
+object = "showcase_page"
+name = "title"
+summary = "tagline"
+icon = "icon"
+
+[activitypub.objects.showcase]
+featured = "pinned"
+name = "title"
+content = "body"
+published = "publish_date"
+image = "screenshot"
+
+# Mentions of any page are received. Each update and case study also sends a
+# mention to every page it links to, authored as the site.
 [webmention]
 domain = "archival.dev"
 
@@ -31,6 +53,11 @@ name = "title"
 photo = "logo"
 
 [webmention.objects.update]
+name = "title"
+content = "body"
+published = "publish_date"
+
+[webmention.objects.showcase]
 name = "title"
 content = "body"
 published = "publish_date"

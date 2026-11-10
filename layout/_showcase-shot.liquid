@@ -1,0 +1,45 @@
+{% comment %}
+  A case study's screenshot with the site's name over its bottom-right corner.
+  With an href it is a tile linking to the case study; without one it is the
+  full, uncropped screenshot on the case study's own page.
+{% endcomment %}
+{% assign shot_host = study.site_url
+  | replace: "https://", ""
+  | replace: "http://", ""
+  | replace: "www.", ""
+  | split: "/"
+  | first
+%}
+
+{% if href %}
+  <a
+    class="showcase-tile"
+    id="{{ id }}"
+    href="/{{ href }}"
+    data-rybbit-event="showcase-open"
+    data-rybbit-prop-site="{{ study.site_name }}"
+  >
+{% else %}
+  <div class="showcase-tile showcase-tile--full">
+{% endif %}
+{% if study.screenshot and study.screenshot.url != blank %}
+  <img
+    class="showcase-shot-image"
+    src="{{ study.screenshot.url }}"
+    alt="Screenshot of {{ study.site_name | escape }}"
+    loading="{% if eager %}eager{% elsif href %}lazy{% else %}eager{% endif %}"
+  >
+{% else %}
+  <span class="showcase-shot-empty" aria-hidden="true">{{ shot_host }}</span>
+{% endif %}
+{% if href %}
+  <span class="showcase-shot-title">
+    <span class="showcase-shot-name">{{ study.site_name }}</span>
+    <span class="showcase-shot-host">{{ shot_host }}</span>
+  </span>
+{% endif %}
+{% if href %}
+  </a>
+{% else %}
+  </div>
+{% endif %}

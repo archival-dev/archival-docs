@@ -1,0 +1,97 @@
+{% assign study_image = "" %}
+{% if showcase.screenshot %}
+  {% assign study_image = showcase.screenshot.url %}
+{% endif %}
+{%
+  layout 'theme' title: showcase.title
+  , area: "showcase"
+  , description: showcase.summary
+  , path: showcase.path
+  , og_image: study_image
+%}
+
+{% assign study_host = showcase.site_url
+  | replace: "https://", ""
+  | replace: "http://", ""
+  | replace: "www.", ""
+  | split: "/"
+  | first
+%}
+
+<div class="updates-page updates-page--detail showcase-detail">
+  <article class="update-detail">
+    <a class="update-back" href="/showcase" data-rybbit-event="showcase-back">← All case studies</a>
+
+    {% render "update-byline", update: showcase %}
+
+    <h1 class="update-detail-title">{{ showcase.title }}</h1>
+
+    {% unless showcase.summary == blank %}
+      <p class="update-detail-summary">{{ showcase.summary }}</p>
+    {% endunless %}
+
+    <div class="showcase-site-meta">
+      <div>
+        <p class="showcase-site-name">{{ showcase.site_name }}</p>
+        {% unless showcase.built_by == blank %}
+          <p class="showcase-built-by">Built by {{ showcase.built_by }}</p>
+        {% endunless %}
+      </div>
+      <a
+        class="showcase-visit"
+        href="{{ showcase.site_url }}"
+        target="_blank"
+        rel="noopener"
+        data-rybbit-event="showcase-site"
+        data-rybbit-prop-site="{{ showcase.site_name }}"
+      >
+        Visit {{ study_host }} ↗
+      </a>
+    </div>
+
+    {% render "showcase-shot", study: showcase %}
+
+    <div class="md update-detail-body">
+      {{ showcase.body }}
+    </div>
+
+    {% assign seen_current = false %}
+    {% assign have_previous = false %}
+    {% assign have_next = false %}
+    {% assign sorted_studies = objects.showcase | reverse %}
+    {% for other in sorted_studies %}
+      {% if other.path == showcase.path %}
+        {% assign seen_current = true %}
+      {% elsif seen_current %}
+        {% unless have_next %}
+          {% assign next_study = other %}
+          {% assign have_next = true %}
+        {% endunless %}
+      {% else %}
+        {% assign previous_study = other %}
+        {% assign have_previous = true %}
+      {% endif %}
+    {% endfor %}
+
+    <div class="update-pager">
+      {% if have_previous %}
+        <a href="/{{ previous_study.path }}" class="update-pager-link" data-rybbit-event="showcase-previous">
+          <span class="update-pager-dir">← Previous</span>
+          <span class="update-pager-title">{{ previous_study.site_name }}</span>
+        </a>
+      {% else %}
+        <div></div>
+      {% endif %}
+      {% if have_next %}
+        <a
+          href="/{{ next_study.path }}"
+          class="update-pager-link update-pager-link--end"
+          data-rybbit-event="showcase-next"
+        >
+          <span class="update-pager-dir">Next →</span>
+          <span class="update-pager-title">{{ next_study.site_name }}</span>
+        </a>
+      {% endif %}
+    </div>
+  </article>
+</div>

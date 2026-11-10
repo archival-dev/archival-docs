@@ -1,0 +1,174 @@
+/* Showcase index and case study pages. Shares the layout, rail and detail
+   page styles with the updates pages. */
+
+.showcase-hero .hero-message {
+  margin-bottom: 1.5rem;
+}
+
+.showcase-list {
+  gap: 3rem;
+}
+
+.showcase-tile {
+  --tile-radius: 1.25rem;
+  position: relative;
+  display: block;
+  height: 26rem;
+  overflow: hidden;
+  border-radius: var(--tile-radius);
+  border: 1px solid var(--color-transparent-border);
+  background: rgba(20, 20, 20, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.3);
+  scroll-margin-top: 7rem;
+  transition:
+    border-color 0.3s ease-out,
+    box-shadow 0.3s ease-out;
+}
+
+a.showcase-tile:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+a.showcase-tile:focus-visible {
+  outline: 2px solid var(--color-primary-cta-highlight);
+  outline-offset: 2px;
+}
+
+.showcase-tile--full {
+  height: auto;
+  margin: 0 0 2.5rem;
+}
+
+.showcase-shot-image {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.6s ease-out;
+}
+
+a.showcase-tile:hover .showcase-shot-image {
+  transform: scale(1.02);
+}
+
+.showcase-shot-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 16rem;
+  font-size: 1.25rem;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.3);
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(255, 255, 255, 0.08),
+      transparent 60%
+    ),
+    rgba(255, 255, 255, 0.03);
+}
+
+/* Bottom-right caption, on a scrim so it holds over a light screenshot. */
+.showcase-shot-title {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+  max-width: calc(100% - 2.5rem);
+  padding: 0.75rem 1rem;
+  border-radius: 0.875rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 10, 10, 0.65);
+  backdrop-filter: blur(12px);
+  text-align: right;
+}
+
+.showcase-shot-name {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.showcase-shot-host {
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Case study page */
+
+.showcase-site-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 0 0 1.25rem;
+}
+
+.showcase-site-name {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.showcase-built-by {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.showcase-visit {
+  flex: none;
+  font-weight: 700;
+  color: var(--color-secondary-interactive);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.showcase-visit:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .showcase-tile {
+    height: 16rem;
+  }
+
+  .showcase-tile--full {
+    height: auto;
+  }
+
+  .showcase-shot-title {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    max-width: calc(100% - 1.5rem);
+  }
+
+  .showcase-shot-name {
+    font-size: 1.125rem;
+  }
+
+  .showcase-site-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase-shot-image {
+    transition: none;
+  }
+}

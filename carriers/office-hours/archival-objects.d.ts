@@ -316,32 +316,43 @@ export interface PayLessGetMoreFaqObject {
   answer: string | null;
 }
 
-export interface ShowcaseObject {
+/** The showcase index page, and the profile of @showcase@archival.dev. */
+export interface ShowcasePageObject {
   /** `<object name>/<file name>` this object was read from. */
   path: string;
   /** The object's `order`, or null when it is unordered. */
   order: number | null;
   title: string | null;
   tagline: string | null;
-  sites: ShowcaseSitesObject[];
-  quotes: ShowcaseQuotesObject[];
+  icon: ArchivalFile | null;
 }
 
-// Child objects are read from their parent's file, so they have no path/order.
-export interface ShowcaseSitesObject {
-  name: string | null;
-  url: string | null;
-  screenshot: ArchivalFile | null;
-  description: string | null;
-  built_by: string | null;
-}
-
-// Child objects are read from their parent's file, so they have no path/order.
-export interface ShowcaseQuotesObject {
-  quote: string | null;
-  author: string | null;
-  role: string | null;
+/**
+ * One case study per file. Each is a page at /showcase/<file name> and a post
+ * from @showcase@archival.dev.
+ */
+export interface ShowcaseObject {
+  /** `<object name>/<file name>` this object was read from. */
+  path: string;
+  /** The object's `order`, or null when it is unordered. */
+  order: number | null;
+  title: string | null;
+  /** The site's own name, shown over its screenshot on the showcase index. */
+  site_name: string | null;
   site_url: string | null;
+  /**
+   * Captured at desktop width. The index crops it to its top; the case study
+   * shows it whole.
+   */
+  screenshot: ArchivalFile | null;
+  built_by: string | null;
+  publish_date: string | null;
+  /** Must match a key from an author object. Empty is the team. */
+  author: string | null;
+  summary: string | null;
+  body: string | null;
+  /** Pins the case study to the fediverse profile (see `featured` in archival_editor.toml). */
+  pinned: boolean | null;
 }
 
 export interface CommentsObject {
@@ -442,7 +453,13 @@ export interface ArchivalObjects {
   product: ProductObject;
   social_web: SocialWebObject;
   pay_less_get_more: PayLessGetMoreObject;
-  showcase: ShowcaseObject;
+  /** The showcase index page, and the profile of @showcase@archival.dev. */
+  showcase_page: ShowcasePageObject;
+  /**
+   * One case study per file. Each is a page at /showcase/<file name> and a post
+   * from @showcase@archival.dev.
+   */
+  showcase: ShowcaseObject[];
   comments: CommentsObject;
   author: AuthorObject[];
   update: UpdateObject[];

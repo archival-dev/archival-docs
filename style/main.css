@@ -4,6 +4,7 @@
 @import "./markdown.css";
 @import "./product.css";
 @import "./updates.css";
+@import "./showcase.css";
 @import "./social-web.css";
 @import "./landing.css";
 @import "./office-hours.css";
@@ -1668,8 +1669,7 @@ h1.pricing-title {
 
 /* Compact benefit row. By the time the reader reaches this, four elaborate product
    frames have already had their turn — so the closing argument is the still thing on
-   the page: same glass card, a quarter of the size, no tilt and no glare layer.
-   Scoped as a modifier because showcase.liquid still uses the full-size cards. */
+   the page: same glass card, a quarter of the size, no tilt and no glare layer. */
 .benefit-grid--compact {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.25rem;

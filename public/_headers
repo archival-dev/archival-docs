@@ -5,6 +5,11 @@
     Cache-Control: public, max-age=3600
     X-Robots-Tag: noindex
 
+/showcase.rss
+    Content-Type: application/rss+xml; charset=utf-8
+    Cache-Control: public, max-age=3600
+    X-Robots-Tag: noindex
+
 # Apple requires this file be served as JSON, and it has no extension for the
 # static host to infer that from.
 /.well-known/apple-app-site-association

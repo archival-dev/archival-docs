@@ -1,0 +1,9 @@
+title = "Built with Archival"
+tagline = "Real sites, running on Archival today, and the stories behind them."
+
+[icon]
+display_type = "image"
+filename = "logo-stroke-padded.png"
+sha = "b6913c0aab026e22eb8755d0a0f2c09376422f7dc153f5b7195e2ffdd06c249c"
+mime = "image/png"
+name = "logo-stroke-padded.png"

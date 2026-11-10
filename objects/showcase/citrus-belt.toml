@@ -1,0 +1,16 @@
+order = 2
+title = ""
+site_name = "Citrus Belt USBC"
+site_url = "https://citrusbelt.org"
+built_by = ""
+publish_date = 2026-11-09T00:00:00.0
+author = ""
+summary = ""
+body = ""
+pinned = false
+
+[screenshot]
+display_type = "image"
+filename = "citrus-belt.jpg"
+sha = "aa7af81e42f4166349cecaa8617b7e786fbbb5d315b8c6187bba756eeeee4f60"
+mime = "image/jpeg"

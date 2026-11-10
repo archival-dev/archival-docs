@@ -100,7 +100,7 @@
         </li>
       </ul>
     </li>
-    {% assign community_areas = "manifesto,office-hours,updates,social-web" | split: "," %}
+    {% assign community_areas = "manifesto,office-hours,updates,showcase,social-web" | split: "," %}
     <li class="nav-dropdown">
       <button
         type="button"
@@ -118,6 +118,9 @@
         </li>
         <li class="nav-text {% if area == 'updates' %}nav-active{% endif %}">
           <a href="/updates" data-rybbit-event="nav-updates">Updates</a>
+        </li>
+        <li class="nav-text {% if area == 'showcase' %}nav-active{% endif %}">
+          <a href="/showcase" data-rybbit-event="nav-showcase">Showcase</a>
         </li>
         <li class="nav-text {% if area == 'social-web' %}nav-active{% endif %}">
           <a href="/social-web" data-rybbit-event="nav-social-web">Social Web</a>
@@ -238,6 +241,9 @@
         </li>
         <li>
           <a href="/updates" data-rybbit-event="mobile-nav-updates">Updates</a>
+        </li>
+        <li>
+          <a href="/showcase" data-rybbit-event="mobile-nav-showcase">Showcase</a>
         </li>
         <li>
           <a href="/social-web" data-rybbit-event="mobile-nav-social-web">Social Web</a>

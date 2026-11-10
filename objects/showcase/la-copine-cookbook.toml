@@ -1,0 +1,16 @@
+order = 6
+title = ""
+site_name = "La Copine Cookbook"
+site_url = "https://cookbook.lacopinekitchen.com"
+built_by = ""
+publish_date = 2026-11-09T00:00:00.0
+author = ""
+summary = ""
+body = ""
+pinned = false
+
+[screenshot]
+display_type = "image"
+filename = "la-copine-cookbook.jpg"
+sha = "f9e56627d81c800bf0ada09ad140a59fc43496ada2074cc99b5b16d915e9af74"
+mime = "image/jpeg"

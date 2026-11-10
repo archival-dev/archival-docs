@@ -1,0 +1,16 @@
+order = 8
+title = ""
+site_name = "Nice Dream"
+site_url = "https://nice-dream.com"
+built_by = ""
+publish_date = 2026-11-09T00:00:00.0
+author = ""
+summary = ""
+body = ""
+pinned = false
+
+[screenshot]
+display_type = "image"
+filename = "nice-dream.jpg"
+sha = "6ea598593ca4d1c83c78ab5f5e99647e2fbe352e29023707d3bf967a5e7b0493"
+mime = "image/jpeg"

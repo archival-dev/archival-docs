@@ -41,6 +41,7 @@ const ctx = await esbuild.context({
     "build-with-claude": "src/build-with-claude.ts",
     link: "src/link.ts",
     updates: "src/updates.ts",
+    showcase: "src/showcase.ts",
     "office-hours": "src/office-hours.ts",
   },
   bundle: true,

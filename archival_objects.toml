@@ -181,22 +181,31 @@ wix_mark = "string"
 question = "string"
 answer = "markdown"
 
-[showcase]
+# The showcase index page, and the profile of @showcase@archival.dev.
+[showcase_page]
 title = "string"
 tagline = "string"
+icon = "image"
 
-[showcase.sites]
-name = "string"
-url = "string"
-screenshot = "image"
-description = "string"
-built_by = "string"
-
-[showcase.quotes]
-quote = "markdown"
-author = "string"
-role = "string"
+# One case study per file. Each is a page at /showcase/<file name> and a post
+# from @showcase@archival.dev.
+[showcase]
+title = "string"
+# The site's own name, shown over its screenshot on the showcase index.
+site_name = "string"
 site_url = "string"
+# Captured at desktop width. The index crops it to its top; the case study
+# shows it whole.
+screenshot = "image"
+built_by = "string"
+publish_date = "date"
+# Must match a key from an author object. Empty is the team.
+author = "string"
+summary = "string"
+body = "markdown"
+# Pins the case study to the fediverse profile (see `featured` in archival_editor.toml).
+pinned = "boolean"
+template = "case-study"
 
 [comments]
 # Lets the team post as the team and hide comments.
