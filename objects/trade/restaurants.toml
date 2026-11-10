@@ -7,13 +7,13 @@ templates_intro = "Pick a template and build your whole site. No signup until yo
 final_line = "A $15/mo restaurant website."
 
 [[templates]]
+slug = "bar-restaurant"
+
+[[templates]]
 slug = "cafe"
 
 [[templates]]
 slug = "food-truck"
-
-[[templates]]
-slug = "bar-restaurant"
 
 [[benefits]]
 title = "Custom domain, with email."
