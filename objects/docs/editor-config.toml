@@ -8,7 +8,7 @@ This file is most useful when creating an archival template or for customizing t
 
 Place `archival_editor.toml` in the root of your repo, alongside `archival_objects.toml` and `archival.toml`. The editor reads it automatically when your site loads, and re-reads it whenever the file changes.
 
-It is also where you turn on [ActivityPub](#ActivityPub), which publishes your content to Mastodon and the rest of the fediverse whenever your site deploys and gives the people who work on the site accounts of their own there, and [Webmention](#Webmention), which lets your pages and pages on other sites tell each other when one links to the other.
+It is also where you turn on [ActivityPub](#ActivityPub), which publishes your content to Mastodon and the rest of the fediverse whenever your site deploys and gives the people who work on the site accounts of their own there, [ATProto](#ATProto), which makes your site an account on Bluesky's network, and [Webmention](#Webmention), which lets your pages and pages on other sites tell each other when one links to the other.
 """
 
 [[sections]]
@@ -211,7 +211,9 @@ Settle on a domain before you start federating. If an account's domain changes a
 
 ### Bluesky
 
-[Bridgy Fed](https://fed.brid.gy) bridges fediverse accounts into Bluesky, and an account opts in by following its bot:
+A site reaches Bluesky on its own with an [`atproto` section](/docs/atproto), which makes the site an account there at `@example.com` with no bridge in between. That is the way to be on Bluesky.
+
+[Bridgy Fed](https://fed.brid.gy) is the other way: it bridges a fediverse account into Bluesky under a handle of the bridge's. Use one or the other, since each is a separate Bluesky account with its own followers. An account opts in to the bridge by following its bot:
 
 ```toml
 [[activitypub]]
@@ -301,6 +303,22 @@ Your pages are built before any of that happens, so they cannot show it. A [carr
 Taking an account out of the list and deploying stops it answering; removing the whole `activitypub` list stops every account. Their followers, posts, the accounts they follow and the likes, boosts and replies they have received are kept, and adding an account back with the same `username` and `domain` resumes it where it left off. While it is off, a carrier reads the account as not federating, with nothing on any list. The same happens while a site's subscription is cancelled: the accounts stop answering, and the next deploy after it is reactivated brings them back.
 
 Archival reserves the paths under `/_archival/ap/` on every site it hosts, whether or not the site federates, so your site cannot serve its own files there. While a site federates, Archival also answers `/.well-known/webfinger` for its accounts and requests for ActivityPub documents on their behalf. It answers `/.well-known/nodeinfo`, `/api/v1/instance` and `/api/v2/instance` as well, describing the site as a server with as many users as it has accounts and registrations closed. Any of those requests it does not recognise is passed on to your site. What exactly is served, for people writing servers and tools, is on the [Federation](/docs/federation) page.
+"""
+
+[[sections]]
+title = "ATProto"
+content = """
+An `atproto` section makes your site an account on the [AT Protocol](https://atproto.com), the network Bluesky runs on. Its handle is your domain, and every deploy publishes the objects you map as Bluesky posts or long-form documents:
+
+```toml
+[atproto]
+
+[atproto.objects.note]
+content = "text"
+published = "date"
+```
+
+It is configured the way `activitypub` is, by naming fields, and a site can have both. [ATProto & Bluesky](/docs/atproto) covers every key, what is published, and the one line a template needs for long-form documents to be verified.
 """
 
 [[sections]]

@@ -54,7 +54,8 @@
 {% comment %}
   How it works. The .product-page wrapper and .product-section grid are the
   homepage tour's, so the copy/frame rhythm matches. Each frame here is a
-  diagram rather than an editor mock, drawn at a 560x400 viewBox and scaled by
+  diagram rather than an editor mock, two or three boxes and at most one arrow
+  each way, drawn at a 560x400 viewBox and scaled by
   the SVG itself, so the callout markers map straight from viewBox coordinates
   to percentages of the frame.
 {% endcomment %}
@@ -75,98 +76,41 @@
           <div class="sw-frame">
             <div class="sw-frame-glow" aria-hidden="true"></div>
             <svg class="sw-diagram" viewBox="0 0 560 400" role="img" aria-labelledby="sw-d1-title">
-              <title id="sw-d1-title">
-                Your content is published by Archival to followers on Mastodon, Threads, Bluesky and other ActivityPub servers,
-                and their follows, likes, boosts and replies come back. Archival also lets Mastodon apps sign in to the account.
-              </title>
+              <title id="sw-d1-title">Your site is an account on your own domain. Each deploy delivers its posts to followers on Mastodon, Threads and other ActivityPub servers, and their follows, likes, boosts and replies come back.</title>
               <defs>
-                <marker
-                  id="sw1-head"
-                  viewBox="0 0 10 10"
-                  refX="9"
-                  refY="5"
-                  markerWidth="7"
-                  markerHeight="7"
-                  orient="auto"
-                >
+                <marker id="sw1-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
                   <path d="M0 0 L10 5 L0 10 z" fill="#06d6a0"></path>
                 </marker>
-                <marker
-                  id="sw1-head-back"
-                  viewBox="0 0 10 10"
-                  refX="9"
-                  refY="5"
-                  markerWidth="7"
-                  markerHeight="7"
-                  orient="auto"
-                >
+                <marker id="sw1-head-back" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
                   <path d="M0 0 L10 5 L0 10 z" fill="#118ab2"></path>
                 </marker>
               </defs>
 
               <g data-callout-target="1">
-                <rect class="sw-card" x="20" y="52" width="226" height="150" rx="10"></rect>
-                <path class="sw-card-head" d="M30 52h206a10 10 0 0 1 10 10v16H20V62a10 10 0 0 1 10-10z"></path>
-                <text class="sw-kicker" x="32" y="70">YOUR CONTENT</text>
-                <text class="sw-mono sw-dim" x="234" y="70" text-anchor="end">post/hello.toml</text>
-                <text class="sw-mono" x="32" y="102">
-                  <tspan class="sw-key">title</tspan> = <tspan class="sw-val">"Hello, world"</tspan>
-                </text>
-                <text class="sw-mono" x="32" y="124">
-                  <tspan class="sw-key">published_at</tspan> = <tspan class="sw-val">2026-10-10</tspan>
-                </text>
-                <text class="sw-mono" x="32" y="146">
-                  <tspan class="sw-key">pinned</tspan> = <tspan class="sw-val">true</tspan>
-                </text>
-                <text class="sw-mono" x="32" y="168">
-                  <tspan class="sw-key">body</tspan> = <tspan class="sw-val">"""</tspan>
-                </text>
-                <rect class="sw-wire" x="32" y="178" width="150" height="5" rx="2.5"></rect>
-                <rect class="sw-wire" x="32" y="188" width="100" height="5" rx="2.5"></rect>
-                <text class="sw-dim sw-small" x="133" y="229" text-anchor="middle">edit in the editor, or git push</text>
+                <rect class="sw-card" x="150" y="40" width="260" height="110" rx="10"></rect>
+                <text class="sw-kicker" x="280" y="68" text-anchor="middle">YOUR SITE</text>
+                <rect class="sw-pill sw-pill--teal" x="180" y="82" width="200" height="30" rx="15"></rect>
+                <text class="sw-mono sw-handle" x="280" y="102" text-anchor="middle">@blog@example.com</text>
+                <text class="sw-dim sw-small" x="280" y="134" text-anchor="middle">your posts, on every deploy</text>
               </g>
 
-              <path class="sw-arrow" d="M246 127 H312" marker-end="url(#sw1-head)"></path>
-              <text class="sw-dim sw-small" x="280" y="118" text-anchor="middle">publish</text>
+              <path class="sw-arrow" d="M230 150 V246" marker-end="url(#sw1-head)"></path>
+              <text class="sw-dim sw-small" x="220" y="204" text-anchor="end">posts</text>
+              <path class="sw-arrow sw-arrow--back" d="M330 248 V152" marker-end="url(#sw1-head-back)"></path>
+              <text class="sw-dim sw-small" x="340" y="204">follows &middot; likes &middot; replies</text>
 
               <g data-callout-target="2">
-                <rect class="sw-card" x="314" y="52" width="226" height="150" rx="10"></rect>
-                <path class="sw-card-head" d="M324 52h206a10 10 0 0 1 10 10v16H314V62a10 10 0 0 1 10-10z"></path>
-                <text class="sw-kicker" x="326" y="70">ARCHIVAL HOSTING</text>
-                <text x="326" y="102"><tspan class="sw-check">&#10003;</tspan> WebFinger discovery</text>
-                <text x="326" y="124"><tspan class="sw-check">&#10003;</tspan> Actor profile</text>
-                <text x="326" y="146"><tspan class="sw-check">&#10003;</tspan> Inbox and outbox</text>
-                <text x="326" y="168"><tspan class="sw-check">&#10003;</tspan> Delivery on every deploy</text>
-                <text x="326" y="190"><tspan class="sw-check">&#10003;</tspan> Sign-in for Mastodon apps</text>
-                <rect class="sw-pill sw-pill--teal" x="314" y="212" width="226" height="26" rx="13"></rect>
-                <text class="sw-mono sw-handle" x="427" y="229" text-anchor="middle">@blog@example.com</text>
-              </g>
-
-              <path class="sw-arrow" d="M350 238 V286" marker-end="url(#sw1-head)"></path>
-              <text class="sw-dim sw-small" text-anchor="end">
-                <tspan x="340" y="258">Create &middot; Update</tspan>
-                <tspan x="340" y="272">&middot; Delete</tspan>
-              </text>
-              <path class="sw-arrow sw-arrow--back" d="M500 288 V240" marker-end="url(#sw1-head-back)"></path>
-              <text class="sw-dim sw-small" text-anchor="end">
-                <tspan x="490" y="258">Follow &middot; Like</tspan>
-                <tspan x="490" y="272">Boost &middot; Reply</tspan>
-              </text>
-
-              <g data-callout-target="3">
-                <rect class="sw-dashed-box" x="20" y="288" width="520" height="92" rx="10"></rect>
-                <text class="sw-kicker" x="32" y="306">FOLLOWED FROM</text>
-                <rect class="sw-pill" x="32" y="316" width="160" height="24" rx="12"></rect>
-                <text x="112" y="332" text-anchor="middle">Mastodon</text>
-                <rect class="sw-pill" x="200" y="316" width="160" height="24" rx="12"></rect>
-                <text x="280" y="332" text-anchor="middle">Threads</text>
-                <rect class="sw-pill" x="368" y="316" width="160" height="24" rx="12"></rect>
-                <text x="448" y="332" text-anchor="middle">Bluesky &middot; via Bridgy Fed</text>
-                <rect class="sw-pill" x="32" y="348" width="160" height="24" rx="12"></rect>
-                <text x="112" y="364" text-anchor="middle">Misskey</text>
-                <rect class="sw-pill" x="200" y="348" width="160" height="24" rx="12"></rect>
-                <text x="280" y="364" text-anchor="middle">Micro.blog</text>
-                <text class="sw-dim" x="448" y="364" text-anchor="middle">+ hundreds more</text>
+                <rect class="sw-dashed-box" x="20" y="250" width="520" height="110" rx="10"></rect>
+                <text class="sw-kicker" x="280" y="276" text-anchor="middle">FOLLOWED FROM</text>
+                <rect class="sw-pill" x="38" y="292" width="112" height="28" rx="14"></rect>
+                <text x="94" y="311" text-anchor="middle">Mastodon</text>
+                <rect class="sw-pill" x="162" y="292" width="112" height="28" rx="14"></rect>
+                <text x="218" y="311" text-anchor="middle">Threads</text>
+                <rect class="sw-pill" x="286" y="292" width="112" height="28" rx="14"></rect>
+                <text x="342" y="311" text-anchor="middle">Misskey</text>
+                <rect class="sw-pill" x="410" y="292" width="112" height="28" rx="14"></rect>
+                <text x="466" y="311" text-anchor="middle">Micro.blog</text>
+                <text class="sw-dim sw-small" x="280" y="344" text-anchor="middle">and hundreds more</text>
               </g>
             </svg>
 
@@ -174,7 +118,7 @@
               type="button"
               class="callout-marker"
               data-callout="1"
-              style="--cx:43.9%;--cy:13%;--i:1;"
+              style="--cx:73.2%;--cy:10%;--i:1;"
               aria-describedby="sw1-1"
             >
               1
@@ -183,133 +127,63 @@
               type="button"
               class="callout-marker"
               data-callout="2"
-              style="--cx:96.4%;--cy:13%;--i:2;"
+              style="--cx:96.4%;--cy:62.5%;--i:2;"
               aria-describedby="sw1-2"
             >
               2
-            </button>
-            <button
-              type="button"
-              class="callout-marker"
-              data-callout="3"
-              style="--cx:96.4%;--cy:72%;--i:3;"
-              aria-describedby="sw1-3"
-            >
-              3
             </button>
           </div>
 
           <ol class="callout-legend">
             <li class="callout-item" data-callout="1" id="sw1-1" style="--i:1;">
               <b>1</b>
-              Map a post type's fields once. The content is what you already write.
+              Map a post type's fields once. Archival serves the account and delivers each deploy.
             </li>
             <li class="callout-item" data-callout="2" id="sw1-2" style="--i:2;">
               <b>2</b>
-              Archival serves WebFinger, the actor, inbox and outbox, delivers each deploy, and lets Mastodon apps sign in.
-            </li>
-            <li class="callout-item" data-callout="3" id="sw1-3" style="--i:3;">
-              <b>3</b>
-              Followed from anything that speaks ActivityPub, and Bluesky through Bridgy Fed.
+              Followed from anything that speaks ActivityPub, and what people do there comes back.
             </li>
           </ol>
-        {% elsif section.key == "apps" %}
+        {% elsif section.key == "atproto" %}
           <div class="sw-frame">
             <div class="sw-frame-glow" aria-hidden="true"></div>
-            <svg class="sw-diagram" viewBox="0 0 560 400" role="img" aria-labelledby="sw-d5-title">
-              <title id="sw-d5-title">
-                A Mastodon app signs in with your domain as its server. The Archival editor asks which of the site's accounts
-                it may act as, and the app then reads that account's home timeline and stars, boosts and replies from it.
-              </title>
+            <svg class="sw-diagram" viewBox="0 0 560 400" role="img" aria-labelledby="sw-d6-title">
+              <title id="sw-d6-title">Your site hosts its own AT Protocol account, whose handle is your domain. Each deploy publishes its posts, which appear on Bluesky, and follows, likes and replies come back.</title>
               <defs>
-                <marker
-                  id="sw5-head"
-                  viewBox="0 0 10 10"
-                  refX="9"
-                  refY="5"
-                  markerWidth="7"
-                  markerHeight="7"
-                  orient="auto"
-                >
+                <marker id="sw6-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
                   <path d="M0 0 L10 5 L0 10 z" fill="#06d6a0"></path>
                 </marker>
-                <marker
-                  id="sw5-head-back"
-                  viewBox="0 0 10 10"
-                  refX="9"
-                  refY="5"
-                  markerWidth="7"
-                  markerHeight="7"
-                  orient="auto"
-                >
+                <marker id="sw6-head-back" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
                   <path d="M0 0 L10 5 L0 10 z" fill="#118ab2"></path>
                 </marker>
               </defs>
 
               <g data-callout-target="1">
-                <rect class="sw-card" x="20" y="40" width="180" height="326" rx="22"></rect>
-                <rect class="sw-wire" x="88" y="50" width="44" height="6" rx="3"></rect>
-                <text class="sw-kicker" x="36" y="80">HOME</text>
-                <text class="sw-mono sw-dim sw-tiny" x="36" y="96">@jesse@example.com</text>
-                <line class="sw-divider" x1="36" y1="108" x2="184" y2="108"></line>
-
-                <circle class="sw-avatar sw-avatar--pink" cx="46" cy="130" r="10"></circle>
-                <text class="sw-strong sw-small" x="62" y="128">Ana</text>
-                <text class="sw-dim sw-tiny" x="62" y="141">@ana@mastodon.social</text>
-                <rect class="sw-wire" x="36" y="152" width="140" height="5" rx="2.5"></rect>
-                <rect class="sw-wire" x="36" y="162" width="100" height="5" rx="2.5"></rect>
-                <text class="sw-dim sw-small" x="36" y="186">&#8617;&#160;&#160;&#160;&#8635;&#160;&#160;&#160;<tspan class="sw-check">&#9733;</tspan></text>
-                <line class="sw-divider" x1="36" y1="198" x2="184" y2="198"></line>
-
-                <text class="sw-dim sw-tiny" x="36" y="214">&#8635; Ana boosted</text>
-                <circle class="sw-avatar sw-avatar--blue" cx="46" cy="234" r="10"></circle>
-                <text class="sw-strong sw-small" x="62" y="232">Kai</text>
-                <text class="sw-dim sw-tiny" x="62" y="245">@kai@pixelfed.social</text>
-                <rect class="sw-wire" x="36" y="256" width="130" height="5" rx="2.5"></rect>
-                <text class="sw-dim sw-small" x="36" y="280">&#8617;&#160;&#160;&#160;<tspan class="sw-check">&#8635;</tspan>&#160;&#160;&#160;&#9734;</text>
-                <line class="sw-divider" x1="36" y1="292" x2="184" y2="292"></line>
-
-                <circle class="sw-avatar sw-avatar--yellow" cx="46" cy="314" r="10"></circle>
-                <text class="sw-strong sw-small" x="62" y="312">Sam</text>
-                <text class="sw-dim sw-tiny" x="62" y="325">@sam@sams.blog</text>
-                <rect class="sw-wire" x="36" y="336" width="120" height="5" rx="2.5"></rect>
-                <rect class="sw-wire" x="36" y="346" width="80" height="5" rx="2.5"></rect>
-                <text class="sw-dim sw-tiny" x="110" y="388" text-anchor="middle">Ivory &middot; Tusky &middot; Elk &middot; Phanpy</text>
+                <rect class="sw-card" x="20" y="110" width="190" height="160" rx="10"></rect>
+                <text class="sw-kicker" x="32" y="136">YOUR SITE</text>
+                <text class="sw-mono sw-dim" x="32" y="162">post/hello.toml</text>
+                <rect class="sw-wire" x="32" y="174" width="150" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="32" y="186" width="110" height="5" rx="2.5"></rect>
+                <rect class="sw-pill sw-pill--teal" x="32" y="216" width="166" height="30" rx="15"></rect>
+                <text class="sw-mono sw-handle" x="115" y="236" text-anchor="middle">@example.com</text>
               </g>
 
-              <path class="sw-arrow" d="M200 96 H298" marker-end="url(#sw5-head)"></path>
-              <text class="sw-dim sw-small" x="249" y="88" text-anchor="middle">sign in</text>
-              <text class="sw-mono sw-dim sw-tiny" x="249" y="112" text-anchor="middle">example.com</text>
-              <path class="sw-arrow sw-arrow--back" d="M300 150 H204" marker-end="url(#sw5-head-back)"></path>
-              <text class="sw-dim sw-small" x="252" y="166" text-anchor="middle">approved</text>
+              <path class="sw-arrow" d="M210 160 H346" marker-end="url(#sw6-head)"></path>
+              <text class="sw-dim sw-small" x="279" y="150" text-anchor="middle">every deploy</text>
+              <path class="sw-arrow sw-arrow--back" d="M348 226 H212" marker-end="url(#sw6-head-back)"></path>
+              <text class="sw-dim sw-small" x="279" y="246" text-anchor="middle">follows &middot; likes &middot; replies</text>
 
               <g data-callout-target="2">
-                <rect class="sw-card" x="300" y="40" width="240" height="152" rx="10"></rect>
-                <path class="sw-card-head" d="M310 40h220a10 10 0 0 1 10 10v16H300V50a10 10 0 0 1 10-10z"></path>
-                <text class="sw-kicker" x="312" y="58">ARCHIVAL EDITOR</text>
-                <text class="sw-small" x="312" y="90">Let Ivory act as</text>
-                <rect class="sw-pill sw-pill--teal" x="312" y="100" width="216" height="24" rx="12"></rect>
-                <text class="sw-mono sw-handle" x="420" y="116" text-anchor="middle">@jesse@example.com</text>
-                <rect class="sw-pill" x="312" y="132" width="216" height="24" rx="12"></rect>
-                <text class="sw-mono" x="420" y="148" text-anchor="middle">@blog@example.com</text>
-                <text class="sw-dim sw-tiny" x="312" y="178">no password &middot; the app keeps a key of its own</text>
-              </g>
-
-              <path class="sw-arrow sw-arrow--back" d="M300 268 H204" marker-end="url(#sw5-head-back)"></path>
-              <text class="sw-dim sw-small" x="252" y="260" text-anchor="middle">timeline</text>
-              <path class="sw-arrow" d="M200 318 H298" marker-end="url(#sw5-head)"></path>
-              <text class="sw-dim sw-small" x="249" y="310" text-anchor="middle">star &middot; reply</text>
-              <text class="sw-dim sw-small" x="249" y="336" text-anchor="middle">boost &middot; follow</text>
-
-              <g data-callout-target="3">
-                <rect class="sw-card" x="300" y="220" width="240" height="160" rx="10"></rect>
-                <path class="sw-card-head" d="M310 220h220a10 10 0 0 1 10 10v16H300v-16a10 10 0 0 1 10-10z"></path>
-                <text class="sw-kicker" x="312" y="238">ARCHIVAL HOSTING</text>
-                <text x="312" y="270"><tspan class="sw-check">&#10003;</tspan> Home timeline from follows</text>
-                <text x="312" y="292"><tspan class="sw-check">&#10003;</tspan> Stars, boosts and replies sent</text>
-                <text x="312" y="314"><tspan class="sw-check">&#10003;</tspan> Follows sent on deploy</text>
-                <text x="312" y="336"><tspan class="sw-check">&#10003;</tspan> Search by handle or address</text>
-                <text class="sw-mono sw-dim sw-tiny" x="312" y="364">/oauth/ &middot; /api/v1/ &middot; /api/v2/</text>
+                <rect class="sw-card" x="350" y="90" width="190" height="200" rx="10"></rect>
+                <text class="sw-kicker" x="362" y="116">BLUESKY</text>
+                <circle class="sw-avatar sw-avatar--teal" cx="376" cy="146" r="12"></circle>
+                <text class="sw-strong" x="396" y="144">Your site</text>
+                <text class="sw-dim sw-tiny" x="396" y="158">@example.com</text>
+                <rect class="sw-wire sw-wire--bright" x="362" y="178" width="120" height="6" rx="3"></rect>
+                <rect class="sw-wire" x="362" y="192" width="160" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="362" y="204" width="130" height="5" rx="2.5"></rect>
+                <text class="sw-dim sw-small" x="362" y="236">3 replies &middot; 12 likes</text>
+                <text class="sw-dim sw-tiny" x="362" y="270">and any AT Protocol app</text>
               </g>
             </svg>
 
@@ -317,7 +191,90 @@
               type="button"
               class="callout-marker"
               data-callout="1"
-              style="--cx:35.7%;--cy:10%;--i:1;"
+              style="--cx:37.5%;--cy:27.5%;--i:1;"
+              aria-describedby="sw6-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--cx:96.4%;--cy:22.5%;--i:2;"
+              aria-describedby="sw6-2"
+            >
+              2
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li class="callout-item" data-callout="1" id="sw6-1" style="--i:1;">
+              <b>1</b>
+              The site hosts its own account. Its handle is your domain, with no bridge in between.
+            </li>
+            <li class="callout-item" data-callout="2" id="sw6-2" style="--i:2;">
+              <b>2</b>
+              Posts appear on Bluesky, and what people do with them comes back.
+            </li>
+          </ol>
+        {% elsif section.key == "apps" %}
+          <div class="sw-frame">
+            <div class="sw-frame-glow" aria-hidden="true"></div>
+            <svg class="sw-diagram" viewBox="0 0 560 400" role="img" aria-labelledby="sw-d5-title">
+              <title id="sw-d5-title">A Mastodon app signs in with your domain as its server. Once approved in the Archival editor, it reads the account's home timeline and stars, boosts and replies as that account.</title>
+              <defs>
+                <marker id="sw5-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#06d6a0"></path>
+                </marker>
+                <marker id="sw5-head-back" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#118ab2"></path>
+                </marker>
+              </defs>
+
+              <g data-callout-target="1">
+                <rect class="sw-card" x="40" y="40" width="180" height="310" rx="22"></rect>
+                <rect class="sw-wire" x="108" y="52" width="44" height="6" rx="3"></rect>
+                <text class="sw-kicker" x="56" y="84">HOME</text>
+                <line class="sw-divider" x1="56" y1="98" x2="204" y2="98"></line>
+                <circle class="sw-avatar sw-avatar--pink" cx="66" cy="124" r="10"></circle>
+                <text class="sw-strong sw-small" x="82" y="122">Ana</text>
+                <text class="sw-dim sw-tiny" x="82" y="135">@ana@mastodon.social</text>
+                <rect class="sw-wire" x="56" y="148" width="140" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="56" y="158" width="100" height="5" rx="2.5"></rect>
+                <line class="sw-divider" x1="56" y1="178" x2="204" y2="178"></line>
+                <circle class="sw-avatar sw-avatar--blue" cx="66" cy="204" r="10"></circle>
+                <text class="sw-strong sw-small" x="82" y="202">Kai</text>
+                <text class="sw-dim sw-tiny" x="82" y="215">@kai@pixelfed.social</text>
+                <rect class="sw-wire" x="56" y="228" width="130" height="5" rx="2.5"></rect>
+                <line class="sw-divider" x1="56" y1="248" x2="204" y2="248"></line>
+                <circle class="sw-avatar sw-avatar--yellow" cx="66" cy="274" r="10"></circle>
+                <text class="sw-strong sw-small" x="82" y="272">Sam</text>
+                <text class="sw-dim sw-tiny" x="82" y="285">@sam@sams.blog</text>
+                <rect class="sw-wire" x="56" y="298" width="120" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="56" y="308" width="80" height="5" rx="2.5"></rect>
+                <text class="sw-dim sw-tiny" x="130" y="376" text-anchor="middle">Ivory &middot; Tusky &middot; Elk &middot; Phanpy</text>
+              </g>
+
+              <path class="sw-arrow" d="M220 160 H336" marker-end="url(#sw5-head)"></path>
+              <text class="sw-dim sw-small" x="278" y="150" text-anchor="middle">sign in</text>
+              <path class="sw-arrow sw-arrow--back" d="M338 226 H222" marker-end="url(#sw5-head-back)"></path>
+              <text class="sw-dim sw-small" x="279" y="246" text-anchor="middle">timeline</text>
+
+              <g data-callout-target="2">
+                <rect class="sw-card" x="340" y="120" width="200" height="150" rx="10"></rect>
+                <text class="sw-kicker" x="352" y="146">YOUR SITE</text>
+                <rect class="sw-pill sw-pill--teal" x="352" y="160" width="176" height="30" rx="15"></rect>
+                <text class="sw-mono sw-handle" x="440" y="180" text-anchor="middle">@jesse@example.com</text>
+                <text class="sw-dim sw-small" x="352" y="222">no password to make</text>
+                <text class="sw-dim sw-small" x="352" y="244">star, boost and reply as you</text>
+              </g>
+            </svg>
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--cx:39.3%;--cy:10%;--i:1;"
               aria-describedby="sw5-1"
             >
               1
@@ -326,19 +283,10 @@
               type="button"
               class="callout-marker"
               data-callout="2"
-              style="--cx:96.4%;--cy:10%;--i:2;"
+              style="--cx:96.4%;--cy:30%;--i:2;"
               aria-describedby="sw5-2"
             >
               2
-            </button>
-            <button
-              type="button"
-              class="callout-marker"
-              data-callout="3"
-              style="--cx:96.4%;--cy:55%;--i:3;"
-              aria-describedby="sw5-3"
-            >
-              3
             </button>
           </div>
 
@@ -349,111 +297,48 @@
             </li>
             <li class="callout-item" data-callout="2" id="sw5-2" style="--i:2;">
               <b>2</b>
-              The Archival editor asks which of the site's accounts the app may act as.
-            </li>
-            <li class="callout-item" data-callout="3" id="sw5-3" style="--i:3;">
-              <b>3</b>
-              Archival keeps the home timeline and sends what you do from the app.
+              Approve it in the Archival editor. The app reads the account's timeline and acts as it.
             </li>
           </ol>
         {% elsif section.key == "webmention" %}
           <div class="sw-frame">
             <div class="sw-frame-glow" aria-hidden="true"></div>
             <svg class="sw-diagram" viewBox="0 0 560 400" role="img" aria-labelledby="sw-d2-title">
-              <title id="sw-d2-title">
-                A page on another site links to yours and sends a webmention, which Archival verifies and keeps. When your
-                post links out, Archival sends a webmention to the other site on deploy.
-              </title>
+              <title id="sw-d2-title">A page on another site links to yours and sends a webmention, which Archival verifies and keeps. When your posts link out, Archival sends a webmention to the other site on deploy.</title>
               <defs>
-                <marker
-                  id="sw2-head"
-                  viewBox="0 0 10 10"
-                  refX="9"
-                  refY="5"
-                  markerWidth="7"
-                  markerHeight="7"
-                  orient="auto"
-                >
+                <marker id="sw2-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
                   <path d="M0 0 L10 5 L0 10 z" fill="#06d6a0"></path>
                 </marker>
-                <marker
-                  id="sw2-head-back"
-                  viewBox="0 0 10 10"
-                  refX="9"
-                  refY="5"
-                  markerWidth="7"
-                  markerHeight="7"
-                  orient="auto"
-                >
+                <marker id="sw2-head-back" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
                   <path d="M0 0 L10 5 L0 10 z" fill="#118ab2"></path>
                 </marker>
               </defs>
 
-              <text class="sw-kicker" x="20" y="40">THEIR SITE</text>
-              <text class="sw-kicker" x="314" y="40">YOUR SITE</text>
-
               <g data-callout-target="1">
-                <rect class="sw-card" x="20" y="52" width="226" height="140" rx="10"></rect>
-                <path class="sw-card-head" d="M30 52h206a10 10 0 0 1 10 10v16H20V62a10 10 0 0 1 10-10z"></path>
-                <text class="sw-mono sw-dim" x="32" y="70">their-blog.com/notes/42</text>
-                <text class="sw-small" x="32" y="100">Replying to <tspan class="sw-link">example.com/post/hello</tspan></text>
-                <rect class="sw-wire" x="32" y="112" width="170" height="5" rx="2.5"></rect>
-                <rect class="sw-wire" x="32" y="122" width="120" height="5" rx="2.5"></rect>
-                <text class="sw-kicker" x="32" y="150">MICROFORMATS</text>
-                <rect class="sw-pill" x="32" y="158" width="58" height="18" rx="9"></rect>
-                <text class="sw-mono sw-tiny" x="61" y="170" text-anchor="middle">h-entry</text>
-                <rect class="sw-pill" x="96" y="158" width="78" height="18" rx="9"></rect>
-                <text class="sw-mono sw-tiny" x="135" y="170" text-anchor="middle">in-reply-to</text>
-                <rect class="sw-pill" x="180" y="158" width="54" height="18" rx="9"></rect>
-                <text class="sw-mono sw-tiny" x="207" y="170" text-anchor="middle">p-author</text>
+                <rect class="sw-card" x="20" y="110" width="200" height="170" rx="10"></rect>
+                <path class="sw-card-head" d="M30 110h180a10 10 0 0 1 10 10v16H20V120a10 10 0 0 1 10-10z"></path>
+                <text class="sw-mono sw-dim" x="32" y="128">their-blog.com/notes/42</text>
+                <text class="sw-small" x="32" y="162">Replying to</text>
+                <text class="sw-small sw-link" x="32" y="180">example.com/post/hello</text>
+                <rect class="sw-wire" x="32" y="200" width="160" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="32" y="212" width="110" height="5" rx="2.5"></rect>
               </g>
 
-              <path class="sw-arrow" d="M246 100 H312" marker-end="url(#sw2-head)"></path>
-              <text class="sw-dim sw-small" x="280" y="92" text-anchor="middle">webmention</text>
-              <path class="sw-arrow sw-arrow--back" d="M314 136 H248" marker-end="url(#sw2-head-back)"></path>
-              <text class="sw-dim sw-small" x="280" y="152" text-anchor="middle">verified</text>
+              <path class="sw-arrow" d="M220 160 H336" marker-end="url(#sw2-head)"></path>
+              <text class="sw-dim sw-small" x="278" y="150" text-anchor="middle">mention</text>
+              <path class="sw-arrow sw-arrow--back" d="M338 226 H222" marker-end="url(#sw2-head-back)"></path>
+              <text class="sw-dim sw-small" x="279" y="246" text-anchor="middle">and yours to them</text>
 
               <g data-callout-target="2">
-                <rect class="sw-card" x="314" y="52" width="226" height="140" rx="10"></rect>
-                <path class="sw-card-head" d="M324 52h206a10 10 0 0 1 10 10v16H314V62a10 10 0 0 1 10-10z"></path>
-                <text class="sw-mono sw-dim" x="326" y="70">example.com/post/hello</text>
-                <rect class="sw-pill sw-pill--teal" x="326" y="86" width="202" height="22" rx="11"></rect>
-                <text class="sw-mono sw-handle" x="427" y="101" text-anchor="middle">/_archival/webmention</text>
-                <text x="326" y="134"><tspan class="sw-check">&#10003;</tspan> Link verified</text>
-                <text x="326" y="156"><tspan class="sw-check">&#10003;</tspan> Kept as a reply</text>
-                <text class="sw-dim sw-small" x="326" y="176">or a like, repost, bookmark or mention</text>
-              </g>
-
-              <line class="sw-divider" x1="20" y1="212" x2="540" y2="212"></line>
-              <rect class="sw-divider-mask" x="222" y="204" width="116" height="16"></rect>
-              <text class="sw-dim sw-tiny" x="280" y="215.5" text-anchor="middle">AND THE OTHER WAY</text>
-
-              <g data-callout-target="4">
-                <rect class="sw-card" x="20" y="232" width="226" height="140" rx="10"></rect>
-                <path class="sw-card-head" d="M30 232h206a10 10 0 0 1 10 10v16H20v-16a10 10 0 0 1 10-10z"></path>
-                <text class="sw-mono sw-dim" x="32" y="250">their-blog.com/notes/42</text>
-                <rect class="sw-pill sw-pill--blue" x="32" y="266" width="202" height="22" rx="11"></rect>
-                <text class="sw-mono sw-endpoint" x="133" y="281" text-anchor="middle">/webmention</text>
-                <text x="32" y="314"><tspan class="sw-check">&#10003;</tspan> Verifies, shows your reply</text>
-                <text class="sw-dim sw-small" x="32" y="334">as a comment under their post</text>
-              </g>
-
-              <path class="sw-arrow" d="M314 280 H250" marker-end="url(#sw2-head)"></path>
-              <text class="sw-dim sw-small" x="280" y="272" text-anchor="middle">webmention</text>
-              <path class="sw-arrow sw-arrow--back" d="M246 316 H310" marker-end="url(#sw2-head-back)"></path>
-              <text class="sw-dim sw-small" x="280" y="332" text-anchor="middle">verified</text>
-
-              <g data-callout-target="3">
-                <rect class="sw-card" x="314" y="232" width="226" height="140" rx="10"></rect>
-                <path class="sw-card-head" d="M324 232h206a10 10 0 0 1 10 10v16H314v-16a10 10 0 0 1 10-10z"></path>
-                <text class="sw-mono sw-dim" x="326" y="250">post/hello.toml</text>
-                <text class="sw-mono" x="326" y="276">
-                  <tspan class="sw-key">content</tspan> = <tspan class="sw-val">"""</tspan>
-                </text>
-                <text class="sw-small" x="326" y="296">Loved <tspan class="sw-link">their-blog.com/notes/42</tspan></text>
-                <rect class="sw-wire" x="326" y="306" width="150" height="5" rx="2.5"></rect>
-                <text x="326" y="338"><tspan class="sw-check">&#10003;</tspan> Mention sent on deploy</text>
-                <text class="sw-dim sw-small" x="326" y="358">Archival serves it as microformats</text>
+                <rect class="sw-card" x="340" y="110" width="200" height="170" rx="10"></rect>
+                <path class="sw-card-head" d="M350 110h180a10 10 0 0 1 10 10v16H340V120a10 10 0 0 1 10-10z"></path>
+                <text class="sw-mono sw-dim" x="352" y="128">example.com/post/hello</text>
+                <rect class="sw-wire sw-wire--bright" x="352" y="150" width="120" height="7" rx="3.5"></rect>
+                <rect class="sw-wire" x="352" y="168" width="170" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="352" y="180" width="140" height="5" rx="2.5"></rect>
+                <line class="sw-divider" x1="352" y1="204" x2="528" y2="204"></line>
+                <text x="352" y="232"><tspan class="sw-check">&#10003;</tspan> 1 reply, verified</text>
+                <text class="sw-dim sw-small" x="352" y="256">kept with your site</text>
               </g>
             </svg>
 
@@ -461,7 +346,7 @@
               type="button"
               class="callout-marker"
               data-callout="1"
-              style="--cx:43.9%;--cy:13%;--i:1;"
+              style="--cx:39.3%;--cy:27.5%;--i:1;"
               aria-describedby="sw2-1"
             >
               1
@@ -470,144 +355,76 @@
               type="button"
               class="callout-marker"
               data-callout="2"
-              style="--cx:96.4%;--cy:13%;--i:2;"
+              style="--cx:96.4%;--cy:27.5%;--i:2;"
               aria-describedby="sw2-2"
             >
               2
-            </button>
-            <button
-              type="button"
-              class="callout-marker"
-              data-callout="3"
-              style="--cx:96.4%;--cy:58%;--i:3;"
-              aria-describedby="sw2-3"
-            >
-              3
-            </button>
-            <button
-              type="button"
-              class="callout-marker"
-              data-callout="4"
-              style="--cx:43.9%;--cy:58%;--i:4;"
-              aria-describedby="sw2-4"
-            >
-              4
             </button>
           </div>
 
           <ol class="callout-legend">
             <li class="callout-item" data-callout="1" id="sw2-1" style="--i:1;">
               <b>1</b>
-              A page elsewhere links to yours, and its site sends a mention.
+              A page elsewhere links to yours and its site sends a mention. Archival checks the link and keeps it.
             </li>
             <li class="callout-item" data-callout="2" id="sw2-2" style="--i:2;">
               <b>2</b>
-              Archival fetches that page, confirms the link, and keeps the mention by kind.
-            </li>
-            <li class="callout-item" data-callout="3" id="sw2-3" style="--i:3;">
-              <b>3</b>
-              One of your posts links out, and Archival tells the other site on deploy.
-            </li>
-            <li class="callout-item" data-callout="4" id="sw2-4" style="--i:4;">
-              <b>4</b>
-              Their site verifies it against a microformats page Archival serves for you.
+              When your posts link out, Archival sends the mention on deploy.
             </li>
           </ol>
         {% elsif section.key == "conversation" %}
           <div class="sw-frame">
             <div class="sw-frame-glow" aria-hidden="true"></div>
             <svg class="sw-diagram" viewBox="0 0 560 400" role="img" aria-labelledby="sw-d3-title">
-              <title id="sw-d3-title">
-                Replies from Mastodon, likes from Bluesky and webmentions from blogs are kept by Archival and read by a
-                carrier, which shows them as a thread under the post on your own site, with your own reply from a Mastodon app.
-              </title>
+              <title id="sw-d3-title">A reply from Mastodon, a reply from Bluesky and a webmention from a blog are kept by Archival and shown as one thread under the post on your own site.</title>
               <defs>
-                <marker
-                  id="sw3-head"
-                  viewBox="0 0 10 10"
-                  refX="9"
-                  refY="5"
-                  markerWidth="7"
-                  markerHeight="7"
-                  orient="auto"
-                >
+                <marker id="sw3-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
                   <path d="M0 0 L10 5 L0 10 z" fill="#06d6a0"></path>
+                </marker>
+                <marker id="sw3-head-back" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#118ab2"></path>
                 </marker>
               </defs>
 
-              <text class="sw-kicker" x="20" y="40">FROM EVERYWHERE</text>
-
               <g data-callout-target="1">
-                <rect class="sw-card" x="20" y="52" width="170" height="66" rx="10"></rect>
-                <circle class="sw-avatar sw-avatar--pink" cx="42" cy="76" r="11"></circle>
-                <text class="sw-strong" x="62" y="74">Ana</text>
-                <text class="sw-dim sw-tiny" x="62" y="88">@ana@mastodon.social</text>
-                <rect class="sw-pill" x="138" y="62" width="42" height="18" rx="9"></rect>
-                <text class="sw-tiny" x="159" y="74" text-anchor="middle">reply</text>
-                <rect class="sw-wire" x="62" y="98" width="100" height="5" rx="2.5"></rect>
-
-                <rect class="sw-card" x="20" y="138" width="170" height="66" rx="10"></rect>
-                <circle class="sw-avatar sw-avatar--blue" cx="42" cy="162" r="11"></circle>
-                <text class="sw-strong" x="62" y="160">Kai</text>
-                <text class="sw-dim sw-tiny" x="62" y="174">Bluesky, via Bridgy Fed</text>
-                <rect class="sw-pill" x="142" y="148" width="38" height="18" rx="9"></rect>
-                <text class="sw-tiny" x="161" y="160" text-anchor="middle">like</text>
-                <rect class="sw-wire" x="62" y="184" width="70" height="5" rx="2.5"></rect>
-
-                <rect class="sw-card" x="20" y="224" width="170" height="66" rx="10"></rect>
-                <circle class="sw-avatar sw-avatar--yellow" cx="42" cy="248" r="11"></circle>
-                <text class="sw-strong" x="62" y="246">Sam's blog</text>
-                <text class="sw-dim sw-tiny" x="62" y="260">webmention</text>
-                <rect class="sw-pill" x="138" y="234" width="42" height="18" rx="9"></rect>
-                <text class="sw-tiny" x="159" y="246" text-anchor="middle">reply</text>
-                <rect class="sw-wire" x="62" y="270" width="110" height="5" rx="2.5"></rect>
+                <rect class="sw-card" x="20" y="92" width="200" height="46" rx="10"></rect>
+                <circle class="sw-avatar sw-avatar--pink" cx="44" cy="115" r="10"></circle>
+                <text class="sw-strong" x="64" y="112">Ana</text>
+                <text class="sw-dim sw-tiny" x="64" y="126">reply from Mastodon</text>
+                <rect class="sw-card" x="20" y="162" width="200" height="46" rx="10"></rect>
+                <circle class="sw-avatar sw-avatar--blue" cx="44" cy="185" r="10"></circle>
+                <text class="sw-strong" x="64" y="182">Kai</text>
+                <text class="sw-dim sw-tiny" x="64" y="196">reply from Bluesky</text>
+                <rect class="sw-card" x="20" y="232" width="200" height="46" rx="10"></rect>
+                <circle class="sw-avatar sw-avatar--yellow" cx="44" cy="255" r="10"></circle>
+                <text class="sw-strong" x="64" y="252">Sam's blog</text>
+                <text class="sw-dim sw-tiny" x="64" y="266">webmention</text>
+                <text class="sw-dim sw-small" x="120" y="308" text-anchor="middle">kept by Archival</text>
               </g>
 
-              <path class="sw-arrow" d="M190 85 C214 85 210 172 234 172" marker-end="url(#sw3-head)"></path>
-              <path class="sw-arrow" d="M190 171 C212 171 212 192 234 192" marker-end="url(#sw3-head)"></path>
-              <path class="sw-arrow" d="M190 257 C214 257 210 212 234 212" marker-end="url(#sw3-head)"></path>
+              <path class="sw-arrow" d="M220 115 C282 115 274 175 336 175" marker-end="url(#sw3-head)"></path>
+              <path class="sw-arrow" d="M220 185 H336" marker-end="url(#sw3-head)"></path>
+              <path class="sw-arrow" d="M220 255 C282 255 274 195 336 195" marker-end="url(#sw3-head)"></path>
 
               <g data-callout-target="2">
-                <rect class="sw-card sw-card--accent" x="236" y="146" width="110" height="92" rx="10"></rect>
-                <text class="sw-strong" x="291" y="176" text-anchor="middle">Archival</text>
-                <text class="sw-strong" x="291" y="192" text-anchor="middle">keeps it</text>
-                <text class="sw-dim sw-tiny" x="291" y="212" text-anchor="middle">verified &middot; stored</text>
-                <text class="sw-dim sw-tiny" x="291" y="226" text-anchor="middle">nothing to run</text>
-                <text class="sw-mono sw-dim sw-tiny" x="236" y="262">site.activitypub.replies()</text>
-                <text class="sw-mono sw-dim sw-tiny" x="236" y="276">site.webmentions.list()</text>
-              </g>
-
-              <path class="sw-arrow" d="M346 192 H386" marker-end="url(#sw3-head)"></path>
-              <text class="sw-dim sw-small" x="366" y="184" text-anchor="middle">carrier</text>
-
-              <g data-callout-target="3">
-                <rect class="sw-card" x="390" y="52" width="150" height="328" rx="10"></rect>
-                <path class="sw-card-head" d="M400 52h130a10 10 0 0 1 10 10v12H390V62a10 10 0 0 1 10-10z"></path>
-                <circle class="sw-wire" cx="402" cy="63" r="3"></circle>
-                <circle class="sw-wire" cx="412" cy="63" r="3"></circle>
-                <circle class="sw-wire" cx="422" cy="63" r="3"></circle>
-                <rect class="sw-wire" x="432" y="59" width="96" height="8" rx="4"></rect>
-                <rect class="sw-wire sw-wire--bright" x="402" y="90" width="100" height="7" rx="3.5"></rect>
-                <rect class="sw-wire" x="402" y="106" width="118" height="5" rx="2.5"></rect>
-                <rect class="sw-wire" x="402" y="116" width="110" height="5" rx="2.5"></rect>
-                <rect class="sw-wire" x="402" y="126" width="90" height="5" rx="2.5"></rect>
-                <line class="sw-divider" x1="402" y1="146" x2="528" y2="146"></line>
-                <text class="sw-strong sw-small" x="402" y="164">Replies &middot; 3</text>
-                <circle class="sw-avatar sw-avatar--pink" cx="410" cy="188" r="7"></circle>
-                <rect class="sw-wire sw-wire--bright" x="424" y="181" width="50" height="5" rx="2.5"></rect>
-                <rect class="sw-wire" x="424" y="191" width="100" height="4" rx="2"></rect>
-                <rect class="sw-wire" x="424" y="199" width="70" height="4" rx="2"></rect>
-                <circle class="sw-avatar sw-avatar--yellow" cx="410" cy="232" r="7"></circle>
-                <rect class="sw-wire sw-wire--bright" x="424" y="225" width="60" height="5" rx="2.5"></rect>
-                <rect class="sw-wire" x="424" y="235" width="104" height="4" rx="2"></rect>
-                <rect class="sw-wire" x="424" y="243" width="80" height="4" rx="2"></rect>
-                <circle class="sw-avatar sw-avatar--teal" cx="410" cy="276" r="7"></circle>
-                <rect class="sw-wire sw-wire--bright" x="424" y="269" width="44" height="5" rx="2.5"></rect>
-                <rect class="sw-wire" x="424" y="279" width="92" height="4" rx="2"></rect>
-                <line class="sw-divider" x1="402" y1="306" x2="528" y2="306"></line>
-                <text class="sw-dim sw-small" x="402" y="330">12 likes &middot; 4 boosts</text>
-                <text class="sw-dim sw-tiny" x="402" y="348">1 from Bluesky</text>
-                <text class="sw-dim sw-tiny" x="402" y="366">your reply, from Ivory</text>
+                <rect class="sw-card" x="340" y="60" width="200" height="270" rx="10"></rect>
+                <path class="sw-card-head" d="M350 60h180a10 10 0 0 1 10 10v16H340V70a10 10 0 0 1 10-10z"></path>
+                <text class="sw-mono sw-dim" x="352" y="78">example.com/post/hello</text>
+                <rect class="sw-wire sw-wire--bright" x="352" y="100" width="110" height="7" rx="3.5"></rect>
+                <rect class="sw-wire" x="352" y="118" width="170" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="352" y="130" width="150" height="5" rx="2.5"></rect>
+                <line class="sw-divider" x1="352" y1="152" x2="528" y2="152"></line>
+                <text class="sw-strong sw-small" x="352" y="174">Replies &middot; 3</text>
+                <circle class="sw-avatar sw-avatar--pink" cx="360" cy="198" r="7"></circle>
+                <rect class="sw-wire sw-wire--bright" x="374" y="191" width="50" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="374" y="201" width="140" height="4" rx="2"></rect>
+                <circle class="sw-avatar sw-avatar--blue" cx="360" cy="232" r="7"></circle>
+                <rect class="sw-wire sw-wire--bright" x="374" y="225" width="60" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="374" y="235" width="120" height="4" rx="2"></rect>
+                <circle class="sw-avatar sw-avatar--yellow" cx="360" cy="266" r="7"></circle>
+                <rect class="sw-wire sw-wire--bright" x="374" y="259" width="44" height="5" rx="2.5"></rect>
+                <rect class="sw-wire" x="374" y="269" width="132" height="4" rx="2"></rect>
+                <text class="sw-dim sw-small" x="352" y="308">12 likes &middot; 4 boosts</text>
               </g>
             </svg>
 
@@ -615,7 +432,7 @@
               type="button"
               class="callout-marker"
               data-callout="1"
-              style="--cx:33.9%;--cy:13%;--i:1;"
+              style="--cx:39.3%;--cy:23%;--i:1;"
               aria-describedby="sw3-1"
             >
               1
@@ -624,34 +441,21 @@
               type="button"
               class="callout-marker"
               data-callout="2"
-              style="--cx:61.8%;--cy:36.5%;--i:2;"
+              style="--cx:96.4%;--cy:15%;--i:2;"
               aria-describedby="sw3-2"
             >
               2
-            </button>
-            <button
-              type="button"
-              class="callout-marker"
-              data-callout="3"
-              style="--cx:96.4%;--cy:13%;--i:3;"
-              aria-describedby="sw3-3"
-            >
-              3
             </button>
           </div>
 
           <ol class="callout-legend">
             <li class="callout-item" data-callout="1" id="sw3-1" style="--i:1;">
               <b>1</b>
-              Likes, boosts, replies and mentions arrive from wherever people already are.
+              Replies, likes and mentions arrive from wherever people already are, and Archival keeps them.
             </li>
             <li class="callout-item" data-callout="2" id="sw3-2" style="--i:2;">
               <b>2</b>
-              Archival verifies and keeps them. No database of your own.
-            </li>
-            <li class="callout-item" data-callout="3" id="sw3-3" style="--i:3;">
-              <b>3</b>
-              A carrier reads them when a visitor asks, and your page shows the thread, your replies from a Mastodon app included.
+              A carrier reads them when a visitor asks, and your page shows the thread.
             </li>
           </ol>
         {% elsif section.key == "config" %}
@@ -668,7 +472,6 @@
 
 <span class="sw-code-block" data-callout-target="2"><span class="t">[[activitypub]]</span>
 <span class="k">username</span> = <span class="s">"blog"</span>
-<span class="k">follow</span> = [<span class="s">"@bsky.brid.gy@bsky.brid.gy"</span>]
 
 <span class="t">[activitypub.actor]</span>
 <span class="k">object</span> = <span class="s">"site"</span>
@@ -681,7 +484,13 @@
 <span class="k">published</span> = <span class="s">"published_at"</span>
 <span class="k">featured</span> = <span class="s">"pinned"</span></span>
 
-<span class="sw-code-block" data-callout-target="4"><span class="t">[webmention]</span>
+<span class="sw-code-block" data-callout-target="4"><span class="t">[atproto]</span>
+
+<span class="t">[atproto.objects.post]</span>
+<span class="k">content</span> = <span class="s">"body"</span>
+<span class="k">published</span> = <span class="s">"published_at"</span></span>
+
+<span class="sw-code-block" data-callout-target="5"><span class="t">[webmention]</span>
 
 <span class="t">[webmention.objects.post]</span>
 <span class="k">name</span> = <span class="s">"title"</span>
@@ -696,7 +505,7 @@
             </li>
             <li class="callout-item" data-callout="2" id="sw4-2" style="--i:2;">
               <b>2</b>
-              The account: a handle on your domain, a profile from your site object, and the Bridgy Fed bot for Bluesky.
+              The fediverse account: a handle on your domain and a profile from your site object.
             </li>
             <li class="callout-item" data-callout="3" id="sw4-3" style="--i:3;">
               <b>3</b>
@@ -704,6 +513,10 @@
             </li>
             <li class="callout-item" data-callout="4" id="sw4-4" style="--i:4;">
               <b>4</b>
+              Bluesky: the same post type, published from an account on your domain.
+            </li>
+            <li class="callout-item" data-callout="5" id="sw4-5" style="--i:5;">
+              <b>5</b>
               Webmention: receive with an empty section, send by mapping a post type.
             </li>
           </ol>

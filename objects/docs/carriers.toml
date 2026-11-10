@@ -66,7 +66,7 @@ The package exports the whole contract, so you can name any part of it explicitl
 | `CarrierParams` | The first argument: a `URLSearchParams`. |
 | `CarrierBody` | The second argument: parsed JSON, a form body, text, or `null`. |
 | `CarrierObjects` / `SiteObjects` | The third argument: your site's objects. |
-| `CarrierSite` | The fourth argument: your site's `url`, `uploads`, `email`, `sql`, `activitypub` and `webmentions`. |
+| `CarrierSite` | The fourth argument: your site's `url`, `uploads`, `email`, `sql`, `activitypub`, `webmentions` and `atproto`. |
 | `CarrierUploads` | `site.uploads`: `list()` and `get()`. |
 | `CarrierUpload` | One upload's body and metadata, as `get()` resolves it. |
 | `CarrierUploadEntry` | A `{ sha, filename }` pair, as `list()` returns them. |
@@ -75,6 +75,7 @@ The package exports the whole contract, so you can name any part of it explicitl
 | `CarrierSqlRow` | One row a query returns, keyed by column name. |
 | `CarrierActivityPub` | `site.activitypub`: `account()`, `accounts()`, `followers()`, `counts()`, `likes()`, `boosts()`, `replies()` and `setLocalLikes()`. |
 | `CarrierWebmentions` | `site.webmentions`: `counts()` and `list()`. |
+| `CarrierATProto` | `site.atproto`: `account()`, `followers()`, `counts()`, `likes()`, `reposts()` and `replies()`. |
 | `CarrierReply` | One reply to a post, as `replies()` lists them. |
 | `CarrierEmailMessage` | What `send()` takes: `from`, `to`, `subject`, `text`, `html` and `replyTo`. |
 | `CarrierEmailReceipt` | What `send()` resolves to: the `id` of the send and the `from` it resolved to. |
@@ -174,7 +175,7 @@ export default async function (params, body, objects, site) {
   - `application/x-www-form-urlencoded`, `multipart/form-data`, or `application/form` → an object of the form fields (file fields arrive as a `Blob`)
   - anything else → the raw request text
 - **`objects`** — your site's objects (see below).
-- **`site`** — a simple object for interacting with data: your site's `url`, `uploads`, `email`, `sql`, `activitypub` and `webmentions` (the last two when enabled).
+- **`site`** — a simple object for interacting with data: your site's `url`, `uploads`, `email`, `sql`, `activitypub`, `webmentions` and `atproto` (the last three when enabled).
 
 The function's return value determines the HTTP response:
 
@@ -228,10 +229,11 @@ The values match what a liquid template sees:
 - **`site.sql`** — your site's own SQLite database. See [Storing data](#Storing%20data).
 - **`site.activitypub`** — your site's fediverse followers, and the likes, boosts and replies its posts have had. See [Reading the fediverse](#Reading%20the%20fediverse).
 - **`site.webmentions`** — pages on other sites that link to yours, with their replies and likes. See [Reading mentions from other sites](#Reading%20mentions%20from%20other%20sites).
+- **`site.atproto`** — your site's followers on Bluesky and the rest of the AT Protocol network, and the likes, reposts and replies its posts have had. See [Reading Bluesky and the AT Protocol](#Reading%20Bluesky%20and%20the%20AT%20Protocol).
 
 A few things worth knowing:
 
-- Objects are **embedded at deploy time**, so a carrier sees a snapshot from the build it was deployed with, not live content. Publishing your site redeploys its carriers with fresh values. (`site.uploads`, `site.email`, `site.sql`, `site.activitypub` and `site.webmentions` act when the request runs.)
+- Objects are **embedded at deploy time**, so a carrier sees a snapshot from the build it was deployed with, not live content. Publishing your site redeploys its carriers with fresh values. (`site.uploads`, `site.email`, `site.sql`, `site.activitypub`, `site.webmentions` and `site.atproto` act when the request runs.)
 - The tree is **deeply frozen**, so one request can't mutate what the next request sees.
 - Because they're embedded, there's an upper bound on how large a site's objects can be (5MB serialized). A site over that fails its carrier deploy rather than silently shipping a carrier with missing data.
 """
@@ -272,7 +274,7 @@ export const scheduled: CarrierScheduled = async (objects, site, event) => {
 `scheduled` receives three arguments, and its return value is ignored:
 
 - **`objects`** — your site's objects, exactly as a request gets them.
-- **`site`** — the same `url`, `uploads`, `email`, `sql`, `activitypub` and `webmentions` a request gets.
+- **`site`** — the same `url`, `uploads`, `email`, `sql`, `activitypub`, `webmentions` and `atproto` a request gets.
 - **`event`** — the `cron` expression the run is on, and the `scheduledTime` it was due, in milliseconds since the epoch.
 
 A carrier can export both a default function and `scheduled`, so the carrier that takes a sign-up can also send the reminders. One that exports only `scheduled` answers requests with a `404`. Only archival starts a run: a request to the carrier's URL never calls `scheduled`.
@@ -609,6 +611,64 @@ Each mention is:
 """
 
 [[sections]]
+title = "Reading Bluesky and the AT Protocol"
+content = """
+A site with an [`atproto` section](/docs/atproto) is an account people follow from Bluesky and other AT Protocol apps, and its posts collect likes, reposts and replies there. Archival keeps them, and `site.atproto` reads them, so a carrier can show a post's replies under it on your own site:
+
+```ts
+const carrier: Carrier = async (params, body, objects, site) => {
+  const post = objects.post.find((p) => p.path === params.get("post"));
+  if (!post) {
+    return "redirect:/404";
+  }
+  const [counts] = await site.atproto.counts([post]);
+  const replies = await site.atproto.replies(post, { limit: 50 });
+  return { counts, replies: replies.items };
+};
+```
+
+A post is one of your objects, or its `path` (`"post/hello-world"`) — the same object you mapped under `atproto.objects`. For a `Document`, what is read is what happened to its Bluesky post.
+
+| Method | Resolves to |
+| --- | --- |
+| `account()` | `{ did, handle, url, followers, following, posts }` for your site's account, or `null` when it has none or it is offline. |
+| `followers(page?)` | A page of `{ account, followedAt }`, newest first. |
+| `counts(posts)` | `{ likes, reposts, replies }` for each of up to 100 posts, in the order given. |
+| `likes(post, page?)` | A page of `{ account, at }`, newest first. |
+| `reposts(post, page?)` | A page of `{ account, at }`, newest first. |
+| `replies(post, page?)` | A page of replies, oldest first, the whole thread together. |
+
+A page of results is `{ items, total, next }`, read the way `site.activitypub`'s lists are: `total` counts every item, `next` goes back as `cursor` for the following page, and `limit` is up to 100, 20 when you leave it out.
+
+### Accounts and replies
+
+An `account` is `{ did, handle, name, url, avatar }`. `did` never changes and `url` is the account's profile on bsky.app. `handle`, `name` and `avatar` are `null` until Archival has read the account's profile, which happens shortly after it first interacts with your site.
+
+Each reply is:
+
+| Field | |
+| --- | --- |
+| `uri` | The reply's address on the network, an `at://` URI. |
+| `url` | The reply on bsky.app. |
+| `inReplyTo` | The `uri` of what it answers: another reply's, or your own post's. |
+| `account` | Who wrote it. |
+| `text` | The reply, as plain text. |
+| `published` | When its author says it was written. |
+
+Everything here is plain text written by someone else, so escape it like any other text. Bluesky replies carry no HTML.
+
+### What is kept
+
+- **Only what happens once the account is live.** Likes, reposts, replies and follows from before the site had an `atproto` section, or made while Archival could not hear the network, are not read back.
+- **A quote of a post is not counted**, and neither is a reply to a quote.
+- **A delete takes it away.** An unlike, an unfollow or a deleted reply is removed from the counts and lists.
+- **Nothing is moderated.** A carrier that shows replies can leave some out — for instance accounts you list in a [secret](/docs/secrets) or a setting.
+- **Times are the author's own.** `at`, `followedAt` and `published` are what each account's app wrote, and lists are ordered by them.
+- **A site with no account** — one without an `atproto` section, or whose subscription is cancelled — and every preview and `archival run`, reads as having no account and nothing on any list. A carrier that shows replies works everywhere without special cases.
+- A method rejects, with the reason, when it is given something that isn't a post, more than 100 posts, or a `limit` over 100.
+"""
+
+[[sections]]
 title = "Typing your site's objects"
 content = """
 {% raw %}
@@ -695,6 +755,7 @@ A few things differ from a deployed carrier:
 - **`site.email.send`** throws.
 - **`site.activitypub`** reads as a site that doesn't federate.
 - **`site.webmentions`** reads as a site no mention has reached.
+- **`site.atproto`** reads as a site with no ATProto account.
 - **Schedules** never run.
 - **Secrets** reach a carrier exactly as they're stored in your object files. One the editor encrypted arrives in its encrypted form, because only archival's hosting can decrypt it.
 

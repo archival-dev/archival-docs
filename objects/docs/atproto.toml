@@ -1,0 +1,200 @@
+order = 20
+title = "ATProto & Bluesky"
+include_in_llm_docs = true
+description = """
+An Archival site hosted by archival.dev can be an account on the [AT Protocol](https://atproto.com), the network Bluesky runs on. The site is the account: its handle is its domain, and people follow `@example.com` from Bluesky or any other ATProto app.
+
+Nothing is posted to someone else's server on the site's behalf. The site hosts its own account, and every deploy publishes what the site's content says. This page covers turning it on, what is published, and the one line your templates need for long-form writing to be verified.
+
+This is separate from [ActivityPub](/docs/editor-config#ActivityPub), which reaches Mastodon and the rest of the fediverse. A site can do both.
+"""
+
+[[sections]]
+title = "Turning it on"
+content = """
+Add an `[atproto]` section to `archival_editor.toml` and map at least one object type:
+
+```toml
+[atproto]
+
+[atproto.actor]
+object = "site"
+name = "title"
+summary = "bio"
+icon = "logo"
+
+[atproto.objects.note]
+content = "text"
+published = "date"
+```
+
+Past `domain`, `follow`, the `object` of `actor` and `publication`, and each object's `type`, every value names a field of the object it reads from. Nothing in the section is content.
+
+The account appears on the network after the next deploy. It can take a few minutes for Bluesky to show a new account.
+
+Publishing needs an active subscription. Cancelling takes the account offline without deleting it, and the next deploy on a live subscription brings it back. Removing the section does the same.
+"""
+
+[[sections]]
+title = "Your domain is your identity"
+content = """
+`domain` (optional) is which of your site's domains the account is. Left out, your site's primary domain is used: normally the domain the site was created with, not a custom domain you added later.
+
+```toml
+[atproto]
+domain = "example.com"
+```
+
+Give a bare hostname with no `https://`, port or path. It must be one of your site's own domains.
+
+**Settle on a domain before you turn this on.** The domain is not just the account's name, it is the account. A different domain is a different account, which starts empty: the followers, likes and replies you had stay with the old one, and the old one stops existing. There is no way to move them.
+
+The same is true of the domain itself. If you let it lapse, whoever registers it next holds the account.
+
+If your domain already verifies a handle for an existing Bluesky account with a `/.well-known/atproto-did` file, that keeps working until you add `[atproto]`. Once you do, the site answers that address itself, and the handle belongs to the site's own account.
+"""
+
+[[sections]]
+title = "The profile"
+content = """
+`[atproto.actor]` is optional, and sets the profile. `object` is required, and names an object your site has exactly one of, such as a site settings or about object. The rest name its fields:
+
+- `name` — the display name, up to 64 characters. A `string`, `markdown` or `enum` field. Left out, the `site_name` in `archival.toml` is used, and failing that the domain.
+- `summary` — the description, up to 256 characters. A `string`, `markdown` or `enum` field, published as plain text.
+- `icon` — the avatar. An `image` field, PNG or JPEG, up to 1 MB.
+- `image` — the banner. An `image` field, PNG or JPEG, up to 1 MB.
+
+An image that is too large or of another type is left off the profile rather than stopping the deploy.
+"""
+
+[[sections]]
+title = "Posts and documents"
+content = """
+Each table under `[atproto.objects]` is keyed by an object type your site has many of. Every object of that type is published unless `when` says otherwise.
+
+```toml
+[atproto.objects.note]
+type = "Post"
+when = "live"
+featured = "pinned"
+content = "text"
+published = "date"
+image = "photo"
+
+[atproto.objects.note.attachment]
+children = "media"
+file = "file"
+name = "alt"
+```
+
+- `type` (optional) — `"Post"` (the default) or `"Document"`, described below.
+- `when` (optional) — a `boolean` field deciding which objects are published. Only objects where it is true are published, and one whose field turns false is deleted from the account. Left out, every object of the type is published, drafts included.
+- `featured` (optional) — a `boolean` field. The newest published object where it is true is the profile's pinned post.
+- `name` — the title. A `string`, `markdown` or `enum` field.
+- `summary` — a short description. A `string`, `markdown` or `enum` field.
+- `content` — the body. A `string`, `markdown` or `enum` field.
+- `published` — when it was published. A `date` field. Left out, or left empty on an object, it is dated when it was first published.
+- `updated` — when it last changed. A `date` field.
+- `image` — an `image` field.
+- `attachment` — more images for a post, read from a [child list](/docs/child-fields): `children` names the list, `file` the `image` field of each child, and `name` (optional) a text field used as its alt text.
+
+**A Post** is a Bluesky post that carries the content itself. It must map `content` or `name`.
+
+- The text is `content` with its formatting removed and its links kept as links. Bluesky posts hold 300 characters: longer text is cut, and ends with a link to the object's page when it has one.
+- Up to four images are shown: `image` first, then the attachments. Each may be up to 2 MB, and an image's description is its alt text.
+
+**A Document** is for long-form writing. It is published twice: as a [standard.site](https://standard.site) document, which readers built for long-form writing show in full, and as a Bluesky post with a link card to the page.
+
+- It must map `name`, which is the title of both.
+- `summary` is the description on the link card, `content` is the document's text, and `image` is the card's thumbnail and the document's cover, up to 1 MB.
+- Its object type must have a `template`, since a document is its page.
+- The site must have an `[atproto.publication]`, and each document's page needs [one line in its template](#Verifying%20documents).
+
+An object type is published as one or the other. Editing an object updates what was published, and deleting it deletes it.
+"""
+
+[[sections]]
+title = "The publication"
+content = """
+`[atproto.publication]` describes the site as a publication, and is required when any object type is a `Document`. `object` names an object your site has exactly one of. The rest name its fields:
+
+- `name` — the publication's name. Left out, the `site_name` in `archival.toml` is used, and failing that the domain.
+- `summary` — its description.
+- `icon` — an `image` field, up to 1 MB.
+
+```toml
+[atproto.publication]
+object = "site"
+name = "title"
+summary = "tagline"
+```
+
+The publication is verified for you: the site answers `/.well-known/site.standard.publication` with its address.
+"""
+
+[[sections]]
+title = "Verifying documents"
+content = """
+A reader only trusts a document that its own page vouches for. Each document's page has to carry a link tag naming the document, and Archival does not change your pages to add it. **Put this line in the `<head>` of the template for every object type you publish as a `Document`:**
+
+```html
+<link
+  rel="site.standard.document"
+  href="at://did:web:example.com/site.standard.document/{{ post.path | replace: "/", "." }}"
+/>
+```
+
+Change two things to match your site:
+
+- `example.com` is your account's domain: the `domain` you set, or your site's primary domain.
+- `post` is the object the template is for, so a template for an `essay` type uses `essay.path`.
+
+The last part of the address is the document's name on the network: its object type, a dot, and its file name. `objects/post/hello.toml` is `post.hello`.
+
+Because that name comes from the file name, two rules follow:
+
+- **Renaming an object's file publishes it as a new document.** The old one is deleted, and anything that linked to it or replied to it stays with the old one.
+- **Object type and file names may only hold letters, numbers and `. _ : ~ -`.** A document whose name has a space or any other character is not published, and the rest of the site still is.
+
+Without the tag the document is still published, and its Bluesky post still links to the page. Readers that check will show it as unverified, or not at all.
+"""
+
+[[sections]]
+title = "Following accounts"
+content = """
+`follow` (optional) lists accounts your account follows, up to twenty, each a handle such as `alice.example.com` or a DID:
+
+```toml
+[atproto]
+follow = ["alice.example.com", "did:plc:ewvi7nxzyoun6zhxrhs64oiz"]
+```
+
+Each deploy follows every account newly on the list and unfollows every one taken off it. A handle that cannot be found is tried again on the next deploy, and does not hold up publishing.
+
+Your site does not show posts from the accounts it follows.
+"""
+
+[[sections]]
+title = "Showing likes and replies on your site"
+content = """
+Archival keeps the follows, likes, reposts and replies your account receives, from the moment it goes live. A [carrier](/docs/carriers) reads them through `site.atproto`, which is how a post's page shows the replies it had on Bluesky:
+
+```ts
+const [counts] = await site.atproto.counts([post]);
+const replies = await site.atproto.replies(post);
+```
+
+See [Reading Bluesky and the AT Protocol](/docs/carriers#Reading%20Bluesky%20and%20the%20AT%20Protocol) for every method and what each returns.
+"""
+
+[[sections]]
+title = "What the account is on the network"
+content = """
+For anyone connecting other software to a site, or hosting Archival sites themselves:
+
+- The account's DID is `did:web:<domain>`, and `https://<domain>/.well-known/did.json` is its DID document. `https://<domain>/.well-known/atproto-did` answers the same DID as plain text, which is how the handle is verified.
+- The site is the account's own Personal Data Server. It answers the read side of one under `https://<domain>/xrpc/`: `com.atproto.repo.describeRepo`, `getRecord` and `listRecords`, and `com.atproto.sync.getRepo`, `getRecord`, `getLatestCommit`, `getRepoStatus`, `listRepos`, `getBlob`, `listBlobs` and `subscribeRepos`.
+- It takes no writes. There is no sign-in, no app password and no OAuth: the only way to change what the account says is to change the site and deploy.
+- A site's other domains redirect `/xrpc/` requests to the account's domain.
+- A suspended or removed account keeps answering its DID document and `getRepoStatus`, and refuses its repository.
+"""
