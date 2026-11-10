@@ -45,7 +45,7 @@ extra_url = ""
 [[standards]]
 kicker = "Works with Mastodon apps"
 name = "Your website is your identity"
-url = "/docs/editor-config#Mastodon%20apps"
+url = "/docs/editor-config#mastodon-apps"
 link_label = "Sign in from an app"
 blurb = "Your handle is your domain, and so is your server. Sign in to it from Ivory, Tusky, Elk, Phanpy or most other Mastodon apps to read the accounts you follow and star, boost and reply as yourself."
 extra_label = ""

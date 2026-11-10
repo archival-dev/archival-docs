@@ -191,7 +191,7 @@ With this file, a site at `example.com` is followed as `@blog@example.com`, and 
 
 Each `[[activitypub]]` table is one account. Every value in it other than `username`, `domain`, `email`, `follow`, `type` and the actor's `object` names a field of your object, exactly as it appears in `archival_objects.toml` — or, under `attachment`, one of its child lists and that list's fields. Nothing you write here is itself published: what goes out is whatever your content says.
 
-`activitypub` is reserved at the top level of this file, so an object type named `activitypub` cannot be configured here. So is `allow_mastodon_clients`, described under [Mastodon apps](#Mastodon%20apps).
+`activitypub` is reserved at the top level of this file, so an object type named `activitypub` cannot be configured here. So is `allow_mastodon_clients`, described under [Mastodon apps](#mastodon-apps).
 
 ### Accounts
 
