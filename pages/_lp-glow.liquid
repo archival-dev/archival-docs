@@ -1,0 +1,21 @@
+<script>
+  // The benefit cards' hover glow follows the pointer, as on the homepage.
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('[data-glow]').forEach(function (card) {
+      var bounds;
+      card.addEventListener('mouseenter', function () {
+        bounds = card.getBoundingClientRect();
+      });
+      card.addEventListener('mousemove', function (e) {
+        if (!bounds) return;
+        card.style.setProperty('--mouse-x', ((e.clientX - bounds.left) / bounds.width) * 100 + '%');
+        card.style.setProperty('--mouse-y', ((e.clientY - bounds.top) / bounds.height) * 100 + '%');
+      });
+      card.addEventListener('mouseleave', function () {
+        card.style.setProperty('--mouse-x', '50%');
+        card.style.setProperty('--mouse-y', '50%');
+      });
+    });
+  })();
+</script>

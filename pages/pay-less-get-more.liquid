@@ -8,141 +8,28 @@
 {% assign lp = objects.pay_less_get_more %}
 
 {% comment %}
-  Google Ads landing page. Every word on it comes from the pay_less_get_more
-  object; the frames are the homepage's product tour partial and the cards
-  under them its benefit cards. Every CTA, the nav's included, reports
-  cta_click to Rybbit with this page's name and its own label; a template card
-  reports its template's name.
+  Google Ads landing page. Its own words come from the pay_less_get_more
+  object; the comparison, the template catalog and the shared questions from
+  landing_shared, which the trade pages read too. The frames are the
+  homepage's product tour partial and the cards under them its benefit cards.
+  Every CTA, the nav's included, reports cta_click to Rybbit with this page's
+  name and its own label; a template card reports its template's name.
 
   The template cards come straight after the hero, then the comparison, so a
   visitor sees what they would be building before what it costs.
 {% endcomment %}
 
-<section class="lp-hero">
-  <h1 class="hero-message lp-headline">{{ lp.headline }}</h1>
-  <p class="lp-subhead">{{ lp.subhead }}</p>
-  <div class="lp-actions">
-    <a
-      class="primary-cta lp-cta"
-      href="https://editor.archival.dev/new"
-      data-rybbit-event="cta_click"
-      data-rybbit-prop-page="pay-less-get-more"
-      data-rybbit-prop-cta_text="{{ lp.cta_label | escape }}"
-    >
-      {{- lp.cta_label -}}
-    </a>
-    <a
-      class="lp-compare-link"
-      href="#templates"
-      data-rybbit-event="cta_click"
-      data-rybbit-prop-page="pay-less-get-more"
-      data-rybbit-prop-cta_text="{{ lp.templates_link_label | escape }}"
-    >
-      {{ lp.templates_link_label }}
-      <span aria-hidden="true">&darr;</span>
-    </a>
-  </div>
-</section>
+{% include "lp-hero",
+  headline: lp.headline,
+  subhead: lp.subhead,
+  cta_label: lp.cta_label,
+  link_label: lp.templates_link_label,
+  lp_page: "pay-less-get-more"
+%}
 
-<section class="lp-templates" id="templates" aria-labelledby="templates-title">
-  <h2 class="section-title lp-section-title" id="templates-title">{{ lp.templates_title }}</h2>
-  <p class="lp-section-intro">{{ lp.templates_intro }}</p>
+{% include "lp-templates", cards: lp.templates, intro: lp.templates_intro, lp_page: "pay-less-get-more" %}
 
-  {% comment %}
-    Each card opens its template's confirm screen in the editor. The editor
-    picks a template from ?template= alone; the hash is the route it lands on
-    anyway, carried so the link reads as that screen. The layout's script adds
-    the ad click and campaign tags to the query, ahead of the hash.
-
-    The images are the editor's own gallery thumbnails, resized: 400 and 640
-    wide, 4:3 like the originals. The name under each says which template it
-    is, so the image itself is decorative.
-  {% endcomment %}
-  <ul class="lp-template-grid" role="list">
-    {% for template in lp.templates %}
-      <li>
-        <a
-          class="lp-template"
-          href="https://editor.archival.dev/new?template={{ template.template_id | url_encode }}#/new/choose-template/{{ template.slug }}"
-          data-rybbit-event="cta_click"
-          data-rybbit-prop-page="pay-less-get-more"
-          data-rybbit-prop-cta_text="{{ template.name | escape }}"
-        >
-          <span class="lp-template-shot">
-            <picture>
-              <source
-                type="image/avif"
-                srcset="/img/templates/{{ template.slug }}-400.avif 400w, /img/templates/{{ template.slug }}-640.avif 640w"
-                sizes="(max-width: 640px) 50vw, 20rem"
-              >
-              <source
-                type="image/webp"
-                srcset="/img/templates/{{ template.slug }}-400.webp 400w, /img/templates/{{ template.slug }}-640.webp 640w"
-                sizes="(max-width: 640px) 50vw, 20rem"
-              >
-              <img
-                src="/img/templates/{{ template.slug }}-640.webp"
-                width="640"
-                height="480"
-                alt=""
-                loading="lazy"
-                decoding="async"
-              >
-            </picture>
-          </span>
-          <span class="lp-template-name">{{ template.name }}</span>
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
-</section>
-
-<section class="lp-compare" id="compare" aria-labelledby="compare-title">
-  <h2 class="section-title lp-section-title" id="compare-title">{{ lp.compare_title }}</h2>
-  <p class="lp-section-intro">{{ lp.compare_intro }}</p>
-
-  {% comment %}
-    Explicit roles because the phone layout restyles the rows as blocks, and
-    some browsers drop table semantics from a table whose display is changed.
-  {% endcomment %}
-  <table class="lp-table" role="table">
-    <thead role="rowgroup">
-      <tr role="row">
-        <td class="lp-corner" role="presentation"></td>
-        <th class="lp-col-archival" scope="col" role="columnheader">{{ lp.archival_label }}</th>
-        <th scope="col" role="columnheader">{{ lp.squarespace_label }}</th>
-        <th scope="col" role="columnheader">{{ lp.wix_label }}</th>
-      </tr>
-    </thead>
-    <tbody role="rowgroup">
-      {% for row in lp.rows %}
-        <tr role="row">
-          <th scope="row" role="rowheader">{{ row.label }}</th>
-          <td class="lp-col-archival" role="cell" data-col="{{ lp.archival_label | escape }}">
-            <span class="lp-cell">
-              {%- include "compare-mark", mark: row.archival_mark -%}
-              <span>{{ row.archival }}</span>
-            </span>
-          </td>
-          <td role="cell" data-col="{{ lp.squarespace_label | escape }}">
-            <span class="lp-cell">
-              {%- include "compare-mark", mark: row.squarespace_mark -%}
-              <span>{{ row.squarespace }}</span>
-            </span>
-          </td>
-          <td role="cell" data-col="{{ lp.wix_label | escape }}">
-            <span class="lp-cell">
-              {%- include "compare-mark", mark: row.wix_mark -%}
-              <span>{{ row.wix }}</span>
-            </span>
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-  <p class="lp-checked">{{ lp.prices_checked }}</p>
-</section>
+{% include "lp-compare" %}
 
 <section class="lp-features" aria-labelledby="features-title">
   <h2 class="section-title lp-section-title" id="features-title">{{ lp.features_title }}</h2>
@@ -159,57 +46,13 @@
   </div>
 </section>
 
-{% comment %}
-  Plain headings, not FAQ structured data: the page is noindex, and the
-  questions are here for the people who searched them.
-{% endcomment %}
-<section class="lp-faq" aria-labelledby="faq-title">
-  <h2 class="section-title lp-section-title" id="faq-title">{{ lp.faq_title }}</h2>
-  <div class="lp-faq-list">
-    {% for item in lp.faq %}
-      <div class="lp-faq-item">
-        <h3 class="lp-faq-question">{{ item.question }}</h3>
-        <div class="lp-faq-answer">{{ item.answer }}</div>
-      </div>
-    {% endfor %}
-  </div>
-</section>
+{% include "lp-faq", title: lp.faq_title, items: lp.faq %}
 
-<section class="lp-final">
-  <a class="lp-logo lp-final-logo" href="/" aria-label="Archival home">
-    {% include "logo-svg-2" %}
-  </a>
-  <h2 class="hero-message lp-headline">{{ lp.headline }}</h2>
-  <p class="lp-final-line">{{ lp.final_line }}</p>
-  <a
-    class="primary-cta lp-cta"
-    href="https://editor.archival.dev/new"
-    data-rybbit-event="cta_click"
-    data-rybbit-prop-page="pay-less-get-more"
-    data-rybbit-prop-cta_text="{{ lp.cta_label | escape }}"
-  >
-    {{- lp.cta_label -}}
-  </a>
-</section>
+{% include "lp-final",
+  headline: lp.headline,
+  line: lp.final_line,
+  cta_label: lp.cta_label,
+  lp_page: "pay-less-get-more"
+%}
 
-<script>
-  // The benefit cards' hover glow follows the pointer, as on the homepage.
-  (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    document.querySelectorAll('[data-glow]').forEach(function (card) {
-      var bounds;
-      card.addEventListener('mouseenter', function () {
-        bounds = card.getBoundingClientRect();
-      });
-      card.addEventListener('mousemove', function (e) {
-        if (!bounds) return;
-        card.style.setProperty('--mouse-x', ((e.clientX - bounds.left) / bounds.width) * 100 + '%');
-        card.style.setProperty('--mouse-y', ((e.clientY - bounds.top) / bounds.height) * 100 + '%');
-      });
-      card.addEventListener('mouseleave', function () {
-        card.style.setProperty('--mouse-x', '50%');
-        card.style.setProperty('--mouse-y', '50%');
-      });
-    });
-  })();
-</script>
+{% include "lp-glow" %}

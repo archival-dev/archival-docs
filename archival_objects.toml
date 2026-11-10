@@ -125,35 +125,19 @@ headline = "string"
 subhead = "string"
 cta_label = "string"
 templates_link_label = "string"
-templates_title = "string"
 templates_intro = "string"
 features_title = "string"
 # The editor frame's first callout, in place of the homepage's wording.
 mode_callout = "string"
 features_intro = "string"
-compare_title = "string"
-compare_intro = "string"
-# Column headers for the comparison table.
-archival_label = "string"
-squarespace_label = "string"
-wix_label = "string"
-prices_checked = "string"
 faq_title = "string"
 # The line above the closing section's button.
 final_line = "string"
 
-# The template cards under the hero. Each opens that template in the editor's
-# gallery, so all three fields must match the editor's catalog
-# (editor.archival.dev/templates.json).
+# The template cards under the hero, in order. Each slug must be one in
+# landing_shared's templates.
 [pay_less_get_more.templates]
-name = "string"
-# The editor's slug for the name (src/journey.ts slug()), used for the route
-# hash and for this page's image files: public/img/templates/<slug>-400.avif,
-# -400.webp, -640.avif and -640.webp.
 slug = "string"
-# TemplateObject::identifier(): provider, owner, repo, ref and name, each
-# percent-encoded, joined by "/". Stored encoded; the page encodes it again.
-template_id = "string"
 
 [pay_less_get_more.features]
 # Must be a product tour frame: prompt, editor, media, settings or history.
@@ -166,7 +150,43 @@ content = "markdown"
 title = "string"
 content = "markdown"
 
-[pay_less_get_more.rows]
+# Either a key from landing_shared's faq, which supplies both the question and
+# the answer, or a question and answer of this page's own.
+[pay_less_get_more.faq]
+shared = "string"
+question = "string"
+answer = "markdown"
+
+# What every paid landing page shares, so they cannot drift apart: the
+# comparison table, the editor templates the cards can show, and the questions
+# more than one page answers.
+[landing_shared]
+templates_title = "string"
+compare_title = "string"
+compare_intro = "string"
+# Column headers for the comparison table.
+archival_label = "string"
+squarespace_label = "string"
+wix_label = "string"
+prices_checked = "string"
+# Section titles on the trade pages, which bring only their own copy.
+trade_compare_title = "string"
+trade_features_title = "string"
+trade_faq_title = "string"
+
+# Every template a landing page can show. All three fields must match the
+# editor's catalog (editor.archival.dev/templates.json).
+[landing_shared.templates]
+name = "string"
+# The editor's slug for the name (src/journey.ts slug()), used for the route
+# hash and for the image files: public/img/templates/<slug>-400.avif,
+# -400.webp, -640.avif and -640.webp.
+slug = "string"
+# TemplateObject::identifier(): provider, owner, repo, ref and name, each
+# percent-encoded, joined by "/". Stored encoded; the page encodes it again.
+template_id = "string"
+
+[landing_shared.rows]
 label = "string"
 archival = "string"
 squarespace = "string"
@@ -177,7 +197,38 @@ archival_mark = "string"
 squarespace_mark = "string"
 wix_mark = "string"
 
-[pay_less_get_more.faq]
+# Questions a page's faq can name by key.
+[landing_shared.faq]
+key = "string"
+question = "string"
+answer = "markdown"
+
+# A landing page for one trade. Each file in objects/trade is rendered by a
+# pages/<filename>.liquid of three lines; see pages/portfolios.liquid.
+[trade]
+# Page <title> before the " | Archival" suffix, and the meta description.
+title = "string"
+description = "string"
+headline = "string"
+subhead = "string"
+cta_label = "string"
+templates_intro = "string"
+# The line above the closing section's button.
+final_line = "string"
+
+# 3 to 6 template cards, in order. Each slug must be one in landing_shared's
+# templates.
+[trade.templates]
+slug = "string"
+
+# The "what you get" cards, four to a row: a short lead, then a sentence or two.
+[trade.benefits]
+title = "string"
+content = "string"
+
+# As in pay_less_get_more's faq: a shared key, or a question and answer.
+[trade.faq]
+shared = "string"
 question = "string"
 answer = "markdown"
 

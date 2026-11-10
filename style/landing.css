@@ -98,6 +98,11 @@
   padding-bottom: 0.1em;
 }
 
+/* The trade pages' hero headline: shorter lines, so it can run larger. */
+.lp-body .lp-headline--large {
+  font-size: clamp(4rem, 14vw, 9.5rem);
+}
+
 .lp-subhead {
   max-width: 34rem;
   margin: 1.25rem 0 0;
@@ -219,6 +224,11 @@
   color: var(--color-typography-primary);
 }
 
+/* Four cards read as one row of four rather than three and a stray. */
+.lp-template-grid--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 /* Phones: two across, so all six fit in three short rows. */
 @media (max-width: 640px) {
   .lp-template-grid {
@@ -232,6 +242,17 @@
 
   .lp-template-name {
     font-size: 0.9375rem;
+  }
+
+  .lp-template-grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* An odd last card sits centered under the pair above it, at their width. */
+  .lp-template-grid > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 0.5rem);
   }
 }
 
@@ -382,6 +403,13 @@
   stroke: #ef476f;
 }
 
+/* On the trade pages the table's edge is a benefit card's: one 1px line and a
+   soft drop shadow, without the double ring. */
+.lp-compare--card .lp-table {
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
 .lp-checked {
   margin: 1rem 0 0;
   text-align: center;
@@ -484,6 +512,47 @@
 @media (max-width: 640px) {
   .lp-body .lp-benefits {
     padding: 0 1rem;
+  }
+}
+
+/* A trade page's "what you get" cards: the homepage's compact cards, at
+   the comparison table's width (same max-width and gutter), with the
+   section's own padding standing in for the row's margin. Four across, two
+   by two below 1100px, one column on phones. */
+.lp-body .lp-trade-benefits {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Four across, titles wrap to different heights. Each card spans two rows
+   of a subgrid, so every title in a row of cards gets the tallest one's
+   height and the bodies start on one line, whatever the copy. */
+.lp-body .lp-trade-benefits .benefit {
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+}
+
+.lp-body .lp-trade-benefits .section-title {
+  min-height: 0;
+}
+
+.lp-body .lp-trade-benefits .section-content p {
+  margin: 0;
+}
+
+@media (max-width: 1100px) {
+  .lp-body .lp-trade-benefits {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .lp-body .lp-trade-benefits {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

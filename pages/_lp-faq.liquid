@@ -1,0 +1,22 @@
+{% comment %}
+  Takes title and items. An item with a shared key is that question and answer
+  from landing_shared's faq; any other item brings its own.
+
+  Plain headings, not FAQ structured data: the pages are noindex, and the
+  questions are here for the people who searched them.
+{% endcomment %}
+<section class="lp-faq" aria-labelledby="faq-title">
+  <h2 class="section-title lp-section-title" id="faq-title">{{ title }}</h2>
+  <div class="lp-faq-list">
+    {% for item in items %}
+      {% assign entry = item %}
+      {% if item.shared != blank %}
+        {% assign entry = objects.landing_shared.faq | where: "key", item.shared | first %}
+      {% endif %}
+      <div class="lp-faq-item">
+        <h3 class="lp-faq-question">{{ entry.question }}</h3>
+        <div class="lp-faq-answer">{{ entry.answer }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</section>

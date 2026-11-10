@@ -1,0 +1,66 @@
+title = "Restaurant Website Templates, $15/mo"
+description = "Restaurant website templates with your menu, hours, and map. Hosting, your own domain, email, and analytics for $15/mo. Build your whole site before you sign up."
+headline = "Your menu, online tonight."
+subhead = "Restaurant, bar, café, and food truck website templates for $15/mo, with hosting, your own domain, email, and analytics included."
+cta_label = "Build your restaurant site"
+templates_intro = "Pick a template and build your whole site. No signup until you go live."
+final_line = "A $15/mo restaurant website."
+
+[[templates]]
+slug = "bar-restaurant"
+
+[[templates]]
+slug = "cafe"
+
+[[templates]]
+slug = "food-truck"
+
+[[benefits]]
+title = "Custom domain, with email."
+content = "yourname.com, plus 5 email addresses on it, included in your plan."
+
+[[benefits]]
+title = "Website analytics."
+content = "See how many people visit and which pages they look at. Nothing to install."
+
+[[benefits]]
+title = "Update from your phone."
+content = "Add a new dish or change your hours from anywhere."
+
+[[benefits]]
+title = "Track changes, undo anything."
+content = "Every change is saved, so you can roll back."
+
+[[benefits]]
+title = "Free yearly domain renewal."
+content = "Registered with us, limit $40/yr."
+
+[[benefits]]
+title = "Interactive Content Editor."
+content = "Change text, photos, and pages in a simple editor, from any device."
+
+[[benefits]]
+title = "AI-assisted site updates."
+content = "Describe the change you want and AI editing makes it. Includes $5 of AI usage each month."
+
+[[benefits]]
+title = "Generous traffic limits."
+content = "1 million requests a month included. A typical site uses under 2% of that."
+
+[[faq]]
+shared = "cost"
+
+[[faq]]
+question = "Can I build my site before paying?"
+answer = """
+Yes. Build and preview your whole site first. You only sign up and pay when you go live.
+"""
+
+[[faq]]
+question = "Can customers order or book a table through my site?"
+answer = """
+Archival doesn't handle online orders or reservations. You can add links or buttons to the ordering and reservation services you already use.
+"""
+
+[[faq]]
+shared = "about"

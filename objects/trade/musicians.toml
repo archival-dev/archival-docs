@@ -1,0 +1,66 @@
+title = "Website Builder for Musicians & Bands, $15/mo"
+description = "A website builder for musicians and bands. Music, videos, and show dates on your own domain, with email and analytics, for $15/mo. Build before you sign up."
+headline = "Less setup, more shows."
+subhead = "A $15/mo website builder for musicians and bands, with hosting, your own domain, email, and analytics included."
+cta_label = "Build your band site"
+templates_intro = "Pick a template and build your whole site. No signup until you go live."
+final_line = "A $15/mo website for musicians."
+
+[[templates]]
+slug = "liner-notes"
+
+[[templates]]
+slug = "repertoire"
+
+[[templates]]
+slug = "band"
+
+[[benefits]]
+title = "Custom domain, with email."
+content = "yourname.com, plus 5 email addresses on it, included in your plan."
+
+[[benefits]]
+title = "Website analytics."
+content = "See how many fans visit and which pages they look at. Nothing to install."
+
+[[benefits]]
+title = "Update from your phone."
+content = "Add a show date or a new release from anywhere."
+
+[[benefits]]
+title = "Track changes, undo anything."
+content = "Every change is saved, so you can roll back."
+
+[[benefits]]
+title = "Free yearly domain renewal."
+content = "Registered with us, limit $40/yr."
+
+[[benefits]]
+title = "Interactive Content Editor."
+content = "Change text, photos, and pages in a simple editor, from any device."
+
+[[benefits]]
+title = "AI-assisted site updates."
+content = "Describe the change you want and AI editing makes it. Includes $5 of AI usage each month."
+
+[[benefits]]
+title = "Generous traffic limits."
+content = "1 million requests a month included. A typical site uses under 2% of that."
+
+[[faq]]
+shared = "cost"
+
+[[faq]]
+question = "Can I build my site before paying?"
+answer = """
+Yes. Build and preview your whole site first. You only sign up and pay when you go live.
+"""
+
+[[faq]]
+question = "Can I sell tickets or merch on my site?"
+answer = """
+Archival doesn't sell tickets or merch directly. You can link to your ticketing, streaming, and merch pages.
+"""
+
+[[faq]]
+shared = "about"

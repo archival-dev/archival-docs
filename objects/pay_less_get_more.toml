@@ -4,49 +4,30 @@ headline = "Pay Less, Get More."
 subhead = "A $15/mo website builder with hosting, email, analytics, and AI editing included."
 cta_label = "Build your site now"
 templates_link_label = "See templates"
-templates_title = "Start from a real template"
 templates_intro = "Pick one, make it yours, and preview it before you pay."
 features_title = "What you get with the $15/mo plan"
 mode_callout = "Switch between editing content yourself and describing a change for AI editing."
 features_intro = "Everything a small business website needs, in one monthly plan. Hosting, email, and analytics included."
-compare_title = "Squarespace vs. Wix vs. Archival"
-compare_intro = "Plans and pricing, side by side."
-archival_label = "Archival Pro"
-squarespace_label = "Squarespace Core"
-wix_label = "Wix Core"
-prices_checked = "Prices checked on October 13, 2026"
 faq_title = "Pricing questions"
 final_line = "A $15/mo website builder for small businesses. Billed monthly. Cancel anytime."
 
 [[templates]]
-name = "Small Business"
 slug = "small-business"
-template_id = "github/jesseditson/archival-website/templates%2Fsmallbiz-1/Small%20Business"
 
 [[templates]]
-name = "Bar & Restaurant"
 slug = "bar-restaurant"
-template_id = "github/jesseditson/archival-website/templates%2Fbar-restaurant-1/Bar%20%26%20Restaurant"
 
 [[templates]]
-name = "Professional"
 slug = "professional"
-template_id = "github/jesseditson/archival-website/templates%2Fprofessional-1/Professional"
 
 [[templates]]
-name = "Portfolio"
 slug = "portfolio"
-template_id = "github/jesseditson/archival-website/templates%2Fabout-1/Portfolio"
 
 [[templates]]
-name = "Photo Gallery"
 slug = "photo-gallery"
-template_id = "github/jesseditson/archival-website/templates%2Fphotographica-1/Photo%20Gallery"
 
 [[templates]]
-name = "Blog"
 slug = "blog"
-template_id = "github/jesseditson/archival-website/templates%2Fblog-1/Blog"
 
 [[features]]
 key = "prompt"
@@ -94,57 +75,8 @@ content = """
 Describe the change you want and AI editing makes it. Pro includes $5 of AI usage each month, billed at cost after that.
 """
 
-[[rows]]
-label = "Monthly plan price"
-archival = "$15/mo"
-squarespace = "$39/mo billed monthly ($348/yr if you prepay)"
-wix = "$36/mo billed monthly ($348/yr if you prepay)"
-archival_mark = "lower"
-squarespace_mark = "higher"
-wix_mark = "higher"
-
-[[rows]]
-label = "Email included"
-archival = "Yes. 5 addresses on your domain, then $0.50/mo each"
-squarespace = "Google Workspace free for the first year, then paid per user"
-wix = "Not included; Google Workspace sold separately"
-archival_mark = "yes"
-squarespace_mark = "partly"
-wix_mark = "no"
-
-[[rows]]
-label = "Domain renewal"
-archival = "Included yearly when registered with us (up to $40/yr)"
-squarespace = "Free first year on annual plans, then about $20/yr for .com"
-wix = "Free first year, then about $21/yr for .com"
-archival_mark = "yes"
-squarespace_mark = "partly"
-wix_mark = "partly"
-
-[[rows]]
-label = "Undo any change"
-archival = "Every change, roll back any of them"
-# Not yet checked against a Squarespace page; verify before launch.
-squarespace = "No site version history"
-wix = "Yes, Site History can restore earlier versions"
-archival_mark = "yes"
-squarespace_mark = "no"
-wix_mark = "yes"
-
-[[rows]]
-label = "Can you leave with your site"
-archival = "Yes, it's your repo"
-squarespace = "Partly: pages and posts export as a WordPress XML file, design does not"
-wix = "No. Wix says its architecture “does not support external hosting”; content is yours, the site isn’t"
-archival_mark = "yes"
-squarespace_mark = "partly"
-wix_mark = "no"
-
 [[faq]]
-question = "What does Archival cost?"
-answer = """
-Archival Pro is $15/mo, billed monthly. It includes hosting, a custom domain (renewal included when registered with us), 5 email addresses on your domain ($0.50/mo for each one after that), cookieless analytics, and $5 of AI editing usage each month (billed at cost after that).
-"""
+shared = "cost"
 
 [[faq]]
 question = "How does that compare to Squarespace and Wix?"
@@ -159,7 +91,4 @@ All three can build a good-looking site. Squarespace and Wix cost more than twic
 """
 
 [[faq]]
-question = "Who's behind Archival?"
-answer = """
-Archival is independent and self-funded, so we answer to customers, not investors. Your site lives in a repo you own, and the code is yours.
-"""
+shared = "about"
