@@ -334,6 +334,7 @@ content = "body"
 published = "published_at"
 in_reply_to = "reply_to"
 like_of = "liked"
+bookmark_of = "link.url"
 ```
 
 Every value other than `domain` and the author's `object` names a field of your object, exactly as it appears in `archival_objects.toml`. Nothing you write here is itself sent: what goes out is whatever your content says.
@@ -352,6 +353,7 @@ Nothing is moderated: any site can send a mention of any page, and what it says 
 
 Each table under `webmention.objects` is keyed by an object type your site has many of, and one with a [page template](/docs/page-templates), since a mention names the page it comes from. Every object of the type sends a mention to each page it links to:
 
+- `bookmark_of` — the address of the page this object bookmarks or shares, read the same way as `in_reply_to`. A post that shares a link sends its mention as a bookmark.
 - `content` — the body. A `string`, `markdown` or `enum` field. Every `https` link in it to a page off your site is sent a mention. Markdown is rendered to HTML.
 - `in_reply_to` — a `string` field holding the address of the page this object replies to. A reply is what a blog shows as a comment.
 - `like_of` — a `string` field holding the address of the page this object likes.
@@ -359,7 +361,9 @@ Each table under `webmention.objects` is keyed by an object type your site has m
 - `published` — when the object was published. A `date` field.
 - `when` (optional) — a `boolean` field deciding which objects send. Only objects where it is true send, and one whose field turns false takes its mentions back. Left out, every object of the type sends.
 
-Each type must map at least one of `content`, `in_reply_to` or `like_of`, since those are what name the pages a mention reaches. A `secret` field cannot be mapped.
+`bookmark_of`, `in_reply_to` and `like_of` can also read the address from inside a `meta` field, or a custom editor type whose `type` is `meta`: write the field, a dot, and the key that holds the address, such as `link.url` for a `link` field holding `url = "https://..."` among its other keys. Keys can go deeper, as in `link.image.url`. Archival can only check that `link` is a `meta` field, so a key that is missing, or holds anything but an `https` address, sends nothing for that object; the same goes for a `string` field that is not an `https` address.
+
+Each type must map at least one of `content`, `in_reply_to`, `like_of` or `bookmark_of`, since those are what name the pages a mention reaches. A `secret` field cannot be mapped.
 
 `[webmention.author]` is optional, and sets who the receiving site shows as the mention's author. `object` names an object your site has exactly one of; `name` is a `string`, `markdown` or `enum` field and `photo` an `image` field. Instead of an object, `account` names the `username` of one of your [ActivityPub accounts](#ActivityPub), and the author is that account's profile. Left out, the author is your site, named by its domain.
 
