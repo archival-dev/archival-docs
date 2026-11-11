@@ -1,7 +1,7 @@
 content = """
 # Privacy Policy
 
-Last updated: October 9, 2026
+Last updated: November 11, 2026
 
 This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.
 
@@ -173,6 +173,16 @@ Your Content belongs to You. We do not claim any ownership of it, and nothing Yo
 - We do not sell Your Content, use it for advertising, use it to train machine learning or artificial intelligence models, or share it with third parties, except as needed to serve Your websites as You direct, with Your consent, or as required by law.
 - Content You publish on Your websites is public. Visitors, search engines, and other services may access, copy, or index it. You control what You publish, and You are responsible for it.
 - You may export or delete Your Content at any time. When You delete Your Content or close Your Account, We remove it from Our production systems, although copies may persist in backups for a limited period.
+
+## Connected Apps and AI Assistants
+
+You may choose to connect a third-party app, such as an AI assistant, to Your Account. A connection is made only after You sign in and approve it, and it lets that app act on Your behalf within the access You approved: reading the websites in Your Account and, where You allowed it, changing and publishing them. A connected app cannot view or change Your billing details or Account settings, and cannot read the values of secrets stored with Your websites.
+
+When You connect an app, We store its name and web address, the access You granted, and when the connection was made and last used. We store only a one-way hash of the credentials issued to it. We receive the requests the app sends to Us, including any text or files it supplies; We do not receive the rest of Your conversation with it. A connection ends when You disconnect it from Your Account page, or when it has gone unused for 90 days.
+
+While an app is editing one of Your websites, We keep a working copy of that website and its unpublished changes in a separate editing session. A session is deleted when the app closes it, when You disconnect the app, or after seven days without use, and it is not included in Our backups. Each session has a preview at a private web address that is not listed or indexed; anyone who is given that address can view the preview while the session exists. Screenshots of a preview are produced on Our behalf by a Service Provider.
+
+Content We return to a connected app is handled by that app's provider under its own terms and privacy policy, which We do not control. A website that an app builds for You without an Account is published at a public preview address for a limited time, and is removed unless it is claimed into an Account.
 
 ## Children's Privacy
 
