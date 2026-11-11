@@ -68,3 +68,19 @@ For a brand-new site it still publishes one preview and gives you the link, beca
 
 In a chat, or anywhere Claude has no shell, the MCP connector builds straight to a preview.
 """
+
+[[sections]]
+title = "Editing your sites from Claude"
+content = """
+The connector can also work on the sites you already have, in any Claude chat with no folder or shell needed. Ask for something like:
+
+> Add a post to example.com about this weekend's show.
+
+The first time Claude reaches for one of your sites, it shows a **Connect** button. That takes you to Archival to sign in and approve, then sends you back to the conversation, which picks up where it left off. Claude can reach every site you own or collaborate on, with the same access you have in the editor.
+
+Changes are staged first. Claude can read your site's files, write new ones, upload images and line up deletions without anything going live. Nothing changes on your site until Claude publishes, and publishing is one commit that deploys the whole change at once. Claude asks before it publishes. The commit shows up in your site's history like any other edit, so you can see what changed and revert it from the editor.
+
+Signed in, Claude also skips the link-and-code step when it starts a new preview.
+
+To disconnect Claude, go to your account page in the editor and use **Connected apps**. It has to ask you again before it can reach your sites.
+"""
