@@ -50,9 +50,9 @@ if (click) {
   }
 }
 
-// Rewritten as the link is used rather than on load, so links the page builds
-// later are covered too. pointerdown runs ahead of a middle click or the
-// context menu's "open in new tab".
+// Rewritten as the link is used, so links the page builds later are covered
+// too. pointerdown runs ahead of a middle click or the context menu's "open in
+// new tab".
 const decorate = (event: Event) => {
   if (!click || !(event.target instanceof Element)) {
     return;

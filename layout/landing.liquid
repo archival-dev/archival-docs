@@ -10,8 +10,7 @@
       too.
 
       The only web font these pages use is the self-hosted Build face (headings);
-      body text is system-ui, as on the rest of the site. Typekit and Poppins are
-      left out because nothing on these pages is set in them.
+      body text is system-ui, as on the rest of the site.
     {% endcomment %}
     <script
       src="https://app.rybbit.io/api/script.js"
@@ -67,8 +66,7 @@
 
     <script>
       // Carry the ad click and campaign tags to the editor on the link itself.
-      // Read from this page's URL only and written nowhere else: no cookie, no
-      // storage, so a visitor who arrives without them sends none.
+      // Read from this page's URL only and written nowhere else.
       document.addEventListener('DOMContentLoaded', function () {
         var keys = ['gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
         var here = new URLSearchParams(location.search);

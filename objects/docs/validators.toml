@@ -87,7 +87,7 @@ Values are converted to a string before matching, so it's worth knowing what tha
 - `date` matches an RFC 2822 timestamp, e.g. `Fri, 17 Dec 2021 00:00:00 +0000` — **not** the format you wrote in your toml file. To constrain how a date is written, alias `string` rather than `date`.
 - `meta` and the file types stringify to a representation of the whole value that is awkward to match against. Use a `path` validator for these instead.
 
-An invalid regex is a hard error: archival refuses to load a manifest it can't compile, so a typo surfaces the first time you run any archival command rather than silently never matching.
+An invalid regex is a hard error: archival refuses to load a manifest it can't compile, so a typo surfaces the first time you run any archival command.
 '''
 
 [[sections]]
@@ -95,7 +95,7 @@ title = "When validators run"
 content = '''
 Validators run when archival **writes** a value — edits made in the archival editor, and writes made through the library's editing API. A failing value is rejected: the write doesn't happen, and the error reports the value, the field path, and the regex that rejected it.
 
-They are not re-run against object files that already exist on disk. As of archival 0.16, `archival build` reads your objects as they are, so a value that was hand-edited into a toml file, or that predates the validator, will still build. Validation guards the editing experience; it is not a build-time gate.
+They are not re-run against object files that already exist on disk. As of archival 0.16, `archival build` reads your objects as they are, so a value that was hand-edited into a toml file, or that predates the validator, will still build. Validation guards the editing experience.
 
 Two things worth planning around:
 

@@ -78,7 +78,7 @@ content = """
 - the arguments passed to it, and
 - your site's [global variables](/docs/template-variables) — `objects`, the pluralized object accessors, `site_url`, `page`, and (on a [page template](/docs/page-templates)) the object being rendered.
 
-The calling template's local variables are **not** visible, and anything the partial assigns does not leak back out. Referencing a variable that wasn't passed is an error rather than silently rendering empty:
+Anything the partial assigns stays inside it. Referencing a variable that wasn't passed is an error:
 
 ```html
 {% assign heading = 'Recent posts' %}

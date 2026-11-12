@@ -44,7 +44,7 @@
 {% comment %}
   The connector has to be in place before Claude opens - one added partway
   through a conversation does not appear in it - so the deep link waits behind
-  its own button rather than firing when this dialog opens. The session is minted
+  its own button. The session is minted
   by that button too: leaving to set up a connector should not spend one.
 {% endcomment %}
 <dialog id="bwc-modal" class="bwc-modal">
@@ -156,7 +156,7 @@
       </button>
     </div>
 
-    {% comment %} Announced rather than only shown, since the icon change is visual. {% endcomment %}
+    {% comment %} Announced to screen readers, since the icon change is visual. {% endcomment %}
     <p id="bwc-copy-status" class="bwc-copy-status" role="status" aria-live="polite"></p>
   </div>
 </dialog>

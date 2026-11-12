@@ -6,7 +6,7 @@ Occasionally your website will need to do something using privileged keys (e.g. 
 
 Carriers are serverless and are deployed automatically whenever your site builds. They run on the same edge as your site in v8 isolates so they're really fast, and they can store small amounts of information permanently if you need state.
 
-Once deployed, a carrier is reachable at `/carriers/<carrier-name>` on your site. For example, a carrier in `carriers/submit-form/` is served at `https://yoursite.com/carriers/submit-form`. A carrier can also [run on a schedule](#Running%20on%20a%20schedule), with no request at all.
+Once deployed, a carrier is reachable at `/carriers/<carrier-name>` on your site. For example, a carrier in `carriers/submit-form/` is served at `https://yoursite.com/carriers/submit-form`. A carrier can also [run on a schedule](#Running%20on%20a%20schedule).
 """
 
 [[sections]]
@@ -32,11 +32,11 @@ carriers/
 [[sections]]
 title = "TypeScript carriers"
 content = """
-A carrier may be written in TypeScript or JavaScript. TypeScript's types are stripped when the carrier is built, so there is **no separate compile step to configure** — name your entry file `index.ts` and it just works.
+A carrier may be written in TypeScript or JavaScript. TypeScript's types are stripped when the carrier is built, so you can name your entry file `index.ts` and it just works.
 
 Types are removed rather than compiled, which is the rule Node applies to `.ts` files. That rules out the few TypeScript features that generate code: `enum`, `namespace` and constructor parameter properties. An import used only as a type must say `import type`. Setting `erasableSyntaxOnly` and `verbatimModuleSyntax` in the carrier's `tsconfig.json` makes your editor hold you to both.
 
-Because `npm init` writes `"main": "index.js"` by default, a `main` that points at a file which was never emitted is resolved against every supported extension before giving up. In other words, `"main": "index.js"` next to an `index.ts` finds the TypeScript file rather than failing the deploy.
+Because `npm init` writes `"main": "index.js"` by default, a `main` that points at a file which was never emitted is resolved against every supported extension before giving up. In other words, `"main": "index.js"` next to an `index.ts` finds the TypeScript file.
 
 To get types for the carrier signature itself, add [`@archival/carrier`](https://www.npmjs.com/package/@archival/carrier) as a dev dependency:
 
@@ -88,7 +88,7 @@ The package exports the whole contract, so you can name any part of it explicitl
 | `CarrierJsonValue` | Any value that survives a JSON round trip. |
 | `CarrierResponse` | What a carrier may return. |
 
-The package is types-only at runtime, so it belongs in `devDependencies` — nothing from it ships with the deployed carrier.
+The package is types-only at runtime, so it belongs in `devDependencies`.
 """
 
 [[sections]]
@@ -118,13 +118,13 @@ Version 1 carriers, typed by `@archival/carrier@0`, receive three arguments, `(p
 [[sections]]
 title = "How a carrier is built"
 content = """
-A carrier is built the same way everywhere it runs: when your site deploys, in the preview in the Archival app, and under [`archival run`](#Running%20carriers%20locally). The build does three things, and nothing else:
+A carrier is built the same way everywhere it runs: when your site deploys, in the preview in the Archival app, and under [`archival run`](#Running%20carriers%20locally). The build does three things:
 
 1. **Installs** the packages your `package-lock.json` names.
 2. **Strips** TypeScript's types from your files.
 3. **Links** your files and your dependencies as the ES modules they are.
 
-Nothing is bundled, and no build script is run. A `scripts.build` in the carrier's `package.json` is ignored, so `main` must name a source file rather than something a build would have emitted.
+Nothing is bundled, and no build script is run. A `scripts.build` in the carrier's `package.json` is ignored, so `main` must name a source file.
 
 That gives a carrier two rules:
 
@@ -206,7 +206,7 @@ export default async function (params, body, objects, site) {
 [[sections]]
 title = "The objects and site arguments"
 content = """
-`objects` is **your site's whole object tree**, so a carrier can read the same content your templates render without refetching or duplicating it.
+`objects` is **your site's whole object tree**, so a carrier can read the same content your templates render.
 
 ```js
 export default async function (params, body, objects) {
@@ -228,7 +228,7 @@ The values match what a liquid template sees:
 
 `site` holds what archival gives a carrier besides your objects:
 
-- **`site.url`** — the full URL of your site (e.g. `https://yoursite.com`). Use it to build absolute URLs for redirects and links rather than hard-coding your domain.
+- **`site.url`** — the full URL of your site (e.g. `https://yoursite.com`). Use it to build absolute URLs for redirects and links.
 - **`site.uploads`** — the files uploaded to your site, readable at request time. See [Reading uploads](#Reading%20uploads).
 - **`site.email`** — sends mail from your site's own email addresses. See [Sending email](#Sending%20email).
 - **`site.sql`** — your site's own SQLite database. See [Storing data](#Storing%20data).
@@ -239,9 +239,9 @@ The values match what a liquid template sees:
 
 A few things worth knowing:
 
-- Objects are **embedded at deploy time**, so a carrier sees a snapshot from the build it was deployed with, not live content. Publishing your site redeploys its carriers with fresh values. (`site.uploads`, `site.email`, `site.sql`, `site.activitypub`, `site.webmentions`, `site.atproto` and `site.payments` act when the request runs.)
+- Objects are **embedded at deploy time**, so a carrier sees a snapshot from the build it was deployed with. Publishing your site redeploys its carriers with fresh values. (`site.uploads`, `site.email`, `site.sql`, `site.activitypub`, `site.webmentions`, `site.atproto` and `site.payments` act when the request runs.)
 - The tree is **deeply frozen**, so one request can't mutate what the next request sees.
-- Because they're embedded, there's an upper bound on how large a site's objects can be (5MB serialized). A site over that fails its carrier deploy rather than silently shipping a carrier with missing data.
+- Because they're embedded, there's an upper bound on how large a site's objects can be (5MB serialized). A site over that fails its carrier deploy.
 """
 
 [[sections]]
@@ -283,7 +283,7 @@ export const scheduled: CarrierScheduled = async (objects, site, event) => {
 - **`site`** — the same `url`, `uploads`, `email`, `sql`, `activitypub`, `webmentions`, `atproto` and `payments` a request gets.
 - **`event`** — the `cron` expression the run is on, and the `scheduledTime` it was due, in milliseconds since the epoch.
 
-A carrier can export both a default function and `scheduled`, so the carrier that takes a sign-up can also send the reminders. One that exports only `scheduled` answers requests with a `404`. Only archival starts a run: a request to the carrier's URL never calls `scheduled`.
+A carrier can export both a default function and `scheduled`, so the carrier that takes a sign-up can also send the reminders. One that exports only `scheduled` answers requests with a `404`. Only archival starts a run.
 
 ### Schedules
 
@@ -308,13 +308,13 @@ A schedule is a standard five-field crontab expression — minute, hour, day of 
 - **A schedule takes effect when your site deploys.** Runs start at the first scheduled time after the deploy, and a deploy that leaves a carrier's schedule unchanged keeps the run it was waiting for. Removing the schedule, or the carrier, stops it at the next deploy.
 - **Runs use your site's primary domain**, so `site.url` is that domain's URL.
 - **Every run is logged.** It appears under the carrier in your site's carrier logs in the editor, with whatever the carrier logged, and the error when it throws.
-- **Only your deployed site runs schedules.** The preview in the Archival app and `archival run` never call `scheduled`.
+- **Only your deployed site runs schedules.**
 """
 
 [[sections]]
 title = "Reading uploads"
 content = """
-`site.uploads` reads the files you've [uploaded to your site](/docs/uploading-files). Unlike `objects` it isn't a snapshot — it reads at request time, so a carrier sees files uploaded since it was deployed. Reads are scoped to your own site, and there is no way to write.
+`site.uploads` reads the files you've [uploaded to your site](/docs/uploading-files). It reads at request time, so a carrier sees files uploaded since it was deployed. Reads are scoped to your own site, and there is no way to write.
 
 This is what lets a carrier put a file behind a check your site can't make on its own — a password, a signed link, a purchase — or serve one under a name that isn't known until the request arrives.
 
@@ -331,7 +331,7 @@ await site.uploads.list();
 const upload = await site.uploads.get("cover.png");
 ```
 
-Names aren't unique — the same name can be uploaded more than once, under different hashes — so looking one up by name alone **throws when it's ambiguous** rather than guessing. Pass the hash to say which you meant, or pass a file field straight off `objects`, which already carries its own:
+Names aren't unique — the same name can be uploaded more than once, under different hashes — so looking one up by name alone **throws when it's ambiguous**. Pass the hash to say which you meant, or pass a file field straight off `objects`, which already carries its own:
 
 ```ts
 await site.uploads.get("cover.png", "31f4725e…");
@@ -392,7 +392,7 @@ const carrier: Carrier = async (params, body, objects, site) => {
 
 A few things worth knowing:
 
-- A domain whose mail is received by another service — Google Workspace, say — can still send. Its addresses are sending-only: nothing arrives in them, and a carrier can't send *to* an address on such a domain, since that mail would never reach the service that receives it.
+- A domain whose mail is received by another service — Google Workspace, say — can still send. Its addresses are sending-only, and a carrier can't send *to* an address on such a domain, since that mail would never reach the service that receives it.
 - `site.email` only delivers from a deployed carrier. In a preview, `send` sends nothing and the message is shown to you instead; see [Carriers in a preview](#Carriers%20in%20a%20preview). In a local run, `send` throws.
 - A carrier is reachable by anyone, so treat what a request asks you to send with care. A `to` taken straight from an untrusted body sends mail to whoever the request names; the recipient cap and the hourly allowance limit how far that goes, but validating the request is what keeps your site from being used as a relay.
 """
@@ -455,7 +455,7 @@ Whatever the billing, these stop a runaway carrier, and a call that would go pas
 
 A few things worth knowing:
 
-- In the preview in the Archival app, `site.sql` rejects. Under `archival run` it is a SQLite file on your machine, not your site's database; see [Running carriers locally](#Running%20carriers%20locally).
+- In the preview in the Archival app, `site.sql` rejects. Under `archival run` it is a SQLite file on your machine; see [Running carriers locally](#Running%20carriers%20locally).
 - A carrier is reachable by anyone, so whatever a request can make it write, anyone can. Validate what you store, and bind values with `?` rather than building SQL from a request.
 """
 
@@ -549,14 +549,14 @@ Replies come in the order they arrived, so a thread reads top to bottom. To nest
 
 ### What is kept
 
-- **Replies are kept only when they are public** — what Mastodon calls public or unlisted. A followers-only reply or a direct message never reaches a carrier. A reply counts when it answers one of your published posts, or a reply already kept in that post's thread.
+- **Replies are kept only when they are public** — what Mastodon calls public or unlisted. A reply counts when it answers one of your published posts, or a reply already kept in that post's thread.
 - **Edits, deletes and undos apply as they arrive.** An edited reply reads as edited, a deleted one is gone, and taking back a like or a boost removes it. When an account is deleted, everything it did on your site goes with it.
 - **Only your published posts collect likes and boosts.** One that is no longer federated — removed, or its `when` field turned false — stops collecting new ones, but what it already has is kept, and comes back with it.
 - **A follower can have only an `id` for a while.** When Archival hasn't read a follower's profile yet, a later deploy fills it in, a few dozen followers at a time.
 
 A few things worth knowing:
 
-- Reads happen when the request runs, so a reply shows up as soon as its server delivers it, without redeploying.
+- Reads happen when the request runs, so a reply shows up as soon as its server delivers it.
 - There is no moderation: any public reply from any account is kept. A carrier that shows replies can leave some out — for instance accounts or servers you list in a [secret](/docs/secrets) or a setting.
 - Showing who follows you is your choice to make. Your account itself publishes only how many followers it has, so someone following it may not expect to appear on your website.
 - A site that doesn't federate — including while its `activitypub` section is removed or its subscription is cancelled — and every preview and `archival run`, reads as having no account and nothing on any list. A carrier that shows replies works everywhere without special cases.
@@ -580,7 +580,7 @@ const carrier: Carrier = async (params, body, objects, site) => {
 };
 ```
 
-A page is one of your objects, or a path on your site: `"post/hello-world"`, `"about"`, and `""` or `"/"` for the home page. Mentions of any page your site serves are kept, not only of your objects.
+A page is one of your objects, or a path on your site: `"post/hello-world"`, `"about"`, and `""` or `"/"` for the home page. Mentions of any page your site serves are kept.
 
 | Method | Resolves to |
 | --- | --- |
@@ -661,7 +661,7 @@ Each reply is:
 | `text` | The reply, as plain text. |
 | `published` | When its author says it was written. |
 
-Everything here is plain text written by someone else, so escape it like any other text. Bluesky replies carry no HTML.
+Everything here is plain text written by someone else, so escape it like any other text.
 
 ### What is kept
 
@@ -705,7 +705,7 @@ const carrier: Carrier = async (params, body, objects, site) => {
 | `checkout.create(checkout)` | `{ id, url }`: the checkout's id, and the url to send the buyer to. |
 | `checkout.get(id)` | A checkout this site started: its `status` (`open`, `paid`, `expired` or `canceled`), `amountTotal`, `currency` and `customerEmail`. |
 
-Your site only learns that a checkout was paid when the buyer comes back to `successUrl`, which is given a `checkout` query parameter to pass to `checkout.get`. A buyer who pays and closes the tab is a payment you see at your provider, not on your site.
+Your site only learns that a checkout was paid when the buyer comes back to `successUrl`, which is given a `checkout` query parameter to pass to `checkout.get`. A buyer who pays and closes the tab is a payment you see at your provider.
 
 A site that sells its account's variants at their own prices needs no carrier for it: the cart every such site serves checks out by itself. See [Cart and checkout](/docs/cart), which also has the carrier to start from when a cart's checkout needs to do more.
 
@@ -732,7 +732,7 @@ declare module "@archival/carrier" {
 
 Each carrier gets the block for the [carrier API version](#Carrier%20API%20versions) its `package.json` names, and the generator refuses a carrier whose installed `@archival/carrier` types a different version than the one it names.
 
-**Commit those files.** They contain no object values, only your schema, and committing them means your editor and CI work on a fresh clone with no extra setup.
+**Commit those files.** They contain no object values, only your schema, and committing them means your editor and CI work on a fresh clone.
 
 After generating, `objects` is fully typed:
 
@@ -785,7 +785,7 @@ A secret set through the archival editor is stored encrypted in your repo, and a
 [[sections]]
 title = "Running carriers locally"
 content = """
-[`archival run`](/cli/run) serves your carriers beside your site, so `http://localhost:1024/carriers/submit-form` answers the way `https://yoursite.com/carriers/submit-form` will once deployed. It needs **Node 22.13 or later** on your `PATH`, and nothing else to install or configure.
+[`archival run`](/cli/run) serves your carriers beside your site, so `http://localhost:1024/carriers/submit-form` answers the way `https://yoursite.com/carriers/submit-form` will once deployed. It needs **Node 22.13 or later** on your `PATH`.
 
 - **Carriers are built the way a deploy builds them.** The same [build](#How%20a%20carrier%20is%20built) runs on your machine, so a carrier that breaks one of its rules answers with the message the deploy would fail with, and the others keep working.
 - **Changes are picked up as you save.** Editing a carrier, or adding or removing one, takes effect on the next request. That includes the first carrier in a site that had none when `archival run` started. Editing your objects reaches your carriers without a restart.
@@ -794,7 +794,7 @@ content = """
 A few things differ from a deployed carrier:
 
 - **`site.url`** is the local server's address, so a carrier that fetches its own site reaches your machine. Pass `--site-url` to change it.
-- **`site.sql`** is a SQLite file named `site.sqlite` in your build directory, shared by every carrier and kept across restarts. It is not your deployed site's database, and it starts empty. A call is refused for the same reasons a deployed one is, but the hourly ceilings and plan allowances don't apply. Delete the file to start over.
+- **`site.sql`** is a SQLite file named `site.sqlite` in your build directory, shared by every carrier and kept across restarts. It starts empty. A call is refused for the same reasons a deployed one is, but the hourly ceilings and plan allowances don't apply. Delete the file to start over.
 - **`site.uploads.list()`** returns the files your objects point to, rather than everything you've uploaded.
 - **`site.email.send`** throws.
 - **`site.activitypub`** reads as a site that doesn't federate.

@@ -5,8 +5,8 @@
 // ahead of `build:site` in `npm run build` - that is the step that copies
 // public/ into dist/.
 //
-// The schemas are fetched rather than checked in so there is exactly one copy to
-// keep correct. archival's CI is what gates their correctness (`cargo test
+// The schemas are fetched from archival so there is exactly one copy to keep
+// correct. archival's CI gates their correctness (`cargo test
 // schema_files` plus Ajv strict mode in ./validate-schemas.sh).
 
 import fs from "node:fs/promises";
@@ -19,21 +19,16 @@ const SCHEMAS = [
   "archival_template.schema.json",
 ];
 
-// SchemaStore's catalog was submitted before these two were renamed, and its
-// entries still fetch the old names. Serving both means editors resolve a schema
-// either way. The copies are byte-identical, so their `$id` still names the
-// canonical URL, which is what `$ref` and editor caches key on.
-//
-// Removing these means every editor carrying the current catalog silently loses
-// validation on archival.toml and archival_objects.toml, so they can only go
-// once the corrected catalog has shipped widely.
+// SchemaStore's catalog still fetches these two by their old names. The copies
+// are byte-identical, so their `$id` still names the canonical URL, which is
+// what `$ref` and editor caches key on. They can go once the corrected catalog
+// has shipped widely.
 const ALIASES = {
   "manifest.schema.json": "archival.schema.json",
   "objects.schema.json": "archival_objects.schema.json",
 };
 
-// Schemas ship from main rather than a tag: archival's CI gates them on every
-// push, and pinning would mean a version bump here for every schema fix. Set
+// Schemas ship from main; archival's CI gates them on every push. Set
 // ARCHIVAL_SCHEMA_REF to pin to a tag (e.g. "refs/tags/v0.17.0") if that ever
 // stops being true.
 const REF = process.env.ARCHIVAL_SCHEMA_REF ?? "refs/heads/main";

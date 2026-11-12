@@ -1,5 +1,5 @@
-// Accounts are passkeys: no password and no email. A visitor who wants to
-// comment picks a name and makes one; the browser's passkey prompt signs
+// An account is a passkey and a name. A visitor who wants to comment picks a
+// name and makes one; the browser's passkey prompt signs
 // them in after that, on this device and on the ones it syncs to.
 
 import {

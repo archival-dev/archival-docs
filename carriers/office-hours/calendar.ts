@@ -5,8 +5,7 @@
 import { type Context, settings, text } from "./http.ts";
 import { endOf, type Event, Notion } from "./notion.ts";
 
-// A session stays in the feed this long after it ends, so it doesn't vanish
-// from subscribers' calendars the moment it's over.
+// A session stays in the feed this long after it ends.
 const KEEP_PAST_MS = 30 * 24 * 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 

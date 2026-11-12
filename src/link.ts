@@ -72,8 +72,6 @@ const setup = () => {
         approve.hidden = true;
         return;
       }
-      // Each of these is a different mistake, and saying which one saves a
-      // round trip through support.
       fail(
         response.status === 404
           ? "That code has expired. Ask your agent for a new one."
