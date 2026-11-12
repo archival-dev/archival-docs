@@ -44,7 +44,7 @@
     </button>
   </div>
   <ul class="flex-shrink justify-end gap-8 items-center flex-nowrap whitespace-nowrap hidden navbar:flex">
-    {% assign product_areas = "home,pricing,social-web" | split: "," %}
+    {% assign product_areas = "home,pricing,social-web,payments" | split: "," %}
     <li class="nav-dropdown">
       <button
         type="button"
@@ -74,6 +74,9 @@
         </li>
         <li class="nav-text {% if area == 'social-web' %}nav-active{% endif %}">
           <a href="/social-web" data-rybbit-event="nav-social-web">Social Web</a>
+        </li>
+        <li class="nav-text {% if area == 'payments' %}nav-active{% endif %}">
+          <a href="/payments" data-rybbit-event="nav-payments">Payments</a>
         </li>
         <li class="nav-text {% if area == 'pricing' %}nav-active{% endif %}">
           <a href="/pricing" data-rybbit-event="nav-pricing">Pricing</a>
@@ -211,6 +214,9 @@
         </li>
         <li>
           <a href="/social-web" data-rybbit-event="mobile-nav-social-web">Social Web</a>
+        </li>
+        <li>
+          <a href="/payments" data-rybbit-event="mobile-nav-payments">Payments</a>
         </li>
         <li>
           <a href="/pricing" data-rybbit-event="mobile-nav-pricing">Pricing</a>

@@ -1,0 +1,527 @@
+{% comment %}
+  A single-file object's Liquid global is the singular of its name, here
+  `payment`, so the object is assigned under its own name before the layout
+  tag reads its title.
+{% endcomment %}
+{% assign payments = objects.payments %}
+{%
+  layout 'theme' title: payments.title
+  , area: "payments"
+  , description: payments.description
+  , path: "payments"
+%}
+
+<div id="header" class="payments-hero w-full flex flex-col justify-center items-center gap-6 pt-44 relative">
+  <h1 class="hero-message" data-tilt-hero>
+    <span class="hero-line-1">websites that</span>
+    <span class="hero-line-2">take payments</span>
+  </h1>
+  <p class="sw-tagline">{{ payments.tagline }}</p>
+  {% include "payments-cta", placement: "top" %}
+</div>
+
+{% comment %} The onboarding steps, ahead of everything that explains them. {% endcomment %}
+
+<section class="pay-setup" id="get-set-up" aria-labelledby="pay-setup-heading">
+  <h2 class="pay-setup-heading" id="pay-setup-heading">{{ payments.setup_title }}</h2>
+  <p class="pay-setup-intro">{{ payments.setup_intro }}</p>
+  <ol class="pay-steps">
+    {% for step in payments.steps %}
+      <li class="benefit pay-step" data-glow>
+        <span class="pay-step-num" aria-hidden="true">{{ forloop.index }}</span>
+        <h3 class="pay-step-title">{{ step.title }}</h3>
+        <div class="pay-step-content">{{ step.content }}</div>
+      </li>
+    {% endfor %}
+  </ol>
+  <div class="pay-plan-note">{{ payments.plan_note }}</div>
+  {% include "payments-cta", placement: "setup" %}
+</section>
+
+{% comment %}
+  How it works. The .product-page wrapper, .product-section grid and
+  .product-frame are the homepage tour's, so each frame is laid out at the
+  tour's design width and scaled by the fit() script below, and a marker's
+  --cx/--cy is a percentage of its frame.
+{% endcomment %}
+
+<div class="product-page payments-page" id="how-it-works">
+  {% for section in payments.sections %}
+    <section
+      class="product-section {% cycle 'frame-right', 'frame-left' %}"
+      data-product-section
+      data-section="{{ section.key }}"
+    >
+      <div class="product-copy">
+        <h2 class="section-title">{{ section.title }}</h2>
+        <div class="section-content">{{ section.content }}</div>
+      </div>
+      <div class="product-frame-wrap" data-tilt>
+        {% if section.key == "connect" %}
+          <p class="sr-only">
+            The Payments panel in a site's settings in Archival, connected to a payment account, beside the provider's
+            screen asking to approve what Archival may do in that account.
+          </p>
+          <div class="product-frame product-frame--pay product-frame--pay-connect">
+            <div class="product-frame-glow" aria-hidden="true"></div>
+
+            <div class="pay-card pf-glass" aria-hidden="true">
+              <div class="pf-settings-row">
+                <span class="pf-settings-site"><i class="pf-dot ok"></i>acme.com</span>
+                <span class="pf-settings-live">Live</span>
+              </div>
+              <div class="pf-settings-row">
+                <span class="pf-settings-label">Plan</span>
+                <span class="pf-settings-value">Pro &middot; $15/mo</span>
+              </div>
+              <hr class="pay-rule">
+              <div class="pay-panel" data-callout-target="1">
+                <div class="pay-title">Payments</div>
+                <p class="pay-small">
+                  Sell from this site through your own payment account. Buyers pay you directly, and Archival takes no
+                  fee.
+                </p>
+              </div>
+              <div class="pay-well pay-connected" data-callout-target="3">
+                <i class="pf-dot ok"></i>Connected to <span class="pay-strong">Acme Studio</span>
+              </div>
+              <span class="pay-btn" data-callout-target="3">Disconnect</span>
+            </div>
+
+            <div class="pay-card pf-glass" data-callout-target="2" aria-hidden="true">
+              <div class="pay-title">Approve access</div>
+              <div class="pay-h">Archival Payments</div>
+              <p class="pay-small">will be able to:</p>
+              <div class="pay-well pay-permissions">
+                <span>Create checkouts</span>
+                <span>Read checkouts</span>
+                <span>Read products</span>
+                <span>Read prices</span>
+              </div>
+              <span class="pay-violet pay-push">Approve</span>
+            </div>
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--cx:25%;--cy:39%;--i:1;"
+              aria-describedby="pay1-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--cx:96.6%;--cy:60%;--i:2;"
+              aria-describedby="pay1-2"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="3"
+              style="--cx:28%;--cy:84%;--i:3;"
+              aria-describedby="pay1-3"
+            >
+              3
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li class="callout-item" data-callout="1" id="pay1-1" style="--i:1;">
+              <b>1</b>
+              Open Payments in your site's settings and choose your provider.
+            </li>
+            <li class="callout-item" data-callout="2" id="pay1-2" style="--i:2;">
+              <b>2</b>
+              Approve what Archival may do in your account.
+            </li>
+            <li class="callout-item" data-callout="3" id="pay1-3" style="--i:3;">
+              <b>3</b>
+              The connection belongs to that one site. Disconnect at any time.
+            </li>
+          </ol>
+        {% elsif section.key == "catalog" %}
+          <p class="sr-only">
+            Three products and their prices in a payment account's catalog, and the same three products with the same
+            prices on a shop page of an Archival site, each with an Add to cart button.
+          </p>
+          <div class="product-frame product-frame--pay product-frame--pay-catalog">
+            <div class="product-frame-glow" aria-hidden="true"></div>
+
+            <div class="pay-card pf-glass" data-callout-target="1" aria-hidden="true">
+              <div class="pay-title">Your catalog</div>
+              <div class="pay-well pay-row">
+                <span><i class="pf-dot ok"></i>Linen tote</span><span class="pay-price">$48.00</span>
+              </div>
+              <div class="pay-well pay-row">
+                <span><i class="pf-dot ok"></i>Ceramic mug</span><span class="pay-price">$24.00</span>
+              </div>
+              <div class="pay-well pay-row">
+                <span><i class="pf-dot ok"></i>A3 print</span><span class="pay-price">$60.00</span>
+              </div>
+              <p class="pay-small pay-push">Managed at your payment provider.</p>
+            </div>
+
+            <div class="pay-browser" data-callout-target="2" aria-hidden="true">
+              <div class="pay-bar"><i></i><i></i><i></i><span class="pay-url">acme.com/shop</span></div>
+              <div class="pay-page">
+                <div class="pay-wnav">
+                  <span class="pay-wlogo"></span>
+                  <span class="pay-wlinks"><span></span><span></span><span></span></span>
+                </div>
+                <div class="pay-h">Shop</div>
+                <div class="pay-shop" data-callout-target="3">
+                  <div class="pay-product">
+                    <div class="pay-art pay-art--a"></div>
+                    <span class="pay-product-name">Linen tote</span>
+                    <span class="pay-small pay-price">$48.00</span>
+                    <span class="pay-cta pay-cta--small">Add to cart</span>
+                  </div>
+                  <div class="pay-product">
+                    <div class="pay-art pay-art--b"></div>
+                    <span class="pay-product-name">Ceramic mug</span>
+                    <span class="pay-small pay-price">$24.00</span>
+                    <span class="pay-cta pay-cta--small">Add to cart</span>
+                  </div>
+                  <div class="pay-product">
+                    <div class="pay-art pay-art--c"></div>
+                    <span class="pay-product-name">A3 print</span>
+                    <span class="pay-small pay-price">$60.00</span>
+                    <span class="pay-cta pay-cta--small">Add to cart</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <span
+              class="pay-arrow"
+              data-callout-target="2"
+              style="--cx:44.2%;--cy:50%;"
+              aria-hidden="true"
+              >&rarr;</span
+            >
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--cx:4.2%;--cy:31%;--i:1;"
+              aria-describedby="pay2-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--cx:44.2%;--cy:32%;--i:2;"
+              aria-describedby="pay2-2"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="3"
+              style="--cx:96.6%;--cy:68%;--i:3;"
+              aria-describedby="pay2-3"
+            >
+              3
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li class="callout-item" data-callout="1" id="pay2-1" style="--i:1;">
+              <b>1</b>
+              Products and prices live in your payment account.
+            </li>
+            <li class="callout-item" data-callout="2" id="pay2-2" style="--i:2;">
+              <b>2</b>
+              Your site reads them to show what is for sale.
+            </li>
+            <li class="callout-item" data-callout="3" id="pay2-3" style="--i:3;">
+              <b>3</b>
+              Change a price there and your site picks it up.
+            </li>
+          </ol>
+        {% elsif section.key == "checkout" %}
+          <p class="sr-only">
+            A cart page on an Archival site with two items and a Checkout button, leading to the provider's hosted
+            checkout, where the buyer pays the site's owner and is returned to the site's thanks page.
+          </p>
+          <div class="product-frame product-frame--pay product-frame--pay-checkout">
+            <div class="product-frame-glow" aria-hidden="true"></div>
+
+            <div class="pay-browser" aria-hidden="true">
+              <div class="pay-bar"><i></i><i></i><i></i><span class="pay-url">acme.com/cart</span></div>
+              <div class="pay-page">
+                <div class="pay-wnav">
+                  <span class="pay-wlogo"></span>
+                  <span class="pay-wlinks"><span></span><span></span><span></span></span>
+                </div>
+                <div class="pay-h">Your cart</div>
+                <div class="pay-row"><span>Linen tote &times; 1</span><span class="pay-price">$48.00</span></div>
+                <div class="pay-row"><span>Ceramic mug &times; 1</span><span class="pay-price">$24.00</span></div>
+                <hr class="pay-rule">
+                <div class="pay-row pay-strong"><span>Total</span><span class="pay-price">$72.00</span></div>
+                <span class="pay-cta pay-push" data-callout-target="1">Checkout</span>
+              </div>
+            </div>
+
+            <div class="pay-card pf-glass" aria-hidden="true">
+              <div class="pay-checkout" data-callout-target="2">
+                <div class="pay-title">Hosted checkout</div>
+                <div>
+                  <p class="pay-small">Pay Acme Studio</p>
+                  <div class="pay-total pay-price">$72.00</div>
+                </div>
+                <div class="pay-well pay-small">Email</div>
+                <div class="pay-well pay-small">Card information</div>
+                <span class="pay-violet">Pay</span>
+              </div>
+              <div class="pay-well pay-returned pay-push" data-callout-target="3">
+                <i class="pf-dot ok"></i>Paid &middot; back to acme.com/thanks
+              </div>
+            </div>
+
+            <span class="pay-arrow" style="--cx:50%;--cy:50%;" aria-hidden="true">&rarr;</span>
+
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="1"
+              style="--cx:4.2%;--cy:85%;--i:1;"
+              aria-describedby="pay3-1"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="2"
+              style="--cx:96.6%;--cy:26%;--i:2;"
+              aria-describedby="pay3-2"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              class="callout-marker"
+              data-callout="3"
+              style="--cx:96.6%;--cy:86%;--i:3;"
+              aria-describedby="pay3-3"
+            >
+              3
+            </button>
+          </div>
+
+          <ol class="callout-legend">
+            <li class="callout-item" data-callout="1" id="pay3-1" style="--i:1;">
+              <b>1</b>
+              A buyer checks out on your site.
+            </li>
+            <li class="callout-item" data-callout="2" id="pay3-2" style="--i:2;">
+              <b>2</b>
+              They pay on your provider's hosted page, in your own account.
+            </li>
+            <li class="callout-item" data-callout="3" id="pay3-3" style="--i:3;">
+              <b>3</b>
+              They return to your site, which confirms the order as paid.
+            </li>
+          </ol>
+        {% endif %}
+      </div>
+    </section>
+  {% endfor %}
+</div>
+
+{% comment %}
+  Explicit roles because the phone layout restyles the rows as blocks, and
+  some browsers drop table semantics from a table whose display is changed.
+{% endcomment %}
+<section class="pay-providers" id="providers" aria-labelledby="pay-providers-heading">
+  <h2 class="pay-setup-heading" id="pay-providers-heading">{{ payments.providers_title }}</h2>
+  <p class="pay-setup-intro">{{ payments.providers_intro }}</p>
+  <table class="lp-table" role="table">
+    <thead role="rowgroup">
+      <tr role="row">
+        <td class="lp-corner" role="presentation"></td>
+        <th scope="col" role="columnheader">Stripe</th>
+        <th scope="col" role="columnheader">Square</th>
+      </tr>
+    </thead>
+    <tbody role="rowgroup">
+      {% for row in payments.provider_rows %}
+        <tr role="row">
+          <th scope="row" role="rowheader">{{ row.label }}</th>
+          <td role="cell" data-col="Stripe">
+            <span class="lp-cell">
+              {%- include "compare-mark", mark: row.stripe_mark -%}
+              <span>{{ row.stripe }}</span>
+            </span>
+          </td>
+          <td role="cell" data-col="Square">
+            <span class="lp-cell">
+              {%- include "compare-mark", mark: row.square_mark -%}
+              <span>{{ row.square }}</span>
+            </span>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="pay-providers-more">{{ payments.providers_more }}</div>
+</section>
+
+<div class="benefit-grid benefit-grid--compact">
+  {% for benefit in payments.benefits %}
+    <div class="benefit" data-glow>
+      <h2 class="section-title">{{ benefit.title }}</h2>
+      <div class="section-content">
+        {{ benefit.content }}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<section class="sw-closing">
+  <h2 class="sw-closing-heading">{{ payments.closing_title }}</h2>
+  <div class="sw-closing-content">{{ payments.closing_content }}</div>
+  {% include "payments-cta", placement: "bottom" %}
+</section>
+
+<script>
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Scale each frame to its column, as the homepage tour does: the frame is
+    // laid out at --pf-dw and zoomed, so its markers stay on their targets.
+    var rootFontPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    var frames = [];
+    document.querySelectorAll('.product-frame-wrap').forEach(function (wrap) {
+      var frame = wrap.querySelector('.product-frame');
+      if (!frame) return;
+      var dwRaw = getComputedStyle(frame).getPropertyValue('--pf-dw').trim();
+      var dw = dwRaw.indexOf('rem') > -1 ? parseFloat(dwRaw) * rootFontPx : parseFloat(dwRaw);
+      if (dw) {
+        frames.push({ wrap: wrap, frame: frame, dw: dw });
+      }
+    });
+    function fit() {
+      frames.forEach(function (f) {
+        var cw = f.wrap.clientWidth;
+        if (!cw) return;
+        f.frame.style.zoom = Math.min(1, cw / f.dw);
+      });
+    }
+    fit();
+    if ('ResizeObserver' in window) {
+      var ro = new ResizeObserver(fit);
+      frames.forEach(function (f) {
+        ro.observe(f.wrap);
+      });
+    } else {
+      window.addEventListener('resize', fit);
+    }
+
+    // Reveal each section on scroll
+    var sections = document.querySelectorAll('[data-product-section]');
+    if (reduce || !('IntersectionObserver' in window)) {
+      sections.forEach(function (s) {
+        s.classList.add('is-visible');
+      });
+    } else {
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-visible');
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.25 },
+      );
+      sections.forEach(function (s) {
+        io.observe(s);
+      });
+    }
+
+    // Cross-highlight callouts: marker <-> legend <-> frame target
+    sections.forEach(function (section) {
+      var frame = section.querySelector('.product-frame');
+      function setActive(n, on) {
+        section
+          .querySelectorAll('[data-callout="' + n + '"], [data-callout-target="' + n + '"]')
+          .forEach(function (el) {
+            el.classList.toggle('callout-active', on);
+          });
+        if (frame) {
+          frame.classList.toggle('is-focusing', on);
+        }
+      }
+      section.querySelectorAll('[data-callout]').forEach(function (trigger) {
+        var n = trigger.getAttribute('data-callout');
+        trigger.addEventListener('mouseenter', function () {
+          setActive(n, true);
+        });
+        trigger.addEventListener('mouseleave', function () {
+          setActive(n, false);
+        });
+        trigger.addEventListener('focus', function () {
+          setActive(n, true);
+        });
+        trigger.addEventListener('blur', function () {
+          setActive(n, false);
+        });
+      });
+    });
+
+    if (reduce) return;
+
+    // Cards track the pointer to place their hover glow
+    document.querySelectorAll('[data-glow]').forEach(function (card) {
+      var bounds;
+      card.addEventListener('mouseenter', function () {
+        bounds = card.getBoundingClientRect();
+      });
+      card.addEventListener('mousemove', function (e) {
+        if (!bounds) return;
+        card.style.setProperty('--mouse-x', ((e.clientX - bounds.left) / bounds.width) * 100 + '%');
+        card.style.setProperty('--mouse-y', ((e.clientY - bounds.top) / bounds.height) * 100 + '%');
+      });
+      card.addEventListener('mouseleave', function () {
+        card.style.setProperty('--mouse-x', '50%');
+        card.style.setProperty('--mouse-y', '50%');
+      });
+    });
+
+    // 3D tilt on the frames
+    document.querySelectorAll('.product-frame-wrap[data-tilt]').forEach(function (card) {
+      var frame = card.querySelector('.product-frame');
+      if (!frame) return;
+      var maxTilt = 6,
+        bounds;
+      card.addEventListener('mouseenter', function () {
+        bounds = frame.getBoundingClientRect();
+        frame.style.transition = 'none';
+      });
+      card.addEventListener('mousemove', function (e) {
+        if (!bounds) return;
+        var mx = e.clientX - bounds.left,
+          my = e.clientY - bounds.top;
+        var rx = ((my - bounds.height / 2) / (bounds.height / 2)) * -maxTilt;
+        var ry = ((mx - bounds.width / 2) / (bounds.width / 2)) * maxTilt;
+        frame.style.transform = 'perspective(1200px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+      });
+      card.addEventListener('mouseleave', function () {
+        frame.style.transition = 'transform 0.4s ease-out';
+        frame.style.transform = 'perspective(1200px) rotateX(0) rotateY(0)';
+      });
+    });
+  })();
+</script>
