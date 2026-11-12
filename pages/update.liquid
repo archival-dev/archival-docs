@@ -3,6 +3,7 @@
   , area: "updates"
   , description: update.summary
   , path: update.path
+  , atproto_document: update.path
 %}
 
 {% assign sorted_updates = objects.update | sort: "publish_date" | reverse %}
