@@ -112,7 +112,7 @@ export default carrier;
 | `cancelUrl` | Optional. Where the buyer lands if they back out, on a checkout page that offers a way back. The same rule applies: https, on one of your site's domains. |
 | `customerEmail` | Optional. Fills in the buyer's email on the checkout page. |
 | `metadata` | Optional. Up to 20 strings, kept with the payment at the provider. |
-| `shipping` | Optional. `{ countries }` asks for a shipping address, where `countries` is the two-letter codes of the places you ship to. A checkout page that cannot limit the country asks for an address anywhere. |
+| `shipping` | Optional. Asks for a shipping address. `{ countries }` names the places you ship to by their two-letter codes; with none named, or on a checkout page that cannot limit the country, an address may be anywhere. |
 | `idempotencyKey` | Optional. A second call with the same key answers the first call's checkout instead of starting another. |
 
 The price is always the provider's. The carrier names a variant, never an amount, so a request cannot change what something costs.
@@ -482,7 +482,7 @@ content = """
 
 **Subscriptions.** A recurring price is a variant with `recurring` set, and a checkout holding one is a Stripe subscription.
 
-**Checkout** is a Stripe Checkout Session. It asks for a shipping address only in the `countries` a checkout names, and for none when the list is empty. `metadata` is set on the session, and refunds, disputes and receipts are in your Stripe Dashboard.
+**Checkout** is a Stripe Checkout Session. It asks for a shipping address only in the `countries` a checkout names, or anywhere Stripe Checkout ships to when it names none. `metadata` is set on the session, and refunds, disputes and receipts are in your Stripe Dashboard.
 """
 
 [[sections]]
