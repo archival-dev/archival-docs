@@ -812,7 +812,7 @@ title = "Carriers in a preview"
 content = """
 The editor's preview of a site you are editing, on the web and in the iOS and Mac apps, runs its carriers, so a form, a cart or a checkout can be tried before it is live. A carrier there does nothing that reaches your visitors or your money:
 
-- **`site.payments`** reads your live account's catalog and makes its checkouts in your site's test account, so nothing is charged. See [Previews](/docs/payments#Previews).
+- **`site.payments`** reads your live account's catalog and makes its checkouts in the site's test account, so nothing is charged. See [Previews](/docs/payments#Previews).
 - **`site.email.send`** sends nothing. The message is shown to you instead.
 - **Requests to other sites are sent**, as they are once deployed, so a carrier that calls another service reaches it from the preview too.
 - **Schedules** never run.
