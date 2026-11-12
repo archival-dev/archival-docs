@@ -31,7 +31,7 @@ Checkout is the same call in both: `site.payments.checkout.create` answers a url
 
 Build against what this page describes, not against what your provider happens to do. Every provider is answered in the same shapes, and [Payment providers](#Payment%20providers) compares them, feature by feature.
 
-`site.payments` is part of [carrier API version 2](/docs/carriers#Carrier%20API%20versions), on the `site` argument beside `site.sql` and `site.email`. Every example on this page is a carrier.
+`site.payments` is part of [carrier API version 2](/docs/carriers#Carrier%20API%20versions), on the `site` argument beside `site.sql` and `site.email`. Every example on this page is a carrier, apart from [the cart](#The%20cart), which checks out without one.
 """
 
 [[sections]]
@@ -304,113 +304,30 @@ When the amount comes from the request, as with a donation the visitor chooses, 
 """
 
 [[sections]]
-title = "The cart script"
+title = "The cart"
 content = """
-A site with a connected account is served a small cart script at `/_archival/cart.js`. It keeps a list of variants and quantities in the visitor's browser and hands it to one of your carriers to check out. Include it on the pages that need it:
-
-```html
-<script src="/_archival/cart.js"></script>
-```
-
-The script is served from the site's next deploy after an account is connected, and stops being served from the next deploy after it is disconnected.
-
-It defines `window.archivalCart`:
-
-| Method | |
-| --- | --- |
-| `items()` | The cart's lines, each `{ variant, quantity }`. |
-| `count()` | The total quantity across every line. |
-| `add(variant, quantity = 1)` | Adds to a variant's quantity, or starts a line for it. |
-| `setQuantity(variant, quantity)` | Sets a line's quantity. `0` removes the line. |
-| `remove(variant)` | Removes a line. |
-| `clear()` | Empties the cart. |
-| `checkout(carrierPath, extra?)` | Sends the cart to a carrier and follows the url it answers, as below. |
-
-The cart is kept in `localStorage` under `archival:cart`, so it survives a reload and is shared between tabs. Whenever its lines change, including from another tab, an `archival:cart` event is dispatched on `window` with the lines as its `detail`. A variant that is empty or not a string throws a `TypeError`, and a quantity that is negative or not a whole number throws a `RangeError`.
-
-The cart holds ids and quantities only. Names and prices come from your catalog, through a carrier that calls `variants()` or `catalog()`.
+A site with a connected account is served a small cart script at `/_archival/cart.js`. It keeps a list of variants and quantities in the visitor's browser as `window.archivalCart`, and checks out with no carrier at all:
 
 ```html
 <button data-add="{{ print.variant_id }}">Add to cart</button>
-<a href="/cart">Cart (<span id="cart-count">0</span>)</a>
 <button id="checkout">Checkout</button>
 
 <script src="/_archival/cart.js"></script>
 <script>
-  const count = document.querySelector("#cart-count");
-  count.textContent = archivalCart.count();
-  window.addEventListener("archival:cart", () => {
-    count.textContent = archivalCart.count();
-  });
-
   document.querySelectorAll("[data-add]").forEach((button) => {
     button.addEventListener("click", () => {
       archivalCart.add(button.dataset.add);
     });
   });
-
-  const checkout = document.querySelector("#checkout");
-  checkout.addEventListener("click", async () => {
-    try {
-      await archivalCart.checkout("/carriers/checkout");
-    } catch (error) {
-      alert(
-        error.outOfStock
-          ? "Something in your cart has sold out."
-          : error.message,
-      );
-    }
+  document.querySelector("#checkout").addEventListener("click", () => {
+    archivalCart.checkout();
   });
 </script>
 ```
 
-`checkout(carrierPath, extra)` posts JSON to a carrier on your own site: `{ ...extra, items }`, where `items` is always the cart's lines. It expects the carrier to answer `{ url }`, and sends the browser there. When the carrier answers with an error status, `checkout` rejects with an `Error` whose `message` is the response's `error`, whose `status` is the response's status, and whose `outOfStock` is the response's list of variant ids when it has one.
+`archivalCart.checkout()` sells the cart's variants at your account's prices through a checkout every such site answers, and returns the buyer to the page they left. A checkout that needs to do more goes through a carrier of yours, with the same call.
 
-The carrier on the other end starts the checkout:
-
-```ts
-import type {
-  Carrier,
-  CarrierCheckoutItem,
-  CarrierOutOfStockError,
-} from "@archival/carrier";
-
-type CartLine = { variant: string; quantity: number };
-
-const carrier: Carrier = async (params, body, objects, site) => {
-  const lines = (body as { items?: CartLine[] } | null)?.items;
-  if (!Array.isArray(lines)) {
-    throw new Error("Method Not Allowed");
-  }
-  const items: CarrierCheckoutItem[] = lines.map((line) => ({
-    variant: line.variant,
-    quantity: line.quantity,
-  }));
-  try {
-    const { url } = await site.payments.checkout.create({
-      items,
-      successUrl: `${site.url}/thanks`,
-      cancelUrl: `${site.url}/cart`,
-    });
-    return { url };
-  } catch (error) {
-    const { outOfStock } = error as CarrierOutOfStockError;
-    if (outOfStock) {
-      return Response.json(
-        { error: "out_of_stock", outOfStock },
-        { status: 409 },
-      );
-    }
-    throw error;
-  }
-};
-
-export default carrier;
-```
-
-Copy only `variant` and `quantity` from each line, as the example does. The body comes from the browser, and passing it through whole would let a request add an item with a price of its own.
-
-Checking out leaves the cart as it is, so a buyer who backs out still has it. Empty it with `archivalCart.clear()` on your thanks page, once the carrier there says the checkout is paid.
+[Cart and checkout](/docs/cart) covers all of it: the cart's methods and its change event, the checkout's options and refusals, its types, and a carrier to start your own checkout from.
 """
 
 [[sections]]

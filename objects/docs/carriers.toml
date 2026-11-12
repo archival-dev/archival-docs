@@ -707,7 +707,9 @@ const carrier: Carrier = async (params, body, objects, site) => {
 
 Your site only learns that a checkout was paid when the buyer comes back to `successUrl`, which is given a `checkout` query parameter to pass to `checkout.get`. A buyer who pays and closes the tab is a payment you see at your provider, not on your site.
 
-[Payments](/docs/payments) covers all of it: connecting an account, listing a catalog, confirming a payment, the cart script, stock, what differs between providers, and trying it locally.
+A site that sells its account's variants at their own prices needs no carrier for it: the cart every such site serves checks out by itself. See [Cart and checkout](/docs/cart), which also has the carrier to start from when a cart's checkout needs to do more.
+
+[Payments](/docs/payments) covers the rest: connecting an account, listing a catalog, confirming a payment, stock, what differs between providers, and trying it locally.
 """
 
 [[sections]]
