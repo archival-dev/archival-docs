@@ -393,7 +393,7 @@ const carrier: Carrier = async (params, body, objects, site) => {
 A few things worth knowing:
 
 - A domain whose mail is received by another service — Google Workspace, say — can still send. Its addresses are sending-only: nothing arrives in them, and a carrier can't send *to* an address on such a domain, since that mail would never reach the service that receives it.
-- `site.email` only works in a deployed carrier. In a preview or a local run, `send` throws.
+- `site.email` only delivers from a deployed carrier. In a preview, `send` sends nothing and the message is shown to you instead; see [Carriers in a preview](#Carriers%20in%20a%20preview). In a local run, `send` throws.
 - A carrier is reachable by anyone, so treat what a request asks you to send with care. A `to` taken straight from an untrusted body sends mail to whoever the request names; the recipient cap and the hourly allowance limit how far that goes, but validating the request is what keeps your site from being used as a relay.
 """
 
@@ -709,7 +709,7 @@ Your site only learns that a checkout was paid when the buyer comes back to `suc
 
 A site that sells its account's variants at their own prices needs no carrier for it: the cart every such site serves checks out by itself. See [Cart and checkout](/docs/cart), which also has the carrier to start from when a cart's checkout needs to do more.
 
-[Payments](/docs/payments) covers the rest: connecting an account, listing a catalog, confirming a payment, stock, what differs between providers, and trying it locally.
+[Payments](/docs/payments) covers the rest: connecting an account, listing a catalog, confirming a payment, stock, what differs between providers, and trying it locally and in a preview.
 """
 
 [[sections]]
@@ -800,9 +800,22 @@ A few things differ from a deployed carrier:
 - **`site.activitypub`** reads as a site that doesn't federate.
 - **`site.webmentions`** reads as a site no mention has reached.
 - **`site.atproto`** reads as a site with no ATProto account.
-- **`site.payments`** reads as a site with no payment account connected, unless you name a JSON file of products in `ARCHIVAL_PAYMENTS`. A checkout then opens a stand-in page on the local server, and nothing is charged. See [Running locally](/docs/payments#Running%20locally).
+- **`site.payments`** reads as a site with no payment account connected, unless you name a JSON file of products in `ARCHIVAL_PAYMENTS`. A checkout then opens a stand-in page on the local server, and nothing is charged. The same file has the local server serve the [cart](/docs/cart#Previews%20and%20local%20runs) and answer its checkout. See [Running locally](/docs/payments#Running%20locally).
 - **Schedules** never run.
 - **Secrets** reach a carrier exactly as they're stored in your object files. One the editor encrypted arrives in its encrypted form, because only archival's hosting can decrypt it.
 
 To run your site without its carriers, pass `--no-carriers`. To debug a carrier, pass `--carriers-inspect` to run your carriers under `node --inspect` and attach your debugger.
+"""
+
+[[sections]]
+title = "Carriers in a preview"
+content = """
+A preview runs your carriers, so a form, a cart or a checkout can be tried before it is live. What a carrier does there has no effect outside the preview:
+
+- **`site.payments`** is answered by a stand-in provider with a sample catalog. A checkout opens a page of the preview with Pay and Cancel buttons, and nothing is charged. See [Previews](/docs/payments#Previews).
+- **`site.email.send`** sends nothing. The message is shown to you instead.
+- **Requests to other sites are not sent**, in the editor's preview on the web and on a preview link. A carrier's `fetch` to another site is answered `200` with an empty JSON object and an `x-archival-preview: simulated` header, and the preview tells you which request it held. A carrier that only checks the answer is `ok` carries on. One that reads data from the answer gets an empty object.
+- **Schedules** never run.
+
+The preview of a Claude editing session runs no carriers. A page there can still use the [cart](/docs/cart) and its checkout.
 """

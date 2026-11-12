@@ -54,6 +54,8 @@ It defines `window.archivalCart`. This is a whole shop page: a button that adds 
 ```
 
 The script is only served on a site with a connected payment account, and that is decided when the site deploys. Connecting an account takes effect at the site's next deploy, and so does disconnecting one. Anywhere the script is not served, `window.archivalCart` is undefined, which is why the example checks for it.
+
+A preview serves the script whether or not an account is connected, and so does a local run that names a payments file. See [Previews and local runs](#Previews%20and%20local%20runs).
 """
 
 [[sections]]
@@ -133,7 +135,7 @@ A few things to know about it:
 
 - **It takes variants and nothing else.** An item without a variant id is refused, so it cannot sell an item [priced where it is sold](/docs/payments#Donations%20and%20deposits). It does not fill in the buyer's email or keep metadata with the payment. For any of those, [write a carrier](#Writing%20your%20own%20checkout%20carrier).
 - **It has the limits of any checkout.** An empty cart is refused, as is one over the [limits](/docs/payments#Limits) on a checkout's items and quantities.
-- **It is rate-limited, and it asks the browser to prove itself.** The cart script does that on its own, so call the checkout through `archivalCart.checkout()` and not with a request of your own.
+- **On a deployed site it is rate-limited, and it asks the browser to prove itself.** The cart script does that on its own, so call the checkout through `archivalCart.checkout()` and not with a request of your own.
 """
 
 [[sections]]
@@ -290,12 +292,24 @@ Keep copying only `variant` and `quantity` from each line, as the carrier does. 
 [[sections]]
 title = "Previews and local runs"
 content = """
-The cart script and the site's own checkout belong to your deployed site.
+A cart can be tried before a payment account is connected, and before the site is deployed. Previews and local runs serve the cart script and answer the site's own checkout from a stand-in for a payment provider. Nothing is charged, and no provider is contacted.
 
-- **[`archival run`](/cli/run)** does not serve `/_archival/cart.js` or answer `/_archival/checkout` yet.
-- **Previews** do not answer `/_archival/checkout` yet. The script loads only in the editor's preview of a deployed site that has a payment account connected.
+**In a preview.** Every preview serves `/_archival/cart.js` and answers `/_archival/checkout`: the editor's preview on the web and in the iOS and Mac apps, a preview link, and the preview of a [Claude editing session](/docs/building-with-claude).
 
-A page that checks for `window.archivalCart` before using it, as the example at the top of this page does, still renders in both. To try a cart, deploy the site with an account connected.
+- `archivalCart.checkout()` opens a checkout page that is part of the preview, with Pay and Cancel buttons.
+- Pay returns the buyer to the page they left with its `checkout` parameter, and the cart empties itself, as it does on the deployed site.
+- A preview takes any variant id, so the ids your objects hold check out there, at a placeholder price. [Previews](/docs/payments#Previews) says what a preview sells.
+- A preview does not ask the browser to prove itself.
+- The preview of a Claude editing session runs no carriers, so only the site's own checkout works there. Every other preview runs a checkout carrier of yours too.
 
-A checkout carrier of your own does run under `archival run`, against the products in a file you name, for a page or a request that posts to it without the cart. See [Running locally](/docs/payments#Running%20locally).
+**Under [`archival run`](/cli/run).** Name a file of what the site sells in `ARCHIVAL_PAYMENTS`, and the local server serves the script and answers the checkout from it. It is the same file your carriers' `site.payments` reads, described under [Running locally](/docs/payments#Running%20locally).
+
+```sh
+ARCHIVAL_PAYMENTS=payments.json archival run
+```
+
+- The checkout opens the local stand-in page. Pay returns the buyer to the page they left, and the cart empties itself.
+- It sells only the variants in the file, so give them the ids your objects hold. A variant the file is short of is refused with `outOfStock`, as it is once deployed.
+- Without `ARCHIVAL_PAYMENTS`, the local server answers neither path, as a deployed site with no payment account does.
+- It needs a release of archival after 0.27.3, and Node 22.13 or later, as [carriers](/docs/carriers#Running%20carriers%20locally) do. `--no-carriers` turns the cart off too.
 """

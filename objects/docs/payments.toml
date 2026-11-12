@@ -480,7 +480,27 @@ A local checkout does not go to a provider. `checkout.create` answers a url on t
 
 The file is read again whenever it is saved, which also puts back any stock a test checkout took. Checkouts are kept only while `archival run` is running. `site.url` is the local server's address, so locally `successUrl` and `cancelUrl` are plain http urls on your machine.
 
-In the preview in the Archival editor, `site.payments` reads as a site with nothing connected.
+The same run serves the [cart script](/docs/cart) and answers its checkout from the file, in releases of archival after 0.27.3. See [Previews and local runs](/docs/cart#Previews%20and%20local%20runs).
+
+A preview needs no file. See [Previews](#Previews).
+"""
+
+[[sections]]
+title = "Previews"
+content = """
+Every preview takes payments from a stand-in provider, so a shop can be tried before an account is connected. That is the editor's preview on the web and in the iOS and Mac apps, a preview link, and the preview of a Claude editing session. Nothing a preview does reaches a payment provider, even for a site that has an account connected, and nothing is charged.
+
+- **`account()`** answers an account named "Preview payments", with `livemode` false.
+- **The catalog is a sample.** `catalog()` lists two products that exist only in previews, "Sample notebook" and "Sample print".
+- **Any other id is a placeholder.** A preview cannot look up your provider's ids, so a product or variant id it does not know reads as a placeholder priced at $10.00, and a checkout of it goes through. The variant ids your objects hold check out in a preview, at a price that is not their own.
+- **A checkout is a page of the preview.** `checkout.create` answers a url on the preview itself: a page listing what is being bought, with Pay and Cancel buttons. Pay marks the checkout paid and returns to `successUrl` with its `checkout` parameter, so `checkout.get` reads `paid`. Cancel returns to `cancelUrl`, or to the home page.
+- **A call is refused as it is once deployed**, with the same errors and the same `outOfStock` list. The sample print has a stock of three, so a carrier's handling of a stock refusal can be tried.
+- **`successUrl` and `cancelUrl` are on the preview's own address**, which is what `site.url` is there. A carrier that builds them from `site.url` needs no change.
+- **A preview's checkouts are not orders.** They last only as long as the preview, and the stock they take is put back.
+
+The cart script and the site's own checkout work in every preview too. See [Cart and checkout](/docs/cart#Previews%20and%20local%20runs).
+
+The preview of a Claude editing session runs no carriers, so only the cart's own checkout takes a payment there.
 """
 
 [[sections]]
