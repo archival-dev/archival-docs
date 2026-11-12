@@ -2,9 +2,11 @@ order = 21
 title = "Payments"
 include_in_llm_docs = true
 description = """
-A site hosted by archival.dev can sell from its owner's own payment account. The owner connects a Stripe account to the site in the editor, and the site's [carriers](/docs/carriers) read that account's products and start checkouts through `site.payments`.
+A site hosted by archival.dev can sell from its owner's own payment account. The owner connects an account at a payment provider to the site in the editor, and the site's [carriers](/docs/carriers) read that account's products and start checkouts through `site.payments`.
 
-The owner is the merchant of record. Buyers pay them directly, on a checkout page Stripe hosts, and the money settles to the owner's own Stripe balance. Archival takes no fee on a sale and never holds the funds. Stripe's own processing fees apply.
+The owner is the merchant of record. Buyers pay them directly, on a checkout page the provider hosts, and the money settles to the owner's own account there. Archival takes no fee on a sale and never holds the funds. The provider's own processing fees apply.
+
+`site.payments` is the same whichever provider is connected. A site connects one account, at [Stripe](#Stripe) or [Square](#Square).
 
 Payments is included with the Pro plan, including Pro on an Archival subdomain, and with White Glove. It is not part of the Developer plan. See [pricing](/pricing).
 """
@@ -12,17 +14,22 @@ Payments is included with the Pro plan, including Pro on an Archival subdomain, 
 [[sections]]
 title = "How it fits together"
 content = """
-Products and prices are made in Stripe, not in Archival. There is nothing to import, and nothing about what you sell is stored in your site's repository unless you put it there.
+What you sell is made at your payment provider, not in Archival. There is nothing to import, and nothing about what you sell is stored in your site's repository unless you put it there.
 
-- A **product** is something you sell, as Stripe lists it.
-- A **variant** is one price of a product. Its `id` is the provider's own: with Stripe, a price id such as `price_1Qx…`. Because the id is Stripe's, an object on your site can hold it.
+- A **product** is something you sell, as your provider lists it.
+- A **variant** is one way a product is sold, with its own price: a size, an edition, a billing interval. A variant is what a checkout takes.
+- A **checkout** is one buyer's purchase. It is paid on a page your provider hosts.
+
+A product's `id` and a variant's `id` are the provider's own, so an object on your site can hold one. Treat them as opaque strings.
 
 A site uses this in one of two ways:
 
-- **Your objects hold the variant id.** A print, a ticket or a menu item is an object like any other, with one more field naming its price in Stripe. A carrier starts a checkout for it. See [Selling a product from an object](#Selling%20a%20product%20from%20an%20object).
+- **Your objects hold the variant id.** A print, a ticket or a menu item is an object like any other, with one more field naming the variant it is sold as. A carrier starts a checkout for it. See [Selling a product from an object](#Selling%20a%20product%20from%20an%20object).
 - **Your page lists the catalog.** A carrier answers what the account has for sale, and the page renders it in the browser. See [Listing products from the catalog](#Listing%20products%20from%20the%20catalog).
 
-Checkout is the same call in both: `site.payments.checkout.create` answers a url, the buyer pays on Stripe's page, and Stripe sends them back to your site.
+Checkout is the same call in both: `site.payments.checkout.create` answers a url, the buyer pays on the provider's page, and the provider sends them back to your site.
+
+Build against what this page describes, not against what your provider happens to do. Every provider is answered in the same shapes, and [Payment providers](#Payment%20providers) lists the few places where one has less to say than another.
 
 `site.payments` is part of [carrier API version 2](/docs/carriers#Carrier%20API%20versions), on the `site` argument beside `site.sql` and `site.email`. Every example on this page is a carrier.
 """
@@ -30,40 +37,44 @@ Checkout is the same call in both: `site.payments.checkout.create` answers a url
 [[sections]]
 title = "Connecting an account"
 content = """
-Connecting is done once per site, by someone who can edit the site and has access to the Stripe account.
+Connecting is done once per site, by someone who can edit the site and has access to the payment account.
 
 **1. Sign in.** Go to [editor.archival.dev](https://editor.archival.dev), sign up or sign in, and open the site.
 
 **2. Check the plan.** The site has to be on a plan that includes Payments: Pro or White Glove.
 
-**3. Connect Stripe.** Open the site's **Settings**, then **Payments**, and choose **Connect Stripe**.
+**3. Choose your provider.** Open the site's **Settings**, then **Payments**, and choose the provider your account is with.
 
-**4. Approve access in Stripe.** Stripe opens and asks which account to connect. Approve access, and you are returned to your site's settings, which now read "Connected to" followed by the account's name.
+**4. Approve access.** The provider opens and asks which account to connect. Approve access, and you are returned to your site's settings, which now read "Connected to" followed by the account's name.
 
-The connection belongs to that one site. It lets Archival do four things in the Stripe account, and nothing else: read products, read prices, create Checkout Sessions and read Checkout Sessions.
+The connection belongs to that one site, and a site has one connection. It lets Archival read the account's catalog, start checkouts and read those checkouts, and nothing else. What that is in each provider's own terms is under [Stripe](#Stripe) and [Square](#Square).
 
-To stop selling, choose **Disconnect** in the same panel. Checkout on the site stops working until an account is connected again. You can also uninstall the Archival Payments app from your Stripe Dashboard. The site finds out the next time it uses the connection, and the panel then offers to reconnect.
+To stop selling, choose **Disconnect** in the same panel. Checkout on the site stops working until an account is connected again. You can also remove Archival's access from your provider's own dashboard. The site finds out the next time it uses the connection, and the panel then offers to reconnect.
+
+To move a site to another provider, disconnect and connect the other. Variant ids are each provider's own, so the ids your objects hold have to be replaced. Nothing else in a site built the way this page describes has to change.
 """
 
 [[sections]]
 title = "Selling a product from an object"
 content = """
-Give the object type a field for the variant id, and put the price's id from Stripe in each object:
+Give the object type a field for the variant id, and put the variant's id from your provider in each object:
 
 ```toml
 # archival_objects.toml
 [print]
 title = "string"
 image = "image"
-price_id = "string"
+variant_id = "string"
 template = "print"
 ```
 
 ```toml
 # objects/print/harbour.toml
 title = "Harbour, 6am"
-price_id = "price_1Qx…"
+variant_id = "…"
 ```
+
+The id is the one your provider gives the variant. [Stripe](#Stripe) and [Square](#Square) say where each shows it, and a carrier that answers [`catalog()`](#Listing%20products%20from%20the%20catalog) lists every id the site can sell.
 
 The page links to a carrier and says which object it is selling:
 
@@ -78,11 +89,11 @@ import type { Carrier } from "@archival/carrier";
 
 const carrier: Carrier = async (params, body, objects, site) => {
   const print = objects.print.find((p) => p.path === params.get("print"));
-  if (!print || !print.price_id) {
+  if (!print || !print.variant_id) {
     return "redirect:/404";
   }
   const { url } = await site.payments.checkout.create({
-    items: [{ variant: print.price_id, quantity: 1 }],
+    items: [{ variant: print.variant_id, quantity: 1 }],
     successUrl: `${site.url}/thanks`,
     cancelUrl: `${site.url}/${print.path}`,
   });
@@ -98,21 +109,23 @@ export default carrier;
 | --- | --- |
 | `items` | What is being bought, at most 100 lines. Each is a variant and a quantity, `{ variant, quantity }`, or an item [priced where it is sold](#Donations%20and%20deposits). |
 | `successUrl` | Where the buyer lands after paying. It must be an https url on one of your site's domains. It is given a `checkout` query parameter holding the checkout's id. |
-| `cancelUrl` | Optional. Where the buyer lands if they back out. The same rule applies: https, on one of your site's domains. |
+| `cancelUrl` | Optional. Where the buyer lands if they back out, on a checkout page that offers a way back. The same rule applies: https, on one of your site's domains. |
 | `customerEmail` | Optional. Fills in the buyer's email on the checkout page. |
-| `metadata` | Optional. Up to 20 strings, kept with the payment at Stripe. |
-| `shipping` | Optional. Asks for a shipping address. `countries`, a list of two-letter codes, limits where to. |
+| `metadata` | Optional. Up to 20 strings, kept with the payment at the provider. |
+| `shipping` | Optional. `{ countries }` asks for a shipping address, where `countries` is the two-letter codes of the places you ship to. A checkout page that cannot limit the country asks for an address anywhere. |
 | `idempotencyKey` | Optional. A second call with the same key answers the first call's checkout instead of starting another. |
 
-The price is always the one in Stripe. The carrier names a variant, never an amount, so a request cannot change what something costs.
+The price is always the provider's. The carrier names a variant, never an amount, so a request cannot change what something costs.
 
-The same carrier can sell a recurring price. A checkout that holds a Stripe subscription price is a subscription.
+An option a provider's checkout page has no way to honor is left out, and the checkout still starts. A carrier never has to ask which provider it is talking to.
+
+The same carrier can sell a subscription. A variant whose `recurring` is set bills on that interval, and a checkout that holds one starts a subscription.
 """
 
 [[sections]]
 title = "Listing products from the catalog"
 content = """
-When the catalog in Stripe is the list of what you sell, a carrier can hand it to the page instead of each product being an object:
+When the catalog at your provider is the list of what you sell, a carrier can hand it to the page instead of each product being an object:
 
 ```ts
 import type { Carrier } from "@archival/carrier";
@@ -183,20 +196,20 @@ Each product is:
 | `name` | Its name. |
 | `description` | Its description, or `null`. |
 | `images` | The addresses of its images. |
-| `metadata` | The metadata set on it at the provider. |
+| `metadata` | The metadata set on it at the provider. Empty where the provider keeps none. |
 | `variants` | Its variants, as below. |
 
 Each variant is:
 
 | Field | |
 | --- | --- |
-| `id` | The variant's id at the provider: a Stripe price id. This is what a checkout takes. |
+| `id` | The variant's id at the provider. This is what a checkout takes. |
 | `product` | The `id` of the product it is a variant of. |
 | `name` | Its name, or `null`. |
 | `sku` | Its SKU, or `null`. |
 | `amount` | Its price in the currency's smallest unit. `null` for a variant with no fixed price, which cannot be put in a checkout. |
 | `currency` | Lowercase ISO 4217, such as `usd`. |
-| `recurring` | `{ interval }` for a subscription price, otherwise `null`. |
+| `recurring` | `{ interval }` for a variant sold as a subscription, otherwise `null`. |
 | `stock` | How many are left, or `null` when the provider does not track it. |
 | `available` | Whether it can be bought: priced, and in stock or untracked. |
 
@@ -204,14 +217,14 @@ To look up things you already know the ids of, `products(ids)` and `variants(ids
 
 ```ts
 const ids = objects.print
-  .map((print) => print.price_id)
+  .map((print) => print.variant_id)
   .filter((id) => id !== null);
 const variants = await site.payments.variants(ids);
 ```
 
 `account()` answers the connected account, or `null` when there is none: its `provider`, its `name`, its `currency`, and `livemode`, which is false for a provider's test or sandbox account.
 
-Names and descriptions are text someone typed into Stripe. Put them in the page as text, as the example does, not as HTML.
+Names and descriptions are text someone typed in at the provider. Put them in the page as text, as the example does, not as HTML.
 """
 
 [[sections]]
@@ -265,11 +278,11 @@ The thanks page reads its own query string, asks the carrier, and shows the resu
 | `currency` | The currency paid in, or `null`. |
 | `customerEmail` | The buyer's email, or `null`. |
 
-**That return is the only way your site learns of a payment.** Archival does not notify your site when a payment is made. A buyer who pays and then closes the tab before landing on `successUrl` has still paid: the payment is in your Stripe Dashboard, and your site never hears about it. Treat Stripe as the record of your orders, and the thanks page as a courtesy to the buyer.
+**That return is the only way your site learns of a payment.** Archival does not notify your site when a payment is made. A buyer who pays and then closes the tab before landing on `successUrl` has still paid: the payment is in your provider's dashboard, and your site never hears about it. Treat your provider as the record of your orders, and the thanks page as a courtesy to the buyer.
 
 Two things follow from that:
 
-- If something has to happen for every payment, such as posting an order or sending a file, do it from Stripe, where every payment is seen.
+- If something has to happen for every payment, such as posting an order or sending a file, do it from your provider, where every payment is seen.
 - The id is in the address, so the thanks page can be opened again later, or by someone the link was sent to. `paid` means that checkout was paid, not that this visitor has just paid. A carrier that hands something over on return should record the ids it has already answered, in [`site.sql`](/docs/carriers#Storing%20data).
 """
 
@@ -318,7 +331,7 @@ The cart is kept in `localStorage` under `archival:cart`, so it survives a reloa
 The cart holds ids and quantities only. Names and prices come from your catalog, through a carrier that calls `variants()` or `catalog()`.
 
 ```html
-<button data-add="{{ print.price_id }}">Add to cart</button>
+<button data-add="{{ print.variant_id }}">Add to cart</button>
 <a href="/cart">Cart (<span id="cart-count">0</span>)</a>
 <button id="checkout">Checkout</button>
 
@@ -403,9 +416,14 @@ Checking out leaves the cart as it is, so a buyer who backs out still has it. Em
 [[sections]]
 title = "Stock and availability"
 content = """
-Stock is the provider's to count. Stripe does not track it, so on a Stripe account every variant's `stock` is `null`, and `available` is true for any variant with a fixed price.
+Stock is the provider's to count, and not every provider counts it. A variant answers two fields:
 
-Where a provider does track stock, `stock` is how many are left and `available` is false when there are none. `checkout.create` then refuses a checkout it cannot fill. The error it throws carries `outOfStock`, the ids of the variants it was short of:
+- `stock` is how many are left, or `null` when nothing is counting.
+- `available` is whether it can be bought now: it has a fixed price, and it is in stock or uncounted.
+
+Show `available` and you never have to know which case you are in. A page that hides or disables what is not `available` is right on every provider.
+
+`checkout.create` refuses a checkout it cannot fill. The error it throws carries `outOfStock`, the ids of the variants it was short of:
 
 ```ts
 try {
@@ -416,31 +434,71 @@ try {
 }
 ```
 
+Handle it wherever you start a checkout, whether or not your account counts stock today.
+
 The check is made when the checkout starts and it is not a reservation. Two buyers can both start a checkout for the last one.
 
-The catalog is read from the provider every five minutes, or every minute where it carries stock. A price you change or a product you archive in Stripe shows up on your site within that time, without a deploy. Only active products and prices are for sale: an archived one is left out of `catalog` and answers `null` from a lookup.
+The catalog is read from the provider every few minutes, so a price you change or a product you take off sale there shows up on your site without a deploy. Only what is active at the provider is for sale: anything archived is left out of `catalog` and answers `null` from a lookup.
+"""
+
+[[sections]]
+title = "Payment providers"
+content = """
+`site.payments` answers the same shapes for every provider. Where a provider keeps nothing for a field, the field is `null` or empty. Where its checkout page cannot honor an option, the option is left out and the checkout still starts. Nothing is refused for being on one provider and not another, so a carrier written against this page runs on any of them.
+
+That comes down to a few habits:
+
+- Read `available` to decide what can be bought. Do not infer it from `stock`.
+- Read `recurring` to tell a subscription from a one-off. Do not infer it from the id.
+- Handle `outOfStock` from `checkout.create`.
+- Treat `cancelUrl` and `shipping.countries` as requests. A buyer may come back another way, and an address may be anywhere. Always name the countries you ship to.
+- Keep ids as the strings they are. Do not parse them.
+
+What each provider calls things, and where it has less to say:
+
+| | Stripe | Square |
+| --- | --- | --- |
+| A product is | a product | an item |
+| A variant is | a price | an item variation |
+| `stock` | always `null` | the count at the site's location, for a tracked variation |
+| `sku` | always `null` | the variation's SKU |
+| `recurring` | set for a recurring price | always `null` |
+| A product's `metadata` | the product's metadata | always empty |
+| `cancelUrl` | used | left out |
+| `shipping.countries` | used | left out |
+| The catalog is read | every five minutes | every minute |
+
+`account()` answers which provider is connected as `provider`, for a page that wants to say so. A carrier has no need to branch on it.
+"""
+
+[[sections]]
+title = "Stripe"
+content = """
+**Connecting** installs the Archival Payments app in your Stripe account. It can read products, read prices, create Checkout Sessions and read Checkout Sessions. To remove it from Stripe's side, uninstall the app in your Stripe Dashboard.
+
+**A variant is a price.** A product is a Stripe product and each of its active prices is a variant, so a variant's `id` is a price id, which starts `price_`. The Dashboard shows it on the product's page, beside each price.
+
+**Stock is not counted.** Stripe keeps no stock, so `stock` is `null` and every variant with a fixed price is `available`. To stop selling something, archive its price or its product.
+
+**Subscriptions.** A recurring price is a variant with `recurring` set, and a checkout holding one is a Stripe subscription.
+
+**Checkout** is a Stripe Checkout Session. It asks for a shipping address only in the `countries` a checkout names, and for none when the list is empty. `metadata` is set on the session, and refunds, disputes and receipts are in your Stripe Dashboard.
 """
 
 [[sections]]
 title = "Square"
 content = """
-A site can connect a Square account instead of a Stripe one. Everything above works the same way through `site.payments`, with these differences.
+**Connecting** asks Square for access to your business's details and locations, its items and stock counts, and to create orders and take payment for them. Disconnecting in Archival revokes that access at Square.
 
-**Connecting.** In the site's Settings, under Payments, choose **Connect Square** and approve access at Square. `account()` then answers `provider: "square"`.
+**A variant is an item variation.** A product is a Square item and each of its variations is a variant, so a variant's `id` is the variation's id. The quickest way to read them is from [`catalog()`](#Listing%20products%20from%20the%20catalog). A variation with variable pricing has no fixed price and is left out.
 
-**Variants are item variations.** A product is a Square item, and a variant is one of its item variations. A variant's `id` is the item variation's id, which is what an object holds and what a checkout takes. A variation with variable pricing has no fixed price, so it cannot be sold this way.
+**A connection sells from one location.** Square keeps its catalog, stock and orders per location. The connection uses the account's main location, and when the account has more than one, the Payments panel lets you choose which the site sells from. The catalog, the stock and the currency are that location's.
 
-**A connection sells from one location.** Square keeps its catalog, stock and orders per location. The connection uses the account's main location, and when the account has more than one, the Payments panel lets you choose which the site sells from. The currency is that location's.
+**Stock is counted.** For a variation Square tracks, `stock` is the count at that location, and a variation marked sold out is not `available`. Square takes a sale off its count once it is paid.
 
-**Stock is tracked.** For a variation Square tracks, `stock` is the count at that location, and a variation marked sold out is not `available`. Square takes a sale off its count once it is paid. `checkout.create` refuses a checkout that asks for more than are left, as described under [Stock and availability](#Stock%20and%20availability).
+**Checkout** is a Square payment link for an order. Its page has no way back for a buyer who changes their mind, so `cancelUrl` is left out, and it asks for a shipping address without limiting the country. `metadata` is kept on the order, and refunds and receipts are in your Square Dashboard.
 
-**What Square's checkout does not offer:**
-
-- There is no page to send a buyer who backs out to, so `cancelUrl` is not used.
-- `shipping` asks for an address, but `countries` cannot limit where to.
-- There are no subscriptions.
-
-The catalog is read from Square every minute, since it carries stock.
+**No subscriptions.** `recurring` is `null` for every variant.
 """
 
 [[sections]]
@@ -462,18 +520,18 @@ The file is shaped like what `site.payments` answers: an `account`, and a `catal
   "catalog": {
     "items": [
       {
-        "id": "prod_harbour",
+        "id": "harbour",
         "name": "Harbour, 6am",
         "variants": [
           {
-            "id": "price_harbour_a3",
+            "id": "harbour-a3",
             "name": "A3",
             "amount": 6000,
             "currency": "usd",
             "stock": 3
           },
           {
-            "id": "price_harbour_a2",
+            "id": "harbour-a2",
             "name": "A2",
             "amount": 9000,
             "currency": "usd"
@@ -485,7 +543,7 @@ The file is shaped like what `site.payments` answers: an `account`, and a `catal
 }
 ```
 
-A product needs an `id`, a `name` and its `variants`, and a variant needs an `id`, an `amount` and a `currency`. Everything else is optional. A variant with no `stock` is untracked, as it would be on Stripe. Use the same variant ids your objects hold, and the same carriers run locally and deployed.
+A product needs an `id`, a `name` and its `variants`, and a variant needs an `id`, an `amount` and a `currency`. Everything else is optional. A variant with no `stock` is uncounted. Use the same variant ids your objects hold, and the same carriers run locally and deployed.
 
 Without `ARCHIVAL_PAYMENTS`, a local run reads as a site with nothing connected.
 
@@ -506,7 +564,7 @@ content = """
 - A checkout holds at most 100 items, each with a quantity from 1 to 10,000.
 - `products()` and `variants()` take at most 100 ids, and a `catalog` page holds at most 100 products.
 - `successUrl` and `cancelUrl` must be https urls on one of your site's own domains.
-- The catalog is read from the provider every five minutes, or every minute where it carries stock, so a change at the provider takes up to that long to reach your site.
+- The catalog is read from the provider every few minutes, so a change at the provider takes up to that long to reach your site.
 
 With no account connected, nothing throws until you try to sell: `account()` is `null`, `catalog()` is empty, lookups answer `null`, and `checkout.create` rejects. A carrier that lists products works on a site that has not connected yet, and shows nothing.
 """
@@ -517,9 +575,9 @@ content = """
 `site.payments` reads a catalog, starts checkouts and reads their status. Everything else about running a shop stays with your payment provider.
 
 - **No notifications to your site.** There are no webhooks and no order events. Your site learns of a payment only when the buyer returns to `successUrl`. See [Confirming a payment](#Confirming%20a%20payment).
-- **No refunds.** Refund, dispute and cancel from your Stripe Dashboard.
+- **No refunds.** Refund, dispute and cancel from your provider's dashboard.
 - **No customer data.** A checkout answers its status, its total and the buyer's email. Names, addresses, payment methods and order history stay at the provider.
-- **No changes to your catalog.** Products and prices are made and changed in Stripe. Archival only reads them.
+- **No changes to your catalog.** Products and prices are made and changed at your provider. Archival only reads them.
 - **No stock reservations.** Stock is checked when a checkout starts and not held while the buyer pays.
 - **No order records.** Archival keeps no list of what was sold. Your provider's dashboard is the record, and a carrier that needs its own can keep one in [`site.sql`](/docs/carriers#Storing%20data).
 - **No handling of money.** Archival is not a party to the sale: it takes no fee, holds no funds and never sees a card. Buyers enter payment details on your provider's page, and payouts, taxes and receipts are set up in your provider's account.

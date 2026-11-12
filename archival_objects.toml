@@ -131,7 +131,7 @@ setup_title = "string"
 setup_intro = "string"
 # Under the setup steps: which plans include Payments, and what a sale costs.
 plan_note = "markdown"
-# One line about providers other than Stripe. Empty leaves it out.
+# One line naming the providers a site can connect. Empty leaves it out.
 providers_note = "markdown"
 closing_title = "string"
 closing_content = "markdown"

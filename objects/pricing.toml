@@ -51,7 +51,7 @@ features = """
 - Per-site content editor usable from everywhere
 - Email on your domain (5 addresses included, then $0.50/mo each)
 - Cookieless site analytics
-- Payments through your own Stripe account, with no fee from us on sales
+- Payments through your own Stripe or Square account, with no fee from us on sales
 - Custom editors and editor configuration
 - Yearly domain renewal (registered with us, limit $40/yr)
 - Granular edit history

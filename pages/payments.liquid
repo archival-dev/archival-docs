@@ -62,8 +62,8 @@
       <div class="product-frame-wrap" data-tilt>
         {% if section.key == "connect" %}
           <p class="sr-only">
-            The Payments panel in a site's settings in Archival, connected to a Stripe account, beside Stripe's screen
-            asking to install the Archival Payments app with four permissions.
+            The Payments panel in a site's settings in Archival, connected to a payment account, beside the provider's
+            screen asking to approve what Archival may do in that account.
           </p>
           <div class="product-frame product-frame--pay product-frame--pay-connect">
             <div class="product-frame-glow" aria-hidden="true"></div>
@@ -86,22 +86,22 @@
                 </p>
               </div>
               <div class="pay-well pay-connected" data-callout-target="3">
-                <i class="pf-dot ok"></i>Connected to <span class="pay-strong">Acme Studio</span> on Stripe
+                <i class="pf-dot ok"></i>Connected to <span class="pay-strong">Acme Studio</span>
               </div>
               <span class="pay-btn" data-callout-target="3">Disconnect</span>
             </div>
 
             <div class="pay-card pf-glass" data-callout-target="2" aria-hidden="true">
-              <div class="pay-title">Stripe &middot; Install app</div>
+              <div class="pay-title">Approve access</div>
               <div class="pay-h">Archival Payments</div>
               <p class="pay-small">will be able to:</p>
               <div class="pay-well pay-permissions">
-                <span>Create Checkout Sessions</span>
-                <span>Read Checkout Sessions</span>
+                <span>Create checkouts</span>
+                <span>Read checkouts</span>
                 <span>Read products</span>
                 <span>Read prices</span>
               </div>
-              <span class="pay-violet pay-push">Install</span>
+              <span class="pay-violet pay-push">Approve</span>
             </div>
 
             <button
@@ -136,11 +136,11 @@
           <ol class="callout-legend">
             <li class="callout-item" data-callout="1" id="pay1-1" style="--i:1;">
               <b>1</b>
-              Open Payments in your site's settings and choose Connect Stripe.
+              Open Payments in your site's settings and choose your provider.
             </li>
             <li class="callout-item" data-callout="2" id="pay1-2" style="--i:2;">
               <b>2</b>
-              Approve the app's four permissions in Stripe.
+              Approve what Archival may do in your account.
             </li>
             <li class="callout-item" data-callout="3" id="pay1-3" style="--i:3;">
               <b>3</b>
@@ -149,14 +149,14 @@
           </ol>
         {% elsif section.key == "catalog" %}
           <p class="sr-only">
-            Three products and their prices in a Stripe catalog, and the same three products with the same prices on a
-            shop page of an Archival site, each with an Add to cart button.
+            Three products and their prices in a payment account's catalog, and the same three products with the same
+            prices on a shop page of an Archival site, each with an Add to cart button.
           </p>
           <div class="product-frame product-frame--pay product-frame--pay-catalog">
             <div class="product-frame-glow" aria-hidden="true"></div>
 
             <div class="pay-card pf-glass" data-callout-target="1" aria-hidden="true">
-              <div class="pay-title">Your Stripe catalog</div>
+              <div class="pay-title">Your catalog</div>
               <div class="pay-well pay-row">
                 <span><i class="pf-dot ok"></i>Linen tote</span><span class="pay-price">$48.00</span>
               </div>
@@ -166,7 +166,7 @@
               <div class="pay-well pay-row">
                 <span><i class="pf-dot ok"></i>A3 print</span><span class="pay-price">$60.00</span>
               </div>
-              <p class="pay-small pay-push">Managed in your Stripe Dashboard.</p>
+              <p class="pay-small pay-push">Managed at your payment provider.</p>
             </div>
 
             <div class="pay-browser" data-callout-target="2" aria-hidden="true">
@@ -240,7 +240,7 @@
           <ol class="callout-legend">
             <li class="callout-item" data-callout="1" id="pay2-1" style="--i:1;">
               <b>1</b>
-              Products and prices live in your Stripe account.
+              Products and prices live in your payment account.
             </li>
             <li class="callout-item" data-callout="2" id="pay2-2" style="--i:2;">
               <b>2</b>
@@ -248,13 +248,13 @@
             </li>
             <li class="callout-item" data-callout="3" id="pay2-3" style="--i:3;">
               <b>3</b>
-              Change a price in Stripe and your site picks it up.
+              Change a price there and your site picks it up.
             </li>
           </ol>
         {% elsif section.key == "checkout" %}
           <p class="sr-only">
-            A cart page on an Archival site with two items and a Checkout button, leading to Stripe Checkout, where the
-            buyer pays the site's owner and is returned to the site's thanks page.
+            A cart page on an Archival site with two items and a Checkout button, leading to the provider's hosted
+            checkout, where the buyer pays the site's owner and is returned to the site's thanks page.
           </p>
           <div class="product-frame product-frame--pay product-frame--pay-checkout">
             <div class="product-frame-glow" aria-hidden="true"></div>
@@ -277,7 +277,7 @@
 
             <div class="pay-card pf-glass" aria-hidden="true">
               <div class="pay-checkout" data-callout-target="2">
-                <div class="pay-title">Stripe Checkout</div>
+                <div class="pay-title">Hosted checkout</div>
                 <div>
                   <p class="pay-small">Pay Acme Studio</p>
                   <div class="pay-total pay-price">$72.00</div>
@@ -329,7 +329,7 @@
             </li>
             <li class="callout-item" data-callout="2" id="pay3-2" style="--i:2;">
               <b>2</b>
-              They pay on Stripe's hosted page, in your own account.
+              They pay on your provider's hosted page, in your own account.
             </li>
             <li class="callout-item" data-callout="3" id="pay3-3" style="--i:3;">
               <b>3</b>

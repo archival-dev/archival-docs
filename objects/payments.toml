@@ -1,7 +1,7 @@
 order = -1
 title = "Websites That Take Payments"
-description = "Connect your own Stripe account to your Archival site and sell from it. Buyers pay you directly on Stripe Checkout, and Archival takes no fee on sales."
-tagline = "Connect your own Stripe account and sell from your site. Buyers pay you directly on Stripe's checkout page. Archival takes no fee on sales and never holds your money."
+description = "Connect your own payment account to your Archival site and sell from it. Buyers pay you directly on your provider's checkout page, and Archival takes no fee on sales."
+tagline = "Connect your own payment account and sell from your site. Buyers pay you directly on your provider's checkout page. Archival takes no fee on sales and never holds your money."
 cta_label = "Get started in the editor"
 cta_url = "https://editor.archival.dev/new"
 docs_label = "Read the docs"
@@ -9,14 +9,14 @@ docs_url = "/docs/payments"
 setup_title = "Get set up"
 setup_intro = "Four steps. Connecting takes about a minute once your site is on a plan that includes Payments."
 plan_note = """
-Payments is included with Archival Pro ($15/mo) and White Glove ($150/mo). Archival takes no fee on sales. Stripe's own processing fees apply. [See pricing](/pricing).
+Payments is included with Archival Pro ($15/mo) and White Glove ($150/mo). Archival takes no fee on sales. Your provider's own processing fees apply. [See pricing](/pricing).
 """
 providers_note = """
-Prefer Square? [A site can connect a Square account instead](/docs/payments#Square).
+A site connects an account at Stripe or Square, and is built the same way on either. [What differs between them](/docs/payments#Payment%20providers).
 """
 closing_title = "Start selling from your site."
 closing_content = """
-Build a site, put it on Pro, and connect Stripe from its settings.
+Build a site, put it on Pro, and connect your payment account from its settings.
 
 Already on Archival? Open your site's Settings, then Payments. The [docs](/docs/payments) have working examples of the buy button, the cart and the order confirmation.
 """
@@ -34,40 +34,40 @@ Put the site on Pro or White Glove. Payments is included with both, at no extra 
 """
 
 [[steps]]
-title = "Connect Stripe"
+title = "Choose your provider"
 content = """
-Open the site's Settings, then Payments, and choose **Connect Stripe**.
+Open the site's Settings, then Payments, and choose the provider your account is with: Stripe or Square.
 """
 
 [[steps]]
-title = "Approve access in Stripe"
+title = "Approve access"
 content = """
-Stripe asks which account to connect. Approve access, and you are returned to your site's settings, connected.
+Your provider asks which account to connect. Approve access, and you are returned to your site's settings, connected.
 """
 
 [[sections]]
 key = "connect"
-title = "Connect your own Stripe account"
+title = "Connect your own payment account"
 content = """
-In your site's settings, open Payments, choose Connect Stripe and approve access. The connection belongs to that one site, and it is only used to read your catalog and to create and read checkouts.
+In your site's settings, open Payments, choose your provider and approve access. The connection belongs to that one site, and it is only used to read your catalog and to create and read checkouts.
 
-You are the merchant of record. Disconnect from the same panel, or from your Stripe Dashboard, at any time.
+You are the merchant of record. Disconnect from the same panel, or from your provider's dashboard, at any time.
 """
 
 [[sections]]
 key = "catalog"
-title = "Your products stay in Stripe"
+title = "Your products stay where you manage them"
 content = """
-Products and prices are made in Stripe, where you already manage them. Your site reads them to show what is for sale, so there is nothing to import or re-enter in Archival.
+Products and prices are made at your payment provider, where you already manage them. Your site reads them to show what is for sale, so there is nothing to import or re-enter in Archival.
 
-Change a price or archive a product in Stripe and your site picks it up within minutes, without a deploy.
+Change a price or take a product off sale there and your site picks it up within minutes, without a deploy.
 """
 
 [[sections]]
 key = "checkout"
-title = "Checkout on Stripe's own page"
+title = "Checkout on your provider's own page"
 content = """
-When a buyer checks out, your site starts a checkout in your Stripe account and sends them to Stripe's hosted payment page. They pay you directly, the money settles to your Stripe balance, and they come back to your site.
+When a buyer checks out, your site starts a checkout in your payment account and sends them to your provider's hosted payment page. They pay you directly, the money settles to your own account, and they come back to your site.
 
 Sell one thing with a buy button, or add the cart script and let buyers collect several first.
 """
@@ -75,23 +75,23 @@ Sell one thing with a buy button, or add the cart script and let buyers collect 
 [[benefits]]
 title = "You are the merchant"
 content = """
-Buyers pay you, not Archival. Payments settle to your own Stripe balance, and Archival never holds your money.
+Buyers pay you, not Archival. Payments settle to your own account at your provider, and Archival never holds your money.
 """
 
 [[benefits]]
 title = "No fee on sales"
 content = """
-Archival takes nothing from a sale. Payments is included with Pro and White Glove, and the only processing fees are Stripe's.
+Archival takes nothing from a sale. Payments is included with Pro and White Glove, and the only processing fees are your provider's.
 """
 
 [[benefits]]
 title = "One catalog"
 content = """
-What you sell lives in Stripe and your site reads it. A price is never typed twice, and there is no second inventory to keep in step.
+What you sell lives in your payment account and your site reads it. A price is never typed twice, and there is no second inventory to keep in step.
 """
 
 [[benefits]]
 title = "Still just a website"
 content = """
-Your pages build to static HTML. A small [carrier](/docs/carriers) starts the checkout and Stripe takes the card. There is no shop platform to run.
+Your pages build to static HTML. A small [carrier](/docs/carriers) starts the checkout and your provider takes the card. There is no shop platform to run.
 """

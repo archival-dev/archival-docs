@@ -77,7 +77,7 @@ The package exports the whole contract, so you can name any part of it explicitl
 | `CarrierWebmentions` | `site.webmentions`: `counts()` and `list()`. |
 | `CarrierATProto` | `site.atproto`: `account()`, `followers()`, `counts()`, `likes()`, `reposts()` and `replies()`. |
 | `CarrierPayments` | `site.payments`: `account()`, `catalog()`, `products()`, `variants()`, `checkout.create()` and `checkout.get()`. |
-| `CarrierPaymentProduct` / `CarrierPaymentVariant` | A product for sale and one price of it, as `catalog()` lists them. |
+| `CarrierPaymentProduct` / `CarrierPaymentVariant` | A product for sale and one way it is sold, as `catalog()` lists them. |
 | `CarrierCheckoutRequest` | What `checkout.create()` takes: `items`, `successUrl`, `cancelUrl` and the rest. |
 | `CarrierCheckout` | What `checkout.get()` resolves to: a checkout's `status`, total and buyer email. |
 | `CarrierOutOfStockError` | What `checkout.create()` throws when a variant is sold out, with the ids in `outOfStock`. |
@@ -679,16 +679,16 @@ title = "Taking payments"
 content = """
 A site whose owner has connected a payment account in its settings sells from that account through `site.payments`. The owner is the merchant: buyers pay them directly, on a checkout page their provider hosts, and Archival takes no fee. It is part of the Pro and White Glove plans.
 
-A carrier starts a checkout for a variant, which is one price of a product at the provider, and redirects the buyer to it:
+A carrier starts a checkout for a variant, which is one way a product is sold at the provider, with its own price, and redirects the buyer to it:
 
 ```ts
 const carrier: Carrier = async (params, body, objects, site) => {
   const print = objects.print.find((p) => p.path === params.get("print"));
-  if (!print || !print.price_id) {
+  if (!print || !print.variant_id) {
     return "redirect:/404";
   }
   const { url } = await site.payments.checkout.create({
-    items: [{ variant: print.price_id, quantity: 1 }],
+    items: [{ variant: print.variant_id, quantity: 1 }],
     successUrl: `${site.url}/thanks`,
     cancelUrl: `${site.url}/${print.path}`,
   });
@@ -707,7 +707,7 @@ const carrier: Carrier = async (params, body, objects, site) => {
 
 Your site only learns that a checkout was paid when the buyer comes back to `successUrl`, which is given a `checkout` query parameter to pass to `checkout.get`. A buyer who pays and closes the tab is a payment you see at your provider, not on your site.
 
-[Payments](/docs/payments) covers all of it: connecting an account, listing a catalog, confirming a payment, the cart script, stock, and trying it locally.
+[Payments](/docs/payments) covers all of it: connecting an account, listing a catalog, confirming a payment, the cart script, stock, what differs between providers, and trying it locally.
 """
 
 [[sections]]
