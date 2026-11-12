@@ -5,6 +5,7 @@
   "main": "index.ts",
   "archival": {
     "carrier": 2,
+    "access": "public",
     "schedule": "*/5 * * * *"
   },
   "devDependencies": {
