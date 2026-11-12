@@ -214,7 +214,7 @@ Each variant is:
 | `amount` | Its price in the currency's smallest unit. `null` for a variant with no fixed price, which cannot be put in a checkout. |
 | `currency` | Lowercase ISO 4217, such as `usd`. |
 | `recurring` | `{ interval }` for a variant sold as a subscription, otherwise `null`. |
-| `stock` | How many are left, or `null` when the provider does not track it. |
+| `stock` | How many are left, or `null` when the provider doesn't support inventory. |
 | `available` | Whether it can be bought: priced, and in stock or untracked. |
 
 To look up things you already know the ids of, `products(ids)` and `variants(ids)` take up to 100 ids and answer one entry per id, in the order given. An id that is not for sale answers `null`. This is how a page whose objects hold variant ids shows the current price beside each one:
@@ -228,7 +228,7 @@ const variants = await site.payments.variants(ids);
 
 `account()` answers the connected account, or `null` when there is none: its `provider`, its `name`, its `currency`, and `livemode`, which is false for a provider's test or sandbox account.
 
-Names and descriptions are text someone typed in at the provider. Put them in the page as text, as the example does, not as HTML.
+Names and descriptions are text someone typed in at the provider.
 """
 
 [[sections]]
@@ -408,7 +408,7 @@ title = "Stripe"
 content = """
 **Connecting** installs the Archival Payments app in your Stripe account. It can read products, read prices, create Checkout Sessions and read Checkout Sessions. To remove it from Stripe's side, uninstall the app in your Stripe Dashboard.
 
-**The test account** is a Stripe sandbox, not your account's test mode. Connecting it installs the app in the sandbox you choose.
+**The test account** is a Stripe sandbox, which will be used in site previews.
 
 **A variant is a price.** A product is a Stripe product and each of its active prices is a variant, so a variant's `id` is a price id, which starts `price_`. The Dashboard shows it on the product's page, beside each price. A price with no fixed amount, such as a tiered price or one the buyer chooses, has `amount` `null` and cannot be put in a checkout.
 
