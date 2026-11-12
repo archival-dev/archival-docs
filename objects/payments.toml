@@ -7,7 +7,7 @@ cta_url = "https://editor.archival.dev/new"
 docs_label = "Read the docs"
 docs_url = "/docs/payments"
 setup_title = "Get set up"
-setup_intro = "Four steps. Connecting takes about a minute once your site is on a plan that includes Payments."
+setup_intro = "Four steps. Connecting takes a few minutes once your site is on a plan that includes Payments."
 plan_note = """
 Payments is included with Archival Pro ($15/mo) and White Glove ($150/mo). Archival takes no fee on sales. Your provider's own processing fees apply. [See pricing](/pricing).
 """
@@ -42,16 +42,16 @@ Open the site's Settings, then Payments, and choose the provider your account is
 """
 
 [[steps]]
-title = "Approve access"
+title = "Connect your accounts"
 content = """
-Your provider asks which account to connect. Approve access, and you are returned to your site's settings, connected.
+Your provider asks which account to connect. Approve access for the live account your site sells from, then connect a test account the same way. Payments is on once both are connected, and the editor's preview checks out in the test one.
 """
 
 [[sections]]
 key = "connect"
 title = "Connect your own payment account"
 content = """
-In your site's settings, open Payments, choose your provider and approve access. The connection belongs to that one site, and it is only used to read your catalog and to create and read checkouts.
+In your site's settings, open Payments, choose your provider and connect two accounts: the live one your site sells from, and a test one the editor's preview checks out in. A connection is only used to read your catalog and to create and read checkouts.
 
 You are the merchant of record. Disconnect from the same panel, or from your provider's dashboard, at any time.
 """
