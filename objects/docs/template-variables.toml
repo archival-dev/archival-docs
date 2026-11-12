@@ -57,7 +57,7 @@ When an object type defines a `template`, that template is rendered once for eac
 title = "path is available on every object"
 content = """
 {% raw %}
-`path` isn’t limited to template pages — every object carries it, including objects you reach through `objects` or a pluralized accessor. This makes it easy to build links to objects that render their own pages:
+Every object carries `path`, including objects you reach through `objects` or a pluralized accessor. This makes it easy to build links to objects that render their own pages:
 
 ```html
 <ul>

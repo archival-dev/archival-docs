@@ -4,7 +4,7 @@ include_in_llm_docs = true
 description = """
 An Archival site hosted by archival.dev can be an account on the [AT Protocol](https://atproto.com), the network Bluesky runs on. The site is the account: its handle is its domain, and people follow `@example.com` from Bluesky or any other ATProto app.
 
-Nothing is posted to someone else's server on the site's behalf. The site hosts its own account, and every deploy publishes what the site's content says. This page covers turning it on, what is published, and the one line your templates need for long-form writing to be verified.
+The site hosts its own account, and every deploy publishes what the site's content says. This page covers turning it on, what is published, and the one line your templates need for long-form writing to be verified.
 
 This is separate from [ActivityPub](/docs/editor-config#ActivityPub), which reaches Mastodon and the rest of the fediverse. A site can do both.
 """
@@ -28,7 +28,7 @@ content = "text"
 published = "date"
 ```
 
-Past `domain`, `follow`, the `object` of `actor` and `publication`, and each object's `type`, every value names a field of the object it reads from. Nothing in the section is content.
+Past `domain`, `follow`, the `object` of `actor` and `publication`, and each object's `type`, every value names a field of the object it reads from.
 
 The account appears on the network after the next deploy. It can take a few minutes for Bluesky to show a new account.
 
@@ -202,9 +202,9 @@ See [Reading Bluesky and the AT Protocol](/docs/carriers#Reading%20Bluesky%20and
 [[sections]]
 title = "Taking your account to another host"
 content = """
-Your account belongs to your domain, not to Archival. You can move it to any host that serves ATProto accounts for a `did:web` and keep its followers, likes and replies, as long as the domain comes with you.
+Your account belongs to your domain. You can move it to any host that serves ATProto accounts for a `did:web` and keep its followers, likes and replies, as long as the domain comes with you.
 
-This works because of where things are stored. A follow, like or reply is a record in the repository of whoever made it, pointing at `did:web:<your domain>`. None of it lives on your host, so none of it has to be moved.
+This works because of where things are stored. A follow, like or reply is a record in the repository of whoever made it, pointing at `did:web:<your domain>`, so none of it has to be moved.
 
 **1. Download your repository.** It is one file in the standard CAR format, holding every record the account has published, under the same record keys:
 

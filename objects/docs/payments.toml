@@ -8,13 +8,13 @@ The owner is the merchant of record. Buyers pay them directly, on a checkout pag
 
 `site.payments` is the same whichever provider is connected. A site connects to one provider, [Stripe](#Stripe) or [Square](#Square): the live account it sells from, and a test account the editor's preview checks out in.
 
-Payments is included with the Pro plan, including Pro on an Archival subdomain, and with White Glove. It is not part of the Developer plan. See [pricing](/pricing).
+Payments is included with the Pro plan, including Pro on an Archival subdomain, and with White Glove. See [pricing](/pricing).
 """
 
 [[sections]]
 title = "How it fits together"
 content = """
-What you sell is made at your payment provider, not in Archival. There is nothing to import, and nothing about what you sell is stored in your site's repository unless you put it there.
+What you sell is made at your payment provider. Your site's repository holds only what you choose to put there.
 
 - A **product** is something you sell, as your provider lists it.
 - A **variant** is one way a product is sold, with its own price: a size, an edition, a billing interval. A variant is what a checkout takes.
@@ -119,7 +119,7 @@ export default carrier;
 | `shipping` | Optional. Asks for a shipping address. `{ countries }` names the places you ship to by their two-letter codes; with none named, or on a checkout page that cannot limit the country, an address may be anywhere. |
 | `idempotencyKey` | Optional. A second call with the same key answers the first call's checkout instead of starting another. |
 
-The price is always the provider's. The carrier names a variant, never an amount, so a request cannot change what something costs.
+A variant's price is always the provider's. The carrier names the variant, so a request cannot change what it costs.
 
 An option a provider's checkout page has no way to honor is left out, and the checkout still starts. A carrier never has to ask which provider it is talking to.
 
@@ -129,7 +129,7 @@ The same carrier can sell a subscription, on a [provider that sells them](#Payme
 [[sections]]
 title = "Listing products from the catalog"
 content = """
-When the catalog at your provider is the list of what you sell, a carrier can hand it to the page instead of each product being an object:
+When the catalog at your provider is the list of what you sell, a carrier can hand it to the page:
 
 ```ts
 import type { Carrier } from "@archival/carrier";
@@ -282,7 +282,7 @@ The thanks page reads its own query string, asks the carrier, and shows the resu
 | `currency` | The currency paid in, or `null`. |
 | `customerEmail` | The buyer's email, or `null`. [Not every provider](#Payment%20providers) answers it. |
 
-**That return is the only way your site learns of a payment.** Archival does not notify your site when a payment is made. A buyer who pays and then closes the tab before landing on `successUrl` has still paid: the payment is in your provider's dashboard, and your site never hears about it. Treat your provider as the record of your orders, and the thanks page as a courtesy to the buyer.
+**That return is the only way your site learns of a payment.** A buyer who pays and then closes the tab before landing on `successUrl` has still paid: the payment is in your provider's dashboard, and your site never hears about it. Treat your provider as the record of your orders, and the thanks page as a courtesy to the buyer.
 
 Two things follow from that:
 
@@ -293,7 +293,7 @@ Two things follow from that:
 [[sections]]
 title = "Donations and deposits"
 content = """
-An item does not have to be a variant. It can be named and priced where it is sold, for a donation, a deposit or anything else with no product behind it:
+An item can also be named and priced where it is sold, for a donation, a deposit or anything else with no product behind it:
 
 ```ts
 const { url } = await site.payments.checkout.create({
@@ -398,7 +398,7 @@ A carrier that keeps a few habits never has to ask which provider it is talking 
 - Handle `outOfStock` from `checkout.create`.
 - Treat `cancelUrl` and `shipping.countries` as requests. A buyer may come back another way, and an address may be anywhere. Always name the countries you ship to.
 - Expect `customerEmail` from `checkout.get` to be `null`.
-- Keep ids as the strings they are. Do not parse them.
+- Keep ids as the strings they are.
 
 `account()` answers which provider is connected as `provider`, for a page that wants to say so.
 """
@@ -481,7 +481,7 @@ A product needs an `id`, a `name` and its `variants`, and a variant needs an `id
 
 Without `ARCHIVAL_PAYMENTS`, a local run reads as a site with nothing connected.
 
-A local checkout does not go to a provider. `checkout.create` answers a url on the local server, `/__payments/<id>`, which is a stand-in page listing what is being bought, with two buttons:
+`checkout.create` answers a url on the local server, `/__payments/<id>`, which is a stand-in page listing what is being bought, with two buttons:
 
 - **Pay** marks the checkout paid, takes what was bought off any stock the file tracks, and returns to `successUrl` with its `checkout` parameter, so your thanks page and `checkout.get` behave as they will once deployed.
 - **Cancel** returns to `cancelUrl`. It is shown when the checkout was given one.
@@ -500,7 +500,7 @@ The preview of a site you are editing takes real checkouts, in the site's test a
 
 - **The catalog is your live account's.** `catalog()`, `products()` and `variants()` read the live account, so the variant ids your objects hold are found, at their real prices.
 - **A checkout is made in the test account.** `checkout.create` starts the checkout at your provider's test account, on the same hosted checkout page a buyer sees. A test account's catalog is separate from the live one, with ids of its own, so each item is copied from the live variant: its name, its amount and its currency.
-- **Nothing is charged.** A test account takes your provider's test payment methods, not a real card.
+- **Nothing is charged.** A test account takes your provider's test payment methods.
 - **Stock is read from the live account**, and a checkout that is short is refused with `outOfStock`, as it is once deployed. A test checkout takes nothing off your live stock.
 - **The buyer returns to the preview** they started from, with the `checkout` parameter, so a thanks page and `checkout.get` behave as they will once deployed.
 

@@ -38,7 +38,7 @@
       engine errors on Unknown variable if a layout arg that was never passed
       at all (e.g. pages/cli.liquid omits description and path) is compared or
       filtered directly. A bare truthy check on an unset var is safe and falsy,
-      so it lets us fall through to the blank-safe defaults without crashing.
+      so it lets us fall through to the blank-safe defaults.
     {% endcomment %}
     {% if title %}
       {% assign title_str = title %}
@@ -54,10 +54,8 @@
     {% comment %}
       Docs descriptions wrap their bodies in liquid raw/endraw tags to stop
       archival's liquid pass from interpreting the templating examples in their code
-      blocks. Truncating for the meta tag keeps the opening tag but cuts the closing
-      one, orphaning it: the stray opener then swallows everything up to the body's
-      closing tag and leaves the literal opener visible as text on the page. So strip
-      both tokens before truncating. They are assembled from pieces below because
+      blocks. Truncating for the meta tag can cut the closing tag and leave the
+      opener unclosed, so strip both tokens before truncating. They are assembled from pieces below because
       writing them literally here would be parsed as real tags — even inside a
       comment — and panics the liquid parser.
     {% endcomment %}
@@ -244,7 +242,7 @@
       {% include "connect" %}
 
       <footer class="footer">
-        <img src="/img/archival-mark.svg" class="footer-mark" width="96" height="96" />
+        <img src="/img/archival-mark.svg" class="footer-mark" width="96" height="96" alt="" />
         <p class="copyright">
           &copy; 2026 Fuck Billionaires, LLC.<br>
           All rights reserved.

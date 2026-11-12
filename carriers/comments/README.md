@@ -15,7 +15,7 @@ One thread per update merges three sources:
 
 ## Accounts
 
-Accounts are passkeys: no password and no email. Posting while signed out
+Accounts are a name and a passkey. Posting while signed out
 first asks the browser for this site's passkey, with a note beside the Post
 button saying why (browsers show no text of the site's own in their prompt).
 If there isn't one, the reader picks a name and makes one. Synced passkeys
@@ -92,7 +92,7 @@ URL or `@handle`, or a webmention's source. A bare hostname blocks every account
 on that server. Fediverse replies and webmentions can't be removed through the
 carrier; block them here instead.
 
-The tables are created on the first request, so there is no migration step.
+The tables are created on the first request.
 
 ## Dependencies and types
 

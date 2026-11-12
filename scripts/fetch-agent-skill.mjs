@@ -6,10 +6,9 @@
 // `build:site` in `npm run build`: that is the step that copies public/ into
 // dist/.
 //
-// The canonical copy lives in archival, as a Claude Code plugin, so there is
-// exactly one to keep correct. That copy is also the one a Claude Code *cloud*
-// session can reach: raw.githubusercontent.com is on the default network
-// allowlist and archival.dev is not. This mirror exists for humans, for agents
+// The canonical copy lives in archival, as a Claude Code plugin. That copy is
+// also the one a Claude Code *cloud* session can reach: raw.githubusercontent.com
+// is on the default network allowlist and archival.dev is not. This mirror exists for humans, for agents
 // that would rather read one documented URL, and so the contract is linkable
 // from the docs.
 
@@ -31,9 +30,8 @@ const FILES = {
   "site-info.sh": "plugins/archival/bin/site-info.sh",
 };
 
-// Same reasoning as the schemas: the skill ships from main rather than a tag,
-// because it describes the current API and the currently released CLI, neither
-// of which moves with an archival version bump.
+// The skill ships from main: it describes the current API and the currently
+// released CLI, neither of which moves with an archival version bump.
 const REF = process.env.ARCHIVAL_AGENT_REF ?? "refs/heads/main";
 // ARCHIVAL_AGENT_SOURCE points the fetch elsewhere - an absolute path to a
 // local archival checkout, or another base URL - to try contract changes here

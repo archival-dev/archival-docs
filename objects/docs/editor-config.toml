@@ -39,7 +39,7 @@ Each view supports the following fields:
 - `secondary` (optional) — the field shown in the second column.
 - `tertiary` (optional) — the field shown in the third column.
 
-The values of `primary`, `secondary`, and `tertiary` are field names defined for that object type in `archival_objects.toml`. You can also use the special value `filename`, which displays the object's filename (its slug) rather than one of its fields.
+The values of `primary`, `secondary`, and `tertiary` are field names defined for that object type in `archival_objects.toml`. You can also use the special value `filename`, which displays the object's filename (its slug).
 
 ### How views are displayed
 
@@ -130,7 +130,7 @@ title = "Drafts"
 content = """
 The composer saves what you write as you write it. A draft is kept on your device until you publish or discard it, so closing the editor and coming back tomorrow reopens it exactly as you left it.
 
-Drafts are never written into your site's files. An unpublished draft is not a pending change, it does not show up in your unsynced changes, and publishing your site any other way leaves it alone.
+Publishing your site any other way leaves your drafts alone.
 
 The shortcut button carries a badge counting the drafts you have saved. Pressing it opens a menu of every shortcut you configured and every draft you have going, so you can start something new or pick up where you left off. With a single shortcut configured and nothing saved, pressing the button skips the menu and starts a draft immediately.
 
@@ -152,7 +152,7 @@ Publishing a draft publishes your site, so anything else you had left unsynced i
 
 ### Changing a schema under an open draft
 
-A draft can outlive the shape it was started in. Every time one is opened it is reconciled against the current object definition: a field the type no longer declares is dropped, a field whose type has changed to one the saved value cannot fit is dropped with it, and a child list you have added since appears empty. Everything still valid is preserved, so editing your schema never costs you a draft outright.
+A draft can outlive the shape it was started in. Every time one is opened it is reconciled against the current object definition: a field the type no longer declares is dropped, a field whose type has changed to one the saved value cannot fit is dropped with it, and a child list you have added since appears empty. Everything still valid is preserved.
 """
 
 [[sections]]
@@ -189,7 +189,7 @@ follow = ["@bsky.brid.gy@bsky.brid.gy"]
 
 With this file, a site at `example.com` is followed as `@blog@example.com`, and whoever was invited to the site as `jesse@example.com` is `@jesse@example.com`.
 
-Each `[[activitypub]]` table is one account. Every value in it other than `username`, `domain`, `email`, `follow`, `type` and the actor's `object` names a field of your object, exactly as it appears in `archival_objects.toml` — or, under `attachment`, one of its child lists and that list's fields. Nothing you write here is itself published: what goes out is whatever your content says.
+Each `[[activitypub]]` table is one account. Every value in it other than `username`, `domain`, `email`, `follow`, `type` and the actor's `object` names a field of your object, exactly as it appears in `archival_objects.toml` — or, under `attachment`, one of its child lists and that list's fields. What goes out is whatever your content says.
 
 `activitypub` is reserved at the top level of this file, so an object type named `activitypub` cannot be configured here. So is `allow_mastodon_clients`, described under [Mastodon apps](#mastodon-apps).
 
@@ -211,7 +211,7 @@ Settle on a domain before you start federating. If an account's domain changes a
 
 ### Bluesky
 
-A site reaches Bluesky on its own with an [`atproto` section](/docs/atproto), which makes the site an account there at `@example.com` with no bridge in between. That is the way to be on Bluesky.
+A site reaches Bluesky on its own with an [`atproto` section](/docs/atproto), which makes the site an account there at `@example.com`. That is the way to be on Bluesky.
 
 [Bridgy Fed](https://fed.brid.gy) is the other way: it bridges a fediverse account into Bluesky under a handle of the bridge's. Use one or the other, since each is a separate Bluesky account with its own followers. An account opts in to the bridge by following its bot:
 
@@ -254,7 +254,7 @@ When an object type has a [page template](/docs/page-templates), each post links
 
 ### When things are published
 
-Publishing happens when your site deploys, however the change reached it — from the editor, a shortcut, or a git push. Nothing is sent while you are still editing.
+Publishing happens when your site deploys, however the change reached it — from the editor, a shortcut, or a git push.
 
 - **Added objects** are posted, **changed objects** are updated, and **removed objects** are deleted from the servers that received them. An object whose `when` field turns false is deleted the same way, and so is every object of a type you take out of an account's `objects`, as long as some account still maps a type.
 - **An object only counts as changed when its post would come out different.** Editing a field you have not mapped sends nothing, and changing this section re-renders every post and updates each one that comes out different. Renaming an object's file deletes its post and publishes a new one, and so does moving a type from one account to another.
@@ -266,7 +266,7 @@ Any mistake in the section stops publishing: a setting it does not recognise, a 
 
 ### Acting from your account
 
-A person's account is used from the [Archival editor](https://editor.archival.dev), signed in as yourself. Nothing is installed anywhere else, and there is no password for the account: whoever can sign in to the editor and matches the account's `email` is the account.
+A person's account is used from the [Archival editor](https://editor.archival.dev), signed in as yourself. Whoever can sign in to the editor and matches the account's `email` is the account.
 
 The way in is the one every Mastodon-compatible server offers. Reading on any of them while logged out, press Follow on a profile, or Star, Boost or Reply on a post. The server asks which account you want to act from; give your handle, `jesse@example.com`, and it sends you to the editor, which shows the profile or post and a button for the action. Most servers remember the handle, so after the first time it is a single click. The same page in the editor takes a pasted handle or address, so you can act on anything without going through another server first.
 
@@ -286,7 +286,7 @@ email = "jesse@example.com"
 follow = ["@someone@mastodon.social"]
 ```
 
-With `allow_mastodon_clients = true` at the top of this file, any app made for Mastodon (Ivory, Tusky, Elk, Phanpy, and most others) can sign in to one of your site's accounts. In the app, add a server and give your site's domain, `example.com`. The app opens the Archival editor in a browser, where you sign in as yourself and choose which of the site's accounts the app may act as: your own, when its `email` is yours, or any account without one. Approve, and the app is signed in. Nothing else is set up, and there is no password: approving is what lets the app in, and it keeps a key of its own. Signing out in the app gives the key back, and so does the editor: the page you act from your account on, described above, lists the apps signed in to the site's accounts with a Sign out button for each.
+With `allow_mastodon_clients = true` at the top of this file, any app made for Mastodon (Ivory, Tusky, Elk, Phanpy, and most others) can sign in to one of your site's accounts. In the app, add a server and give your site's domain, `example.com`. The app opens the Archival editor in a browser, where you sign in as yourself and choose which of the site's accounts the app may act as: your own, when its `email` is yours, or any account without one. Approve, and the app is signed in with a key of its own. Signing out in the app gives the key back, and so does the editor: the page you act from your account on, described above, lists the apps signed in to the site's accounts with a Sign out button for each.
 
 What the app shows is the account's home timeline: every post and boost from the accounts on its `follow` list, kept by Archival as they arrive, so it starts empty and fills from the moment the follows are accepted. The last two thousand are kept. Posts addressed to followers only are shown; direct messages are not. From the app you can star, boost and reply to anything on that timeline, delete a reply you wrote, search for an account or a post by handle or address, and follow or unfollow an account — the same actions as the editor's, and they work the same way: a reply is published as a post of the account, and a follow edits this file and is sent when the site next deploys, so the app shows it as a pending request until then. The app cannot write a post of its own, because an account's posts are the site's objects: write them in the site. Notifications, lists, filters and bookmarks are empty, and the app's other screens show nothing, since the site keeps none of that.
 
@@ -294,7 +294,7 @@ Turning on apps reserves three more paths on every domain of the site, `/oauth/`
 
 ### Followers, likes, boosts and replies
 
-Archival keeps what the fediverse does with each account: who follows it, and the likes, boosts and public replies its posts get, including replies to those replies. Followers-only replies and direct messages are not kept. Edits, deletions and taken-back likes apply as they arrive, and an account that is deleted takes everything it did with it.
+Archival keeps what the fediverse does with each account: who follows it, and the likes, boosts and public replies its posts get, including replies to those replies. Edits, deletions and taken-back likes apply as they arrive, and an account that is deleted takes everything it did with it.
 
 Your pages are built before any of that happens, so they cannot show it. A [carrier](/docs/carriers) can: `site.activitypub` reads each post's likes, boosts and replies when a visitor asks, so a post's page can fetch them and show the conversation under it. See [Reading the fediverse](/docs/carriers#Reading%20the%20fediverse).
 
@@ -355,7 +355,7 @@ like_of = "liked"
 bookmark_of = "link.url"
 ```
 
-Every value other than `domain` and the author's `object` names a field of your object, exactly as it appears in `archival_objects.toml`. Nothing you write here is itself sent: what goes out is whatever your content says.
+Every value other than `domain` and the author's `object` names a field of your object, exactly as it appears in `archival_objects.toml`. What goes out is whatever your content says.
 
 `webmention` is reserved at the top level of this file, so an object type named `webmention` cannot be configured here.
 
@@ -389,7 +389,7 @@ Each type must map at least one of `content`, `in_reply_to`, `like_of` or `bookm
 
 ### When mentions are sent
 
-Sending happens when your site deploys, however the change reached it. Nothing is sent while you are still editing.
+Sending happens when your site deploys, however the change reached it.
 
 - **A new object** sends a mention to every page it links to. **A changed object** sends one to every page it linked to before and after the change, so a page it no longer links to can drop the mention. **A removed object**, or one whose `when` field turns false, sends one to every page it linked to, and the page Archival served for it answers that it is gone, which is how the other site knows to remove the mention.
 - **An object only counts as changed when what it says would come out different.** Editing a field you have not mapped sends nothing, and neither does changing the author, moving to another `domain`, or anything else that only changes how its page is written.

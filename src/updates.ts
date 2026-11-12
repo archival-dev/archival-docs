@@ -47,7 +47,7 @@ const setupCardNavigation = () => {
       card.addEventListener("click", (e) => {
         const target = e.target as HTMLElement | null;
         if (target?.closest("a, button, [data-update-media]")) return;
-        // A click that ends a text selection is someone copying, not navigating.
+        // A click that ends a text selection is someone copying.
         if (window.getSelection()?.toString()) return;
         window.location.href = href;
       });
@@ -96,7 +96,7 @@ const formatTime = (seconds: number) => {
   return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
 };
 
-/** Custom transport for update videos, in place of the browser's own controls. */
+/** Custom transport controls for update videos. */
 const setupVideoPlayers = () => {
   document
     .querySelectorAll<HTMLElement>("[data-media-player]")

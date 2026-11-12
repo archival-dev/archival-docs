@@ -80,13 +80,13 @@ Every change dispatches an `archival:cart` event on `window`, a `CustomEvent` wi
 
 A variant that is empty or not a string throws a `TypeError`. A quantity that is not a whole number throws a `RangeError`, as does one below 1 for `add`, or below 0 for `setQuantity`.
 
-The cart holds ids and quantities, and nothing else. To show names and prices beside them, ask a carrier that calls [`site.payments.variants()`](/docs/payments#Listing%20products%20from%20the%20catalog) with the ids.
+The cart holds ids and quantities. To show names and prices beside them, ask a carrier that calls [`site.payments.variants()`](/docs/payments#Listing%20products%20from%20the%20catalog) with the ids.
 """
 
 [[sections]]
 title = "Checking out"
 content = """
-`archivalCart.checkout()` posts the cart's lines to `POST /_archival/checkout`, which every site with a connected payment account answers. There is no carrier to write. The buyer is sent to a checkout page your payment provider hosts, and pays for the lines there.
+`archivalCart.checkout()` posts the cart's lines to `POST /_archival/checkout`, which every site with a connected payment account answers. The buyer is sent to a checkout page your payment provider hosts, and pays for the lines there.
 
 It sells only your payment account's own variants, at the prices the account gives them. Nothing in the request can name a price.
 
@@ -135,7 +135,7 @@ A few things to know about it:
 
 - **It takes variants and nothing else.** An item without a variant id is refused, so it cannot sell an item [priced where it is sold](/docs/payments#Donations%20and%20deposits). It does not fill in the buyer's email or keep metadata with the payment. For any of those, [write a carrier](#Writing%20your%20own%20checkout%20carrier).
 - **It has the limits of any checkout.** An empty cart is refused, as is one over the [limits](/docs/payments#Limits) on a checkout's items and quantities.
-- **On a deployed site it is rate-limited, and it asks the browser to prove itself.** The cart script does that on its own, so call the checkout through `archivalCart.checkout()` and not with a request of your own.
+- **On a deployed site it is rate-limited, and it asks the browser to prove itself.** The cart script does that on its own, so call the checkout through `archivalCart.checkout()`.
 """
 
 [[sections]]
@@ -185,7 +185,7 @@ checkoutButton.addEventListener("click", async () => {
 [[sections]]
 title = "Writing your own checkout carrier"
 content = """
-The site's own checkout sells variants at their prices and does nothing else. When a checkout has to do more, such as take a discount or a donation, record an order, or fill in the buyer's email, the cart checks out through one of your [carriers](/docs/carriers) instead:
+The site's own checkout sells variants at their prices. When a checkout has to do more, such as take a discount or a donation, record an order, or fill in the buyer's email, the cart checks out through one of your [carriers](/docs/carriers) instead:
 
 ```js
 await archivalCart.checkout("/carriers/checkout", { coupon });
@@ -296,7 +296,7 @@ A cart can be tried from end to end before the site is live, and without a real 
 
 **In the editor's preview.** The preview of a site you are editing checks out in the site's [test account](/docs/payments#Connecting%20an%20account). That is the editor's preview on the web and in the iOS and Mac apps, and the preview of a [Claude editing session](/docs/building-with-claude).
 
-- `archivalCart.checkout()` opens your provider's hosted checkout page, in the test account. Nothing is charged: a test account takes your provider's test payment methods, not a real card.
+- `archivalCart.checkout()` opens your provider's hosted checkout page, in the test account. Nothing is charged: a test account takes your provider's test payment methods.
 - The cart holds your live account's variant ids, and the checkout sells them at their live prices.
 - Paying returns the buyer to the preview page they left with its `checkout` parameter, and the cart empties itself, as it does on the deployed site.
 - A checkout through a carrier of yours is made in the test account too.

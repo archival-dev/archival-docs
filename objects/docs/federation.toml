@@ -35,7 +35,7 @@ title = "Accounts on a site"
 content = """
 An Archival site is a host with one or more accounts, each configured as an entry of the site's `activitypub` list. A site at `jesse.news` with the accounts `news` and `jesse` is reached as `@news@jesse.news` and `@jesse@jesse.news`. Each account is a separate ActivityPub actor with its own keypair, followers, following list and outbox. There is no account that stands for the site itself: a site that publishes its posts does so from whichever account maps them, which on a personal site is usually also its owner's account.
 
-Accounts are created and removed by the site's owner editing a file and deploying. There is no registration and no way to sign in to a site from another server. A person acts as an account by signing in to the Archival editor, as described under [Interacting from another server](#Interacting%20from%20another%20server), or, on a site that allows it, from a Mastodon app the editor has approved, as described under [Mastodon client API](#Mastodon%20client%20API).
+Accounts are created and removed by the site's owner editing a file and deploying. A person acts as an account by signing in to the Archival editor, as described under [Interacting from another server](#Interacting%20from%20another%20server), or, on a site that allows it, from a Mastodon app the editor has approved, as described under [Mastodon client API](#Mastodon%20client%20API).
 """
 
 [[sections]]
@@ -66,7 +66,7 @@ The `resource` may also be the actor's own url. An unknown account, a domain the
 
 **Pages.** A GET of a post's own page with `Accept: application/activity+json` or `application/ld+json; profile="https://www.w3.org/ns/activitystreams"` answers with the post's ActivityStreams document rather than the HTML, so a page's address can be pasted into a server's search. A page that is not a federated post answers as it does to a browser.
 
-Everything under `/_archival/ap/` on every Archival site is reserved for this purpose. Paths there answer with JSON-LD and never with a page of the site.
+Everything under `/_archival/ap/` on every Archival site is reserved for this purpose. Paths there answer with JSON-LD.
 """
 
 [[sections]]
@@ -103,7 +103,7 @@ An actor is served at `https://<domain>/_archival/ap/<username>` as `application
 - The type is `Person`. An account that only publishes a site's posts, with no person behind it, is still a `Person`, because that is what every server shows and lets people follow.
 - `name`, `summary`, `icon` and `image` come from the site's content when the account maps them, and otherwise from the profile of the person the account belongs to, and failing that the site's name. `summary` is HTML.
 - `url` is the site's home page, or the page the account's profile object has.
-- `followers` and `following` are collections that publish only `totalItems`. Who follows an account is not listed.
+- `followers` and `following` are collections that publish only `totalItems`.
 - `featured` is an ordered collection of up to five of the account's post ids, newest first, which servers that support pinning show pinned to the profile.
 - `endpoints.sharedInbox` is one inbox for the whole host. An activity delivered there is handled for every account it concerns.
 
@@ -113,7 +113,7 @@ Every actor, object and activity id is on the account's domain, and a GET of any
 [[sections]]
 title = "What an account publishes"
 content = """
-An account's posts are the objects of the site that its configuration maps. They are published when the site deploys, not when they are written, so a server following an account receives activities in batches, when the site's owner publishes.
+An account's posts are the objects of the site that its configuration maps. They are published when the site deploys, so a server following an account receives activities in batches, when the site's owner publishes.
 
 - Each post is an `Article` or a `Note`, `attributedTo` the account, addressed `to` the public collection and `cc` the account's followers, with `published` and `updated` as the content says. An article has a `name`, a `content` body in HTML and a `url` to its page. A note has `content` and no `name`. Either may carry an `image` and up to a site's own limit of `attachment` documents of type `Image`, `Video` or `Audio` with `mediaType`, `url` and `name` as alt text.
 - A new post is delivered as `Create`, a changed one as `Update`, and a removed one as `Delete` with the post's id as its object, and a `Tombstone` left at the id. A post that stops being published is deleted the same way.
@@ -168,9 +168,9 @@ content = """
 - `Follow` of an account is accepted at once with an `Accept`, and the actor added to the account's followers. `Undo` of a `Follow` removes it.
 - `Accept` and `Reject` of a `Follow` the account sent settle that follow.
 - `Like` and `Announce` of one of the account's posts, and `Undo` of either, are kept and reflected in the post's `likes` and `shares` counts.
-- `Create` of a public `Note` whose `inReplyTo` is one of the account's posts, or a reply already kept, is kept as a reply, as is an `Update` or `Delete` of it from its own author. A reply addressed to followers only, or sent as a direct message, is not kept.
+- `Create` of a public `Note` whose `inReplyTo` is one of the account's posts, or a reply already kept, is kept as a reply, as is an `Update` or `Delete` of it from its own author.
 - `Delete` of an actor forgets that actor's follow and everything it did.
-- `Move`, `Block`, `Flag`, mentions, direct messages and any other activity are accepted and ignored. An account never sends a mention or direct message either, and cannot be messaged.
+- `Move`, `Block`, `Flag`, mentions, direct messages and any other activity are accepted and ignored. An account never sends a mention or direct message either.
 
 An account's replies, likes and boosts, sent from the editor, are ordinary activities from the account's actor: a `Like` or `Announce` with the target's id as object, delivered to the target's author and, for a boost, the account's followers; a `Create` of a `Note` with `inReplyTo`, addressed to the public collection, the parent's author and the account's followers, served at an id under the account; and an `Undo` of any of them.
 """
@@ -178,7 +178,7 @@ An account's replies, likes and boosts, sent from the editor, are ordinary activ
 [[sections]]
 title = "Webmention"
 content = """
-Webmention is per site, not per account. A site that takes mentions advertises its endpoint on every page it serves with a `Link: <https://<domain>/_archival/webmention>; rel="webmention"` header, and the endpoint takes a form-encoded `POST` of `source` and `target`. It answers 202 at once, 400 for a `source` that is not https or a `target` that is not a page of the site, and 429 past thirty requests a minute from one source host. Verification happens later: the source is fetched, checked for a link to the target, and read for microformats to learn whether the mention is a reply, like, repost, bookmark or plain mention, and from which h-card. A source that no longer links to the target removes the mention.
+Webmention is per site. A site that takes mentions advertises its endpoint on every page it serves with a `Link: <https://<domain>/_archival/webmention>; rel="webmention"` header, and the endpoint takes a form-encoded `POST` of `source` and `target`. It answers 202 at once, 400 for a `source` that is not https or a `target` that is not a page of the site, and 429 past thirty requests a minute from one source host. Verification happens later: the source is fetched, checked for a link to the target, and read for microformats to learn whether the mention is a reply, like, repost, bookmark or plain mention, and from which h-card. A source that no longer links to the target removes the mention.
 
 A site that sends mentions does so from source documents it serves at `/_archival/webmention/<type>/<file>`, one per published object: an `h-entry` with `u-url` the object's page, its `p-author h-card`, `dt-published`, `e-content`, and `u-in-reply-to` or `u-like-of` when the object has them. A site's configuration may name an account as the author, in which case the h-card is that person, with `u-url` the account's profile page. A mention is sent for every link in the content, found by [endpoint discovery](https://www.w3.org/TR/webmention/#sender-discovers-receiver-webmention-endpoint) on the target. An object that stops being published keeps its source document as a 410, so the receiver can take the mention back.
 

@@ -32,7 +32,7 @@ Installing it also connects our MCP server, which is what the skill actually dri
 [[sections]]
 title = "Connecting the MCP server on its own"
 content = """
-The plugin is Claude Code specific; the MCP server isn't. Any MCP client can connect to it directly:
+The plugin is Claude Code specific. Any MCP client can connect to the MCP server directly:
 
 ```
 https://api.archival.dev/mcp
@@ -72,7 +72,7 @@ In a chat, or anywhere Claude has no shell, the MCP connector builds straight to
 [[sections]]
 title = "Editing your sites from Claude"
 content = """
-The connector can also work on the sites you already have, in any Claude chat or in Claude Duet, with no folder or shell needed. Ask for something like:
+The connector can also work on the sites you already have, in any Claude chat or in Claude Duet. Ask for something like:
 
 > Add a post to example.com about this weekend's show.
 

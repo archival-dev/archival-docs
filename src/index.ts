@@ -33,28 +33,18 @@ window.addEventListener("load", () => {
  * access-control-allow-origin: *, and carries the five repo fields that make up
  * a template's identifier. That is all this needs: the identifier addresses the
  * template in the gallery, and the same parts spell the thumbnail path.
- *
- * Progressive enhancement on purpose. The heading, the line under it and the
- * browse link are in the markup already, so a failed fetch, an empty catalog or
- * no JS at all leaves a section that still reads and still leads somewhere.
  */
 
 /**
- * Seconds a tile takes to travel its own width.
- *
- * The drift is stated as a speed rather than a duration so it does not depend
- * on how many templates the catalog holds: the row is a wall of sites going
- * past at a readable pace, and that pace is a property of the band, not of the
- * number of tiles filling it. Expressed per tile rather than in pixels so the
- * band still drifts faster on a large display, where the tiles are bigger.
+ * Seconds a tile takes to travel its own width. Stated per tile so the pace
+ * holds for any catalog size and scales up with the tiles on a large display.
  */
 const SECONDS_PER_TILE = 15;
 
 /**
  * `TemplateObject::identifier()` in the editor: the five parts url-encoded and
- * joined by "/". It has to be encodeURIComponent'd again into the query string,
- * because the parts carry percent-escapes of their own - dropped in raw,
- * URLSearchParams would decode them and the id would no longer match.
+ * joined by "/". It is encodeURIComponent'd again into the query string so the
+ * parts' own percent-escapes survive URLSearchParams decoding it.
  */
 const templateId = (t: Template) =>
   [t.repo_provider, t.repo_owner, t.repo_name, t.repo_ref, t.name]
@@ -101,13 +91,7 @@ const pointBrowseLinkAtEditor = () => {
   }
 };
 
-/**
- * The templates a visitor can pick, or null if the catalog cannot be had.
- *
- * Separate from the mosaic itself because the mosaic has to hand its space
- * back on every way this can fail, and one caller checking one value is
- * harder to leave a hole in than four early returns.
- */
+/** The templates a visitor can pick, or null if the catalog cannot be had. */
 const loadTemplates = async (): Promise<Template[] | null> => {
   try {
     const response = await fetch(`${EDITOR_URL}/templates.json`);
@@ -121,20 +105,14 @@ const loadTemplates = async (): Promise<Template[] | null> => {
     const pickable = templates.filter((t) => !t.omit_from_gallery);
     return pickable.length > 0 ? pickable : null;
   } catch (error) {
-    // Degrading quietly is right for an unreachable editor: the section still
-    // reads and the browse link still works. Saying so is right for everything
-    // else - this swallowed a ReferenceError once (a dev server holding an
-    // esbuild context from before EDITOR_URL existed, since esbuild's watch
-    // captures its defines at startup and never re-reads build.mjs) and the
-    // silence was the expensive part, not the failure.
+    // The section still reads without the catalog, so warn and carry on.
     console.warn("Could not load the template catalog:", error);
     return null;
   }
 };
 
 const setupTemplateMosaic = async () => {
-  // Only the home page carries the mosaic. Bail before fetching anything so
-  // every other page does not pay for a request it will not use.
+  // Only the home page carries the mosaic.
   const mosaic = document.getElementById("template-mosaic");
   if (!mosaic) {
     return;
@@ -142,9 +120,7 @@ const setupTemplateMosaic = async () => {
 
   const templates = await loadTemplates();
   if (!templates) {
-    // The band is in the markup and holding its height (so nothing below it
-    // moves when the tiles land), so an editor that cannot be reached has to
-    // give that space back rather than leave a band of nothing above the link.
+    // The band holds its height in the markup, so give that space back.
     mosaic.hidden = true;
     return;
   }
@@ -160,12 +136,11 @@ const setupTemplateMosaic = async () => {
     const img = document.createElement("img");
     img.src = thumbnailUrl(template);
     img.loading = "lazy";
-    // Decorative: the name below already says which template this is, and a
-    // screen reader does not need to hear it twice.
+    // Decorative: the name below already says which template this is.
     img.alt = "";
-    // Thumbnails only exist once the gallery ships. Until then - and for any
-    // template whose shot has not been captured - the tile falls back to its
-    // name on an empty frame rather than a broken image.
+    // Thumbnails only exist once the gallery ships. Until then, and for any
+    // template whose shot has not been captured, the tile shows its name on an
+    // empty frame.
     img.addEventListener("error", () => el.classList.add("no-shot"));
     shot.appendChild(img);
 
@@ -181,13 +156,10 @@ const setupTemplateMosaic = async () => {
    * Fill a track so it can loop seamlessly at this width.
    *
    * The animation runs to -50%, so the first half of the track has to be at
-   * least as wide as the row, or the loop drags empty space through the far
-   * end. A small catalog on a wide display does not manage that in one pass,
-   * so the templates repeat until a half covers the row.
+   * least as wide as the row; the templates repeat until it is.
    *
-   * Only the first pass is exposed. Everything after it is the same templates
-   * again, so it is hidden from assistive tech and taken out of the tab order
-   * rather than announcing and focusing each template several times.
+   * Only the first pass is exposed. The repeats are hidden from assistive tech
+   * and taken out of the tab order.
    */
   const fillTrack = (
     rowEl: HTMLElement,
@@ -225,8 +197,7 @@ const setupTemplateMosaic = async () => {
     return { rowEl, refill: () => fillTrack(rowEl, track, items) };
   };
 
-  // Shuffled, so a reload is a different wall rather than the same one again -
-  // and so no template is permanently the one at the front of the catalog.
+  // Shuffled, so no template is always the one at the front of the catalog.
   const featured = shuffled(templates);
   // Split across two rows that drift against each other. An odd count puts the
   // extra one on top, where the row is read first.
@@ -236,8 +207,7 @@ const setupTemplateMosaic = async () => {
     row(featured.slice(split), true),
   ];
   mosaic.append(...rows.map((r) => r.rowEl));
-  // Measured, so it has to happen after the rows are laid out - and again when
-  // the window grows, or a track that covered the row stops covering it.
+  // Measured, so it runs after the rows are laid out and again on resize.
   const refillAll = () => rows.forEach((r) => r.refill());
   refillAll();
   let resizeFrame: number | undefined;
@@ -250,20 +220,14 @@ const setupTemplateMosaic = async () => {
   });
 
   /**
-   * The curve.
+   * The band is a screen wrapping around the viewer: flat straight ahead and
+   * curling toward you at both ends, so a tile at the side is nearer the camera
+   * and draws larger. That depends on where each tile is right now, so it runs
+   * per frame.
    *
-   * The band is a screen wrapping around the viewer: flat straight ahead, and
-   * curling toward you at both ends, so a tile out at the side is nearer the
-   * camera and draws larger. A tile's transform therefore depends on where it
-   * is right now, which is why this runs per frame instead of being declared
-   * in CSS - the tiles never stop moving.
-   *
-   * Cheap on purpose, and independent of how long the catalog is. Each tile's
-   * offset within its track is measured once and cached; per frame this reads
-   * one box (the track's) and writes transforms only for the tiles actually
-   * over the row, rather than asking the browser where every tile is. The rest
-   * of the track is clipped, so the work that matters is set by the width of
-   * the display and not by the number of templates strung across it.
+   * Each tile's offset within its track is measured once and cached; per frame
+   * this reads the track's box and writes transforms only for tiles over the
+   * row.
    */
   type Curved = { el: HTMLElement; centre: number; radius: number };
   let curved: { track: HTMLElement; row: HTMLElement; tiles: Curved[] }[] = [];
@@ -277,8 +241,7 @@ const setupTemplateMosaic = async () => {
     const tracks = rows.map(
       ({ rowEl }) => rowEl.querySelector(".marquee-track") as HTMLElement,
     );
-    // A tile's offset is taken from its rendered box, so any curve still on it
-    // from an earlier run would be measured in as part of where it sits.
+    // Clear any earlier curve so each tile is measured flat.
     for (const track of tracks) {
       for (const child of track.children) {
         (child as HTMLElement).style.transform = "";
@@ -308,17 +271,12 @@ const setupTemplateMosaic = async () => {
       const middle = rowBox.left + half;
       for (const { el, centre, radius } of tiles) {
         const offset = trackLeft + centre - middle;
-        // Clipped by the row, so nothing it is given would be seen. The track
-        // runs the whole catalog past a fixed window; this is what keeps the
-        // per-frame cost the size of the window rather than the catalog.
+        // Outside the row, where it is clipped.
         if (Math.abs(offset) > half + radius) continue;
         // -1 at the left edge of the row, 0 dead ahead, 1 at the right edge.
-        // Clamped there: past the edge a tile is inside the fade anyway, and
-        // letting p run on squared into a translateZ that pushed tiles most of
-        // the way to the camera and blew them up to twice their size.
+        // Clamped there: past the edge a tile is inside the fade anyway.
         const p = Math.max(-1, Math.min(1, offset / half));
-        // Squared, so the middle stays flat and the curve gathers at the ends
-        // rather than tilting everything a little.
+        // Squared, so the middle stays flat and the curve gathers at the ends.
         // depth is a fraction of the row, so the curve scales with the display
         // the same way the tiles and the perspective do.
         const push = p * p * depth * rowBox.width;
@@ -347,8 +305,7 @@ const setupTemplateMosaic = async () => {
   start();
   flat.addEventListener("change", start);
 
-  // Nothing to compute while the rows are off screen, and a page that keeps a
-  // rAF loop running out of view is just spending someone's battery.
+  // Nothing to compute while the rows are off screen.
   if ("IntersectionObserver" in window) {
     new IntersectionObserver(
       ([entry]) => {
