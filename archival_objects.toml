@@ -29,6 +29,8 @@ title_line_1 = "string"
 title_line_2 = "string"
 tagline = "string"
 usage_summary = "string"
+# What a sale made through Payments costs, shown under the tiers.
+payments_note = "markdown"
 usage_limits = "markdown"
 
 [pricing.tiers]
@@ -114,6 +116,38 @@ title = "string"
 content = "markdown"
 
 [social_web.benefits]
+title = "string"
+content = "markdown"
+
+[payments]
+title = "string"
+description = "string"
+tagline = "string"
+cta_label = "string"
+cta_url = "string"
+docs_label = "string"
+docs_url = "string"
+setup_title = "string"
+setup_intro = "string"
+# Under the setup steps: which plans include Payments, and what a sale costs.
+plan_note = "markdown"
+# One line about providers other than Stripe. Empty leaves it out.
+providers_note = "markdown"
+closing_title = "string"
+closing_content = "markdown"
+
+# The numbered "get set up" steps, in order.
+[payments.steps]
+title = "string"
+content = "markdown"
+
+# Must be a diagram pages/payments.liquid draws: connect, catalog or checkout.
+[payments.sections]
+key = "string"
+title = "string"
+content = "markdown"
+
+[payments.benefits]
 title = "string"
 content = "markdown"
 

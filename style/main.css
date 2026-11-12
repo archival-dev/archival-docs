@@ -6,6 +6,7 @@
 @import "./updates.css";
 @import "./showcase.css";
 @import "./social-web.css";
+@import "./payments.css";
 @import "./landing.css";
 @import "./office-hours.css";
 
@@ -893,6 +894,14 @@ h1.pricing-title {
 .pricing-usage-summary {
   color: var(--color-typography-secondary);
   margin: 0;
+}
+
+.pricing-payments-note p {
+  margin: 0;
+}
+
+.pricing-payments-note a {
+  color: var(--color-secondary-interactive);
 }
 
 .pricing-limits-trigger {
@@ -2277,6 +2286,14 @@ h1.pricing-title {
 
   .footer-links {
     gap: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Four columns side by side on a phone: 3rem between them is wider than
+     the screen. */
+  .footer-links {
+    gap: 1rem;
   }
 }
 

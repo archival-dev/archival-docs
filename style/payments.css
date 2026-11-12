@@ -1,0 +1,470 @@
+/* Payments landing page. Reuses the homepage hero, the social web page's
+   tagline, call-to-action row and closing, the tour's section grid, frame and
+   callout legend, and the compact benefit cards; what is new here is the
+   numbered setup block and the three frames that stand in the tour's place. */
+
+/* Longer second line than the homepage's "everyone", so it is sized to fit the
+   1200px column rather than inheriting the 11rem cap. */
+.payments-hero .hero-line-2 {
+  font-size: clamp(2.4rem, 12vw, 7.5rem);
+}
+
+/* ============ Setup steps ============ */
+
+.pay-setup {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 7rem auto 0;
+  padding: 0 2rem;
+  text-align: center;
+  /* Clears the fixed nav when the page is opened at #get-set-up. */
+  scroll-margin-top: 100px;
+}
+
+.pay-setup-heading {
+  font-family: "Build", system-ui, sans-serif;
+  font-size: var(--typo-subheader-size);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  font-feature-settings: "ss01" on;
+}
+
+.pay-setup-intro {
+  max-width: 42rem;
+  margin: 1.25rem auto 0;
+  font-size: var(--typo-body-size-large);
+  line-height: 1.5;
+  color: var(--color-typography-secondary);
+}
+
+.pay-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 3rem 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.pay-steps .pay-step {
+  --benefit-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+}
+
+.pay-step > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* The diagonal glare reads as a smudge at this size. */
+.pay-steps .pay-step::after {
+  display: none;
+}
+
+.pay-step-num {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 0.25rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fe8300 0%, #ff3c00 100%);
+  border: 2px solid rgba(0, 0, 0, 0.6);
+  box-shadow:
+    0 0 0 4px rgba(255, 131, 0, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pay-step-title {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-typography-primary);
+}
+
+.pay-step-content {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pay-step-content p {
+  margin: 0;
+}
+
+.pay-step-content strong {
+  color: var(--color-typography-primary);
+}
+
+.pay-step-content a,
+.pay-plan-note a,
+.pay-providers-note a {
+  color: var(--color-secondary-interactive);
+}
+
+.pay-plan-note {
+  max-width: 44rem;
+  margin: 2.5rem auto 0;
+  font-size: var(--typo-body-size-large);
+  line-height: 1.5;
+  color: var(--color-typography-primary);
+}
+
+.pay-providers-note {
+  margin: 0.75rem auto 0;
+  font-size: var(--typo-body-size);
+  line-height: 1.5;
+  color: var(--color-typography-secondary);
+}
+
+.pay-plan-note p,
+.pay-providers-note p {
+  margin: 0;
+}
+
+.pay-setup .sw-cta-row {
+  margin-top: 2rem;
+}
+
+/* ============ Frames ============ */
+
+.payments-page .section-content a {
+  color: var(--color-secondary-interactive);
+}
+
+.product-frame--pay {
+  --pay-dim: #c4c4c4;
+
+  display: grid;
+  gap: 1rem;
+  align-items: stretch;
+  padding: 1.35rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.product-frame--pay-connect {
+  grid-template-columns: 1.2fr 0.8fr;
+}
+
+.product-frame--pay-catalog {
+  grid-template-columns: 0.88fr 1.12fr;
+  gap: 2.1rem;
+}
+
+.product-frame--pay-checkout {
+  grid-template-columns: 1fr 1fr;
+  gap: 2.1rem;
+}
+
+.pay-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+  padding: 0.95rem;
+}
+
+.pay-panel,
+.pay-checkout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.pay-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.pay-title {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  color: var(--pay-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pay-small {
+  margin: 0;
+  font-size: 0.65rem;
+  line-height: 1.45;
+  color: var(--pay-dim);
+}
+
+.pay-strong {
+  font-weight: 650;
+}
+
+.pay-h {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.pay-rule {
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: var(--pf-hairline);
+}
+
+.pay-well {
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.35rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--pf-hairline);
+}
+
+.pay-permissions {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.65rem;
+}
+
+.pay-connected,
+.pay-returned {
+  font-size: 0.65rem;
+  white-space: nowrap;
+}
+
+.pay-btn {
+  align-self: flex-start;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.3rem;
+  background: var(--pf-glass);
+  border: 1px solid var(--pf-hairline);
+  color: var(--pay-dim);
+  font-size: 0.625rem;
+  white-space: nowrap;
+}
+
+.pay-cta,
+.pay-violet {
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.35rem;
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.pay-cta {
+  background: var(--pf-cta);
+  box-shadow: 0 0 12px rgba(255, 60, 0, 0.2);
+}
+
+.pay-cta--small {
+  padding: 0.28rem 0;
+  font-size: 0.53rem;
+}
+
+.pay-violet {
+  background: var(--pf-violet);
+}
+
+/* Pins a card's last element to its bottom edge. */
+.pay-push {
+  margin-top: auto;
+}
+
+.pay-total {
+  margin-top: 0.15rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.pay-price {
+  font-variant-numeric: tabular-nums;
+}
+
+.pay-browser {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: 0.5rem;
+  background: var(--pf-panel);
+  border: 1px solid var(--pf-hairline);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.pay-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.45rem 0.5rem;
+  background: var(--pf-panel-2);
+  border-bottom: 1px solid var(--pf-hairline);
+}
+
+.pay-bar i {
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.pay-url {
+  flex: 1;
+  margin-left: 0.35rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--pf-glass);
+  border: 1px solid var(--pf-hairline);
+  color: var(--pay-dim);
+  font-size: 0.53rem;
+}
+
+.pay-page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.8rem;
+}
+
+.pay-wnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pay-wlogo {
+  width: 2.4rem;
+  height: 0.5rem;
+  border-radius: 0.15rem;
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.9), #7ec8b8);
+}
+
+.pay-wlinks {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.pay-wlinks span {
+  width: 1.3rem;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.pay-shop {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.pay-product {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.pay-product-name {
+  font-size: 0.6rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.pay-product .pay-cta {
+  margin-top: 0.15rem;
+}
+
+.pay-art {
+  height: 3.6rem;
+  border-radius: 0.35rem;
+  border: 1px solid var(--pf-hairline);
+}
+
+.pay-art--a {
+  background: linear-gradient(
+    150deg,
+    rgba(139, 92, 246, 0.55),
+    rgba(0, 200, 255, 0.3) 60%,
+    rgba(0, 255, 100, 0.18)
+  );
+}
+
+.pay-art--b {
+  background: linear-gradient(
+    150deg,
+    rgba(254, 131, 0, 0.55),
+    rgba(255, 0, 150, 0.3) 65%,
+    rgba(139, 92, 246, 0.25)
+  );
+}
+
+.pay-art--c {
+  background: linear-gradient(
+    150deg,
+    rgba(126, 200, 184, 0.6),
+    rgba(0, 200, 255, 0.28) 60%,
+    rgba(184, 127, 212, 0.3)
+  );
+}
+
+/* Sits in the gap between a frame's two panels, placed like a marker. */
+.pay-arrow {
+  position: absolute;
+  left: var(--cx);
+  top: var(--cy);
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  background: #1f1c2b;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--pf-text);
+  font-size: 0.8rem;
+}
+
+/* ============ Responsive ============ */
+
+@media (max-width: 1100px) {
+  .pay-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .pay-setup {
+    margin-top: 5rem;
+  }
+
+  /* The tour shrinks its frames' type on phones, where zoom already scales
+     them. These frames are drawn at one size, so the type holds. */
+  .product-frame--pay {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .pay-steps {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 32rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

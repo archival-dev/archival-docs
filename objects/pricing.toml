@@ -2,6 +2,7 @@ title_line_1 = "priced for"
 title_line_2 = "everyone"
 tagline = "No hidden charges. Just straightforward, simple pricing."
 usage_summary = "The busiest month any archival site has had so far used 15% of its free requests. A typical site uses under 2%."
+payments_note = "[Payments](/payments) is included with Pro and White Glove. Archival takes no fee on sales made through it. Your payment provider's own processing fees apply."
 
 usage_limits = """
 To make sure archival is affordable for everyone, we pass through costs beyond what most sites will ever need:
@@ -50,6 +51,7 @@ features = """
 - Per-site content editor usable from everywhere
 - Email on your domain (5 addresses included, then $0.50/mo each)
 - Cookieless site analytics
+- Payments through your own Stripe account, with no fee from us on sales
 - Custom editors and editor configuration
 - Yearly domain renewal (registered with us, limit $40/yr)
 - Granular edit history

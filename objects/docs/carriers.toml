@@ -66,7 +66,7 @@ The package exports the whole contract, so you can name any part of it explicitl
 | `CarrierParams` | The first argument: a `URLSearchParams`. |
 | `CarrierBody` | The second argument: parsed JSON, a form body, text, or `null`. |
 | `CarrierObjects` / `SiteObjects` | The third argument: your site's objects. |
-| `CarrierSite` | The fourth argument: your site's `url`, `uploads`, `email`, `sql`, `activitypub`, `webmentions` and `atproto`. |
+| `CarrierSite` | The fourth argument: your site's `url`, `uploads`, `email`, `sql`, `activitypub`, `webmentions`, `atproto` and `payments`. |
 | `CarrierUploads` | `site.uploads`: `list()` and `get()`. |
 | `CarrierUpload` | One upload's body and metadata, as `get()` resolves it. |
 | `CarrierUploadEntry` | A `{ sha, filename }` pair, as `list()` returns them. |
@@ -76,6 +76,11 @@ The package exports the whole contract, so you can name any part of it explicitl
 | `CarrierActivityPub` | `site.activitypub`: `account()`, `accounts()`, `followers()`, `counts()`, `likes()`, `boosts()`, `replies()` and `setLocalLikes()`. |
 | `CarrierWebmentions` | `site.webmentions`: `counts()` and `list()`. |
 | `CarrierATProto` | `site.atproto`: `account()`, `followers()`, `counts()`, `likes()`, `reposts()` and `replies()`. |
+| `CarrierPayments` | `site.payments`: `account()`, `catalog()`, `products()`, `variants()`, `checkout.create()` and `checkout.get()`. |
+| `CarrierPaymentProduct` / `CarrierPaymentVariant` | A product for sale and one price of it, as `catalog()` lists them. |
+| `CarrierCheckoutRequest` | What `checkout.create()` takes: `items`, `successUrl`, `cancelUrl` and the rest. |
+| `CarrierCheckout` | What `checkout.get()` resolves to: a checkout's `status`, total and buyer email. |
+| `CarrierOutOfStockError` | What `checkout.create()` throws when a variant is sold out, with the ids in `outOfStock`. |
 | `CarrierReply` | One reply to a post, as `replies()` lists them. |
 | `CarrierEmailMessage` | What `send()` takes: `from`, `to`, `subject`, `text`, `html` and `replyTo`. |
 | `CarrierEmailReceipt` | What `send()` resolves to: the `id` of the send and the `from` it resolved to. |
@@ -175,7 +180,7 @@ export default async function (params, body, objects, site) {
   - `application/x-www-form-urlencoded`, `multipart/form-data`, or `application/form` → an object of the form fields (file fields arrive as a `Blob`)
   - anything else → the raw request text
 - **`objects`** — your site's objects (see below).
-- **`site`** — a simple object for interacting with data: your site's `url`, `uploads`, `email`, `sql`, `activitypub`, `webmentions` and `atproto` (the last three when enabled).
+- **`site`** — a simple object for interacting with data: your site's `url`, `uploads`, `email`, `sql`, `activitypub`, `webmentions`, `atproto` and `payments` (the last four when enabled).
 
 The function's return value determines the HTTP response:
 
@@ -230,10 +235,11 @@ The values match what a liquid template sees:
 - **`site.activitypub`** — your site's fediverse followers, and the likes, boosts and replies its posts have had. See [Reading the fediverse](#Reading%20the%20fediverse).
 - **`site.webmentions`** — pages on other sites that link to yours, with their replies and likes. See [Reading mentions from other sites](#Reading%20mentions%20from%20other%20sites).
 - **`site.atproto`** — your site's followers on Bluesky and the rest of the AT Protocol network, and the likes, reposts and replies its posts have had. See [Reading Bluesky and the AT Protocol](#Reading%20Bluesky%20and%20the%20AT%20Protocol).
+- **`site.payments`**: the products in your site's connected payment account, and checkouts that sell them. See [Taking payments](#Taking%20payments).
 
 A few things worth knowing:
 
-- Objects are **embedded at deploy time**, so a carrier sees a snapshot from the build it was deployed with, not live content. Publishing your site redeploys its carriers with fresh values. (`site.uploads`, `site.email`, `site.sql`, `site.activitypub`, `site.webmentions` and `site.atproto` act when the request runs.)
+- Objects are **embedded at deploy time**, so a carrier sees a snapshot from the build it was deployed with, not live content. Publishing your site redeploys its carriers with fresh values. (`site.uploads`, `site.email`, `site.sql`, `site.activitypub`, `site.webmentions`, `site.atproto` and `site.payments` act when the request runs.)
 - The tree is **deeply frozen**, so one request can't mutate what the next request sees.
 - Because they're embedded, there's an upper bound on how large a site's objects can be (5MB serialized). A site over that fails its carrier deploy rather than silently shipping a carrier with missing data.
 """
@@ -274,7 +280,7 @@ export const scheduled: CarrierScheduled = async (objects, site, event) => {
 `scheduled` receives three arguments, and its return value is ignored:
 
 - **`objects`** — your site's objects, exactly as a request gets them.
-- **`site`** — the same `url`, `uploads`, `email`, `sql`, `activitypub`, `webmentions` and `atproto` a request gets.
+- **`site`** — the same `url`, `uploads`, `email`, `sql`, `activitypub`, `webmentions`, `atproto` and `payments` a request gets.
 - **`event`** — the `cron` expression the run is on, and the `scheduledTime` it was due, in milliseconds since the epoch.
 
 A carrier can export both a default function and `scheduled`, so the carrier that takes a sign-up can also send the reminders. One that exports only `scheduled` answers requests with a `404`. Only archival starts a run: a request to the carrier's URL never calls `scheduled`.
@@ -669,6 +675,42 @@ Everything here is plain text written by someone else, so escape it like any oth
 """
 
 [[sections]]
+title = "Taking payments"
+content = """
+A site whose owner has connected a payment account in its settings sells from that account through `site.payments`. The owner is the merchant: buyers pay them directly, on a checkout page their provider hosts, and Archival takes no fee. It is part of the Pro and White Glove plans.
+
+A carrier starts a checkout for a variant, which is one price of a product at the provider, and redirects the buyer to it:
+
+```ts
+const carrier: Carrier = async (params, body, objects, site) => {
+  const print = objects.print.find((p) => p.path === params.get("print"));
+  if (!print || !print.price_id) {
+    return "redirect:/404";
+  }
+  const { url } = await site.payments.checkout.create({
+    items: [{ variant: print.price_id, quantity: 1 }],
+    successUrl: `${site.url}/thanks`,
+    cancelUrl: `${site.url}/${print.path}`,
+  });
+  return `redirect:${url}`;
+};
+```
+
+| Method | Resolves to |
+| --- | --- |
+| `account()` | The connected account, `{ provider, name, livemode, currency }`, or `null` when none is connected. |
+| `catalog(page?)` | A page of the products for sale, each with its variants. |
+| `products(ids)` | One product per id, for up to 100 ids, in the order given. `null` for an id that is not for sale. |
+| `variants(ids)` | One variant per id, for up to 100 ids, in the order given. `null` for an id that is not for sale. |
+| `checkout.create(checkout)` | `{ id, url }`: the checkout's id, and the url to send the buyer to. |
+| `checkout.get(id)` | A checkout this site started: its `status` (`open`, `paid`, `expired` or `canceled`), `amountTotal`, `currency` and `customerEmail`. |
+
+Your site only learns that a checkout was paid when the buyer comes back to `successUrl`, which is given a `checkout` query parameter to pass to `checkout.get`. A buyer who pays and closes the tab is a payment you see at your provider, not on your site.
+
+[Payments](/docs/payments) covers all of it: connecting an account, listing a catalog, confirming a payment, the cart script, stock, and trying it locally.
+"""
+
+[[sections]]
 title = "Typing your site's objects"
 content = """
 {% raw %}
@@ -756,6 +798,7 @@ A few things differ from a deployed carrier:
 - **`site.activitypub`** reads as a site that doesn't federate.
 - **`site.webmentions`** reads as a site no mention has reached.
 - **`site.atproto`** reads as a site with no ATProto account.
+- **`site.payments`** reads as a site with no payment account connected, unless you name a JSON file of products in `ARCHIVAL_PAYMENTS`. A checkout then opens a stand-in page on the local server, and nothing is charged. See [Running locally](/docs/payments#Running%20locally).
 - **Schedules** never run.
 - **Secrets** reach a carrier exactly as they're stored in your object files. One the editor encrypted arrives in its encrypted form, because only archival's hosting can decrypt it.
 

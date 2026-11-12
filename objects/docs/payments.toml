@@ -1,0 +1,526 @@
+order = 21
+title = "Payments"
+include_in_llm_docs = true
+description = """
+A site hosted by archival.dev can sell from its owner's own payment account. The owner connects a Stripe account to the site in the editor, and the site's [carriers](/docs/carriers) read that account's products and start checkouts through `site.payments`.
+
+The owner is the merchant of record. Buyers pay them directly, on a checkout page Stripe hosts, and the money settles to the owner's own Stripe balance. Archival takes no fee on a sale and never holds the funds. Stripe's own processing fees apply.
+
+Payments is included with the Pro plan, including Pro on an Archival subdomain, and with White Glove. It is not part of the Developer plan. See [pricing](/pricing).
+"""
+
+[[sections]]
+title = "How it fits together"
+content = """
+Products and prices are made in Stripe, not in Archival. There is nothing to import, and nothing about what you sell is stored in your site's repository unless you put it there.
+
+- A **product** is something you sell, as Stripe lists it.
+- A **variant** is one price of a product. Its `id` is the provider's own: with Stripe, a price id such as `price_1Qx…`. Because the id is Stripe's, an object on your site can hold it.
+
+A site uses this in one of two ways:
+
+- **Your objects hold the variant id.** A print, a ticket or a menu item is an object like any other, with one more field naming its price in Stripe. A carrier starts a checkout for it. See [Selling a product from an object](#Selling%20a%20product%20from%20an%20object).
+- **Your page lists the catalog.** A carrier answers what the account has for sale, and the page renders it in the browser. See [Listing products from the catalog](#Listing%20products%20from%20the%20catalog).
+
+Checkout is the same call in both: `site.payments.checkout.create` answers a url, the buyer pays on Stripe's page, and Stripe sends them back to your site.
+
+`site.payments` is part of [carrier API version 2](/docs/carriers#Carrier%20API%20versions), on the `site` argument beside `site.sql` and `site.email`. Every example on this page is a carrier.
+"""
+
+[[sections]]
+title = "Connecting an account"
+content = """
+Connecting is done once per site, by someone who can edit the site and has access to the Stripe account.
+
+**1. Sign in.** Go to [editor.archival.dev](https://editor.archival.dev), sign up or sign in, and open the site.
+
+**2. Check the plan.** The site has to be on a plan that includes Payments: Pro or White Glove.
+
+**3. Connect Stripe.** Open the site's **Settings**, then **Payments**, and choose **Connect Stripe**.
+
+**4. Approve access in Stripe.** Stripe opens and asks which account to connect. Approve access, and you are returned to your site's settings, which now read "Connected to" followed by the account's name.
+
+The connection belongs to that one site. It lets Archival do four things in the Stripe account, and nothing else: read products, read prices, create Checkout Sessions and read Checkout Sessions.
+
+To stop selling, choose **Disconnect** in the same panel. Checkout on the site stops working until an account is connected again. You can also uninstall the Archival Payments app from your Stripe Dashboard. The site finds out the next time it uses the connection, and the panel then offers to reconnect.
+"""
+
+[[sections]]
+title = "Selling a product from an object"
+content = """
+Give the object type a field for the variant id, and put the price's id from Stripe in each object:
+
+```toml
+# archival_objects.toml
+[print]
+title = "string"
+image = "image"
+price_id = "string"
+template = "print"
+```
+
+```toml
+# objects/print/harbour.toml
+title = "Harbour, 6am"
+price_id = "price_1Qx…"
+```
+
+The page links to a carrier and says which object it is selling:
+
+```html
+<a href="/carriers/buy?print={{ print.path }}">Buy this print</a>
+```
+
+The carrier looks the object up, starts a checkout for its variant and redirects the buyer to it:
+
+```ts
+import type { Carrier } from "@archival/carrier";
+
+const carrier: Carrier = async (params, body, objects, site) => {
+  const print = objects.print.find((p) => p.path === params.get("print"));
+  if (!print || !print.price_id) {
+    return "redirect:/404";
+  }
+  const { url } = await site.payments.checkout.create({
+    items: [{ variant: print.price_id, quantity: 1 }],
+    successUrl: `${site.url}/thanks`,
+    cancelUrl: `${site.url}/${print.path}`,
+  });
+  return `redirect:${url}`;
+};
+
+export default carrier;
+```
+
+`checkout.create` resolves to the checkout's `id` and the `url` to send the buyer to. It takes:
+
+| Field | |
+| --- | --- |
+| `items` | What is being bought, at most 100 lines. Each is a variant and a quantity, `{ variant, quantity }`, or an item [priced where it is sold](#Donations%20and%20deposits). |
+| `successUrl` | Where the buyer lands after paying. It must be an https url on one of your site's domains. It is given a `checkout` query parameter holding the checkout's id. |
+| `cancelUrl` | Optional. Where the buyer lands if they back out. The same rule applies: https, on one of your site's domains. |
+| `customerEmail` | Optional. Fills in the buyer's email on the checkout page. |
+| `metadata` | Optional. Up to 20 strings, kept with the payment at Stripe. |
+| `shipping` | Optional. Asks for a shipping address. `countries`, a list of two-letter codes, limits where to. |
+| `idempotencyKey` | Optional. A second call with the same key answers the first call's checkout instead of starting another. |
+
+The price is always the one in Stripe. The carrier names a variant, never an amount, so a request cannot change what something costs.
+
+The same carrier can sell a recurring price. A checkout that holds a Stripe subscription price is a subscription.
+"""
+
+[[sections]]
+title = "Listing products from the catalog"
+content = """
+When the catalog in Stripe is the list of what you sell, a carrier can hand it to the page instead of each product being an object:
+
+```ts
+import type { Carrier } from "@archival/carrier";
+
+const carrier: Carrier = async (params, body, objects, site) => {
+  const page = await site.payments.catalog({
+    limit: 100,
+    cursor: params.get("cursor") ?? undefined,
+  });
+  return { products: page.items, next: page.next };
+};
+
+export default carrier;
+```
+
+`catalog` reads every product for sale a page at a time, in a stable order. A page is `{ items, total, next }`: `total` counts every product, and `next` goes back as `cursor` for the following page, or is `null` on the last one. `limit` is up to 100, and 20 when you leave it out.
+
+The page fetches the carrier and renders what it answers:
+
+```html
+<ul id="shop"></ul>
+
+<script type="module">
+  const { products } = await (await fetch("/carriers/shop")).json();
+  const shop = document.querySelector("#shop");
+  for (const product of products) {
+    for (const variant of product.variants.filter((v) => v.available)) {
+      const price = new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency: variant.currency,
+      }).format(variant.amount / 100);
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      const id = encodeURIComponent(variant.id);
+      link.href = `/carriers/buy-variant?variant=${id}`;
+      link.textContent = `${product.name}, ${price}`;
+      item.append(link);
+      shop.append(item);
+    }
+  }
+</script>
+```
+
+`amount` is in the currency's smallest unit, so `1200` is $12.00. The example divides by 100, which is right for currencies with cents. A currency with no smaller unit, such as the yen, is already whole.
+
+Each link goes to a carrier that sells whichever variant the request names. That is safe to do, because a checkout only takes variants your account has for sale, at the price the account gives them:
+
+```ts
+const carrier: Carrier = async (params, body, objects, site) => {
+  const variant = params.get("variant");
+  if (!variant) {
+    return "redirect:/404";
+  }
+  const { url } = await site.payments.checkout.create({
+    items: [{ variant, quantity: 1 }],
+    successUrl: `${site.url}/thanks`,
+    cancelUrl: `${site.url}/shop`,
+  });
+  return `redirect:${url}`;
+};
+```
+
+Each product is:
+
+| Field | |
+| --- | --- |
+| `id` | The product's id at the provider. |
+| `name` | Its name. |
+| `description` | Its description, or `null`. |
+| `images` | The addresses of its images. |
+| `metadata` | The metadata set on it at the provider. |
+| `variants` | Its variants, as below. |
+
+Each variant is:
+
+| Field | |
+| --- | --- |
+| `id` | The variant's id at the provider: a Stripe price id. This is what a checkout takes. |
+| `product` | The `id` of the product it is a variant of. |
+| `name` | Its name, or `null`. |
+| `sku` | Its SKU, or `null`. |
+| `amount` | Its price in the currency's smallest unit. `null` for a variant with no fixed price, which cannot be put in a checkout. |
+| `currency` | Lowercase ISO 4217, such as `usd`. |
+| `recurring` | `{ interval }` for a subscription price, otherwise `null`. |
+| `stock` | How many are left, or `null` when the provider does not track it. |
+| `available` | Whether it can be bought: priced, and in stock or untracked. |
+
+To look up things you already know the ids of, `products(ids)` and `variants(ids)` take up to 100 ids and answer one entry per id, in the order given. An id that is not for sale answers `null`. This is how a page whose objects hold variant ids shows the current price beside each one:
+
+```ts
+const ids = objects.print
+  .map((print) => print.price_id)
+  .filter((id) => id !== null);
+const variants = await site.payments.variants(ids);
+```
+
+`account()` answers the connected account, or `null` when there is none: its `provider`, its `name`, its `currency`, and `livemode`, which is false for a provider's test or sandbox account.
+
+Names and descriptions are text someone typed into Stripe. Put them in the page as text, as the example does, not as HTML.
+"""
+
+[[sections]]
+title = "Confirming a payment"
+content = """
+After paying, the buyer lands on `successUrl` with a `checkout` query parameter holding the checkout's id: `https://example.com/thanks?checkout=…`. A carrier turns that id into the checkout's status:
+
+```ts
+import type { Carrier } from "@archival/carrier";
+
+const carrier: Carrier = async (params, body, objects, site) => {
+  const id = params.get("checkout");
+  if (!id) {
+    return { paid: false };
+  }
+  const checkout = await site.payments.checkout.get(id);
+  return {
+    paid: checkout.status === "paid",
+    total: checkout.amountTotal,
+    currency: checkout.currency,
+  };
+};
+
+export default carrier;
+```
+
+The thanks page reads its own query string, asks the carrier, and shows the result:
+
+```html
+<p id="order">Checking your order…</p>
+
+<script type="module">
+  const id = new URLSearchParams(location.search).get("checkout") ?? "";
+  const response = await fetch(
+    `/carriers/order?checkout=${encodeURIComponent(id)}`,
+  );
+  const order = await response.json();
+  document.querySelector("#order").textContent = order.paid
+    ? "Thank you. Your order is paid."
+    : "We could not confirm a payment for this order.";
+</script>
+```
+
+`checkout.get` reads a checkout this site started, by the id `create` answered:
+
+| Field | |
+| --- | --- |
+| `id` | The checkout's id. |
+| `status` | `open`, `paid`, `expired` or `canceled`. It is `paid` once the payment has gone through. |
+| `amountTotal` | The total in the currency's smallest unit, tax and shipping included, or `null`. |
+| `currency` | The currency paid in, or `null`. |
+| `customerEmail` | The buyer's email, or `null`. |
+
+**That return is the only way your site learns of a payment.** Archival does not notify your site when a payment is made. A buyer who pays and then closes the tab before landing on `successUrl` has still paid: the payment is in your Stripe Dashboard, and your site never hears about it. Treat Stripe as the record of your orders, and the thanks page as a courtesy to the buyer.
+
+Two things follow from that:
+
+- If something has to happen for every payment, such as posting an order or sending a file, do it from Stripe, where every payment is seen.
+- The id is in the address, so the thanks page can be opened again later, or by someone the link was sent to. `paid` means that checkout was paid, not that this visitor has just paid. A carrier that hands something over on return should record the ids it has already answered, in [`site.sql`](/docs/carriers#Storing%20data).
+"""
+
+[[sections]]
+title = "Donations and deposits"
+content = """
+An item does not have to be a variant. It can be named and priced where it is sold, for a donation, a deposit or anything else with no product behind it:
+
+```ts
+const { url } = await site.payments.checkout.create({
+  items: [{ name: "Deposit", amount: 2500, quantity: 1 }],
+  successUrl: `${site.url}/thanks`,
+});
+```
+
+`amount` is in the currency's smallest unit and in the connected account's currency, so this is $25.00 for an account in US dollars. `name` is what the buyer sees on the checkout page.
+
+When the amount comes from the request, as with a donation the visitor chooses, check it before you use it. A carrier is reachable by anyone, so set a minimum and a maximum, and never use this kind of item for something that has a price in your catalog.
+"""
+
+[[sections]]
+title = "The cart script"
+content = """
+A site with a connected account is served a small cart script at `/_archival/cart.js`. It keeps a list of variants and quantities in the visitor's browser and hands it to one of your carriers to check out. Include it on the pages that need it:
+
+```html
+<script src="/_archival/cart.js"></script>
+```
+
+The script is served from the site's next deploy after an account is connected, and stops being served from the next deploy after it is disconnected.
+
+It defines `window.archivalCart`:
+
+| Method | |
+| --- | --- |
+| `items()` | The cart's lines, each `{ variant, quantity }`. |
+| `count()` | The total quantity across every line. |
+| `add(variant, quantity = 1)` | Adds to a variant's quantity, or starts a line for it. |
+| `setQuantity(variant, quantity)` | Sets a line's quantity. `0` removes the line. |
+| `remove(variant)` | Removes a line. |
+| `clear()` | Empties the cart. |
+| `checkout(carrierPath, extra?)` | Sends the cart to a carrier and follows the url it answers, as below. |
+
+The cart is kept in `localStorage` under `archival:cart`, so it survives a reload and is shared between tabs. Whenever its lines change, including from another tab, an `archival:cart` event is dispatched on `window` with the lines as its `detail`. A variant that is empty or not a string throws a `TypeError`, and a quantity that is negative or not a whole number throws a `RangeError`.
+
+The cart holds ids and quantities only. Names and prices come from your catalog, through a carrier that calls `variants()` or `catalog()`.
+
+```html
+<button data-add="{{ print.price_id }}">Add to cart</button>
+<a href="/cart">Cart (<span id="cart-count">0</span>)</a>
+<button id="checkout">Checkout</button>
+
+<script src="/_archival/cart.js"></script>
+<script>
+  const count = document.querySelector("#cart-count");
+  count.textContent = archivalCart.count();
+  window.addEventListener("archival:cart", () => {
+    count.textContent = archivalCart.count();
+  });
+
+  document.querySelectorAll("[data-add]").forEach((button) => {
+    button.addEventListener("click", () => {
+      archivalCart.add(button.dataset.add);
+    });
+  });
+
+  const checkout = document.querySelector("#checkout");
+  checkout.addEventListener("click", async () => {
+    try {
+      await archivalCart.checkout("/carriers/checkout");
+    } catch (error) {
+      alert(
+        error.outOfStock
+          ? "Something in your cart has sold out."
+          : error.message,
+      );
+    }
+  });
+</script>
+```
+
+`checkout(carrierPath, extra)` posts JSON to a carrier on your own site: `{ ...extra, items }`, where `items` is always the cart's lines. It expects the carrier to answer `{ url }`, and sends the browser there. When the carrier answers with an error status, `checkout` rejects with an `Error` whose `message` is the response's `error`, whose `status` is the response's status, and whose `outOfStock` is the response's list of variant ids when it has one.
+
+The carrier on the other end starts the checkout:
+
+```ts
+import type {
+  Carrier,
+  CarrierCheckoutItem,
+  CarrierOutOfStockError,
+} from "@archival/carrier";
+
+type CartLine = { variant: string; quantity: number };
+
+const carrier: Carrier = async (params, body, objects, site) => {
+  const lines = (body as { items?: CartLine[] } | null)?.items;
+  if (!Array.isArray(lines)) {
+    throw new Error("Method Not Allowed");
+  }
+  const items: CarrierCheckoutItem[] = lines.map((line) => ({
+    variant: line.variant,
+    quantity: line.quantity,
+  }));
+  try {
+    const { url } = await site.payments.checkout.create({
+      items,
+      successUrl: `${site.url}/thanks`,
+      cancelUrl: `${site.url}/cart`,
+    });
+    return { url };
+  } catch (error) {
+    const { outOfStock } = error as CarrierOutOfStockError;
+    if (outOfStock) {
+      return Response.json(
+        { error: "out_of_stock", outOfStock },
+        { status: 409 },
+      );
+    }
+    throw error;
+  }
+};
+
+export default carrier;
+```
+
+Copy only `variant` and `quantity` from each line, as the example does. The body comes from the browser, and passing it through whole would let a request add an item with a price of its own.
+
+Checking out leaves the cart as it is, so a buyer who backs out still has it. Empty it with `archivalCart.clear()` on your thanks page, once the carrier there says the checkout is paid.
+"""
+
+[[sections]]
+title = "Stock and availability"
+content = """
+Stock is the provider's to count. Stripe does not track it, so on a Stripe account every variant's `stock` is `null`, and `available` is true for any variant with a fixed price.
+
+Where a provider does track stock, `stock` is how many are left and `available` is false when there are none. `checkout.create` then refuses a checkout it cannot fill. The error it throws carries `outOfStock`, the ids of the variants it was short of:
+
+```ts
+try {
+  await site.payments.checkout.create({ items, successUrl });
+} catch (error) {
+  const { outOfStock } = error as CarrierOutOfStockError;
+  // ["<variant id>", …] when the checkout was refused for stock
+}
+```
+
+The check is made when the checkout starts and it is not a reservation. Two buyers can both start a checkout for the last one.
+
+The catalog is read from the provider every five minutes, or every minute where it carries stock. A price you change or a product you archive in Stripe shows up on your site within that time, without a deploy. Only active products and prices are for sale: an archived one is left out of `catalog` and answers `null` from a lookup.
+"""
+
+[[sections]]
+title = "Square"
+content = """
+A site can connect a Square account instead of a Stripe one. Everything above works the same way through `site.payments`, with these differences.
+
+**Connecting.** In the site's Settings, under Payments, choose **Connect Square** and approve access at Square. `account()` then answers `provider: "square"`.
+
+**Variants are item variations.** A product is a Square item, and a variant is one of its item variations. A variant's `id` is the item variation's id, which is what an object holds and what a checkout takes. A variation with variable pricing has no fixed price, so it cannot be sold this way.
+
+**A connection sells from one location.** Square keeps its catalog, stock and orders per location. The connection uses the account's main location, and when the account has more than one, the Payments panel lets you choose which the site sells from. The currency is that location's.
+
+**Stock is tracked.** For a variation Square tracks, `stock` is the count at that location, and a variation marked sold out is not `available`. Square takes a sale off its count once it is paid. `checkout.create` refuses a checkout that asks for more than are left, as described under [Stock and availability](#Stock%20and%20availability).
+
+**What Square's checkout does not offer:**
+
+- There is no page to send a buyer who backs out to, so `cancelUrl` is not used.
+- `shipping` asks for an address, but `countries` cannot limit where to.
+- There are no subscriptions.
+
+The catalog is read from Square every minute, since it carries stock.
+"""
+
+[[sections]]
+title = "Running locally"
+content = """
+[`archival run`](/cli/run), from archival 0.27.3, gives your carriers a local `site.payments`, so a shop can be built and tried without a payment account. Nothing is charged, and no provider is contacted.
+
+Name a JSON file of what the site sells in `ARCHIVAL_PAYMENTS`:
+
+```sh
+ARCHIVAL_PAYMENTS=payments.json archival run
+```
+
+The file is shaped like what `site.payments` answers: an `account`, and a `catalog` whose `items` are products with their variants.
+
+```json
+{
+  "account": { "name": "Test shop", "currency": "usd" },
+  "catalog": {
+    "items": [
+      {
+        "id": "prod_harbour",
+        "name": "Harbour, 6am",
+        "variants": [
+          {
+            "id": "price_harbour_a3",
+            "name": "A3",
+            "amount": 6000,
+            "currency": "usd",
+            "stock": 3
+          },
+          {
+            "id": "price_harbour_a2",
+            "name": "A2",
+            "amount": 9000,
+            "currency": "usd"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+A product needs an `id`, a `name` and its `variants`, and a variant needs an `id`, an `amount` and a `currency`. Everything else is optional. A variant with no `stock` is untracked, as it would be on Stripe. Use the same variant ids your objects hold, and the same carriers run locally and deployed.
+
+Without `ARCHIVAL_PAYMENTS`, a local run reads as a site with nothing connected.
+
+A local checkout does not go to a provider. `checkout.create` answers a url on the local server, `/__payments/<id>`, which is a stand-in page listing what is being bought, with two buttons:
+
+- **Pay** marks the checkout paid, takes what was bought off any stock the file tracks, and returns to `successUrl` with its `checkout` parameter, so your thanks page and `checkout.get` behave as they will once deployed.
+- **Cancel** returns to `cancelUrl`. It is shown when the checkout was given one.
+
+The file is read again whenever it is saved, which also puts back any stock a test checkout took. Checkouts are kept only while `archival run` is running. `site.url` is the local server's address, so locally `successUrl` and `cancelUrl` are plain http urls on your machine.
+
+In the preview in the Archival editor, `site.payments` reads as a site with nothing connected.
+"""
+
+[[sections]]
+title = "Limits"
+content = """
+- A site reads `site.payments` at most 6,000 times an hour, and starts at most 600 checkouts an hour. A call past either is refused until the hour moves on.
+- A checkout holds at most 100 items, each with a quantity from 1 to 10,000.
+- `products()` and `variants()` take at most 100 ids, and a `catalog` page holds at most 100 products.
+- `successUrl` and `cancelUrl` must be https urls on one of your site's own domains.
+- The catalog is read from the provider every five minutes, or every minute where it carries stock, so a change at the provider takes up to that long to reach your site.
+
+With no account connected, nothing throws until you try to sell: `account()` is `null`, `catalog()` is empty, lookups answer `null`, and `checkout.create` rejects. A carrier that lists products works on a site that has not connected yet, and shows nothing.
+"""
+
+[[sections]]
+title = "What it does not do"
+content = """
+`site.payments` reads a catalog, starts checkouts and reads their status. Everything else about running a shop stays with your payment provider.
+
+- **No notifications to your site.** There are no webhooks and no order events. Your site learns of a payment only when the buyer returns to `successUrl`. See [Confirming a payment](#Confirming%20a%20payment).
+- **No refunds.** Refund, dispute and cancel from your Stripe Dashboard.
+- **No customer data.** A checkout answers its status, its total and the buyer's email. Names, addresses, payment methods and order history stay at the provider.
+- **No changes to your catalog.** Products and prices are made and changed in Stripe. Archival only reads them.
+- **No stock reservations.** Stock is checked when a checkout starts and not held while the buyer pays.
+- **No order records.** Archival keeps no list of what was sold. Your provider's dashboard is the record, and a carrier that needs its own can keep one in [`site.sql`](/docs/carriers#Storing%20data).
+- **No handling of money.** Archival is not a party to the sale: it takes no fee, holds no funds and never sees a card. Buyers enter payment details on your provider's page, and payouts, taxes and receipts are set up in your provider's account.
+"""
