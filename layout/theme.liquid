@@ -100,6 +100,12 @@
       <meta name="robots" content="noindex">
     {% endif %}
     <link rel="canonical" href="{{ canonical_url }}" />
+    {% if atproto_document %}
+      <link
+        rel="site.standard.document"
+        href="at://did:web:archival.dev/site.standard.document/{{ atproto_document | replace: "/", "." }}"
+      />
+    {% endif %}
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

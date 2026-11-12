@@ -177,6 +177,16 @@ Your site does not show posts from the accounts it follows.
 """
 
 [[sections]]
+title = "Signing in as your site"
+content = """
+Apps that support ATProto sign-in can sign you in as your site's account. Where the app asks for your handle, enter your domain, such as `example.com`, and you are sent to Archival to approve it.
+
+Anyone who can edit the site can approve a sign-in, once they have signed in to Archival. The app learns which account you are, `did:web:example.com`, and nothing else. It cannot post, follow or change anything as the account, because the only way to change what the account says is to change the site and deploy.
+
+Each sign-in is listed under **Connected apps** on your account page, with the account it was for, and disconnecting it there signs the app out.
+"""
+
+[[sections]]
 title = "Showing likes and replies on your site"
 content = """
 Archival keeps the follows, likes, reposts and replies your account receives, from the moment it goes live. A [carrier](/docs/carriers) reads them through `site.atproto`, which is how a post's page shows the replies it had on Bluesky:
@@ -223,7 +233,8 @@ For anyone connecting other software to a site, or hosting Archival sites themse
 
 - The account's DID is `did:web:<domain>`, and `https://<domain>/.well-known/did.json` is its DID document. `https://<domain>/.well-known/atproto-did` answers the same DID as plain text, which is how the handle is verified.
 - The site is the account's own Personal Data Server. It answers the read side of one under `https://<domain>/xrpc/`: `com.atproto.repo.describeRepo`, `getRecord` and `listRecords`, and `com.atproto.sync.getRepo`, `getRecord`, `getLatestCommit`, `getRepoStatus`, `listRepos`, `getBlob`, `listBlobs` and `subscribeRepos`.
-- It takes no writes. There is no sign-in, no app password and no OAuth: the only way to change what the account says is to change the site and deploy.
+- It takes no writes and has no app passwords: the only way to change what the account says is to change the site and deploy.
+- `https://<domain>/.well-known/oauth-protected-resource` names `https://api.archival.dev` as the account's authorization server. It is an ATProto OAuth server: it requires pushed authorization requests and DPoP, takes client metadata documents as `client_id`, and grants the `atproto` scope alone, with the account's DID as `sub`.
 - A site's other domains redirect `/xrpc/` requests to the account's domain.
 - `com.atproto.sync.getRepo` is the whole repository as a CAR file, which is how the account is moved to another host.
 - A suspended or removed account keeps answering its DID document and `getRepoStatus`, and refuses its repository.
