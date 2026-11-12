@@ -311,5 +311,5 @@ ARCHIVAL_PAYMENTS=payments.json archival run
 - The checkout opens the local stand-in page. Pay returns the buyer to the page they left, and the cart empties itself.
 - It sells only the variants in the file, so give them the ids your objects hold. A variant the file is short of is refused with `outOfStock`, as it is once deployed.
 - Without `ARCHIVAL_PAYMENTS`, the local server answers neither path, as a deployed site with no payment account does.
-- It needs a release of archival after 0.27.3, and Node 22.13 or later, as [carriers](/docs/carriers#Running%20carriers%20locally) do. `--no-carriers` turns the cart off too.
+- It needs Node 22.13 or later, as [carriers](/docs/carriers#Running%20carriers%20locally) do. `--no-carriers` turns the cart off too.
 """

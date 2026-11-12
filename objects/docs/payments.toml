@@ -480,7 +480,7 @@ A local checkout does not go to a provider. `checkout.create` answers a url on t
 
 The file is read again whenever it is saved, which also puts back any stock a test checkout took. Checkouts are kept only while `archival run` is running. `site.url` is the local server's address, so locally `successUrl` and `cancelUrl` are plain http urls on your machine.
 
-The same run serves the [cart script](/docs/cart) and answers its checkout from the file, in releases of archival after 0.27.3. See [Previews and local runs](/docs/cart#Previews%20and%20local%20runs).
+The same run serves the [cart script](/docs/cart) and answers its checkout from the file. See [Previews and local runs](/docs/cart#Previews%20and%20local%20runs).
 
 A preview needs no file. See [Previews](#Previews).
 """
