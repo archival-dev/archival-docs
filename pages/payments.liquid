@@ -35,9 +35,6 @@
     {% endfor %}
   </ol>
   <div class="pay-plan-note">{{ payments.plan_note }}</div>
-  {% unless payments.providers_note == blank %}
-    <div class="pay-providers-note">{{ payments.providers_note }}</div>
-  {% endunless %}
   {% include "payments-cta", placement: "setup" %}
 </section>
 
@@ -341,6 +338,44 @@
     </section>
   {% endfor %}
 </div>
+
+{% comment %}
+  Explicit roles because the phone layout restyles the rows as blocks, and
+  some browsers drop table semantics from a table whose display is changed.
+{% endcomment %}
+<section class="pay-providers" id="providers" aria-labelledby="pay-providers-heading">
+  <h2 class="pay-setup-heading" id="pay-providers-heading">{{ payments.providers_title }}</h2>
+  <p class="pay-setup-intro">{{ payments.providers_intro }}</p>
+  <table class="lp-table" role="table">
+    <thead role="rowgroup">
+      <tr role="row">
+        <td class="lp-corner" role="presentation"></td>
+        <th scope="col" role="columnheader">Stripe</th>
+        <th scope="col" role="columnheader">Square</th>
+      </tr>
+    </thead>
+    <tbody role="rowgroup">
+      {% for row in payments.provider_rows %}
+        <tr role="row">
+          <th scope="row" role="rowheader">{{ row.label }}</th>
+          <td role="cell" data-col="Stripe">
+            <span class="lp-cell">
+              {%- include "compare-mark", mark: row.stripe_mark -%}
+              <span>{{ row.stripe }}</span>
+            </span>
+          </td>
+          <td role="cell" data-col="Square">
+            <span class="lp-cell">
+              {%- include "compare-mark", mark: row.square_mark -%}
+              <span>{{ row.square }}</span>
+            </span>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="pay-providers-more">{{ payments.providers_more }}</div>
+</section>
 
 <div class="benefit-grid benefit-grid--compact">
   {% for benefit in payments.benefits %}

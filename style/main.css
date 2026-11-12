@@ -1959,6 +1959,43 @@ h1.pricing-title {
   margin: 2rem 0 0;
 }
 
+.md table {
+  margin: 0 0 2rem;
+  text-align: left;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.md th,
+.md td {
+  padding: 0.75rem 1.25rem 0.75rem 0;
+  vertical-align: top;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.md th:last-child,
+.md td:last-child {
+  padding-right: 0;
+}
+
+.md thead th {
+  border-top: none;
+  color: var(--color-typography-primary);
+}
+
+@media (max-width: 640px) {
+  .md table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  /* Every column after the first, in a table of three or more. */
+  .md td:not(:first-child):not(:last-child),
+  .md td:nth-child(n + 3) {
+    min-width: 14rem;
+  }
+}
+
 .cli-options code,
 .cli-arguments code {
   width: fit-content;

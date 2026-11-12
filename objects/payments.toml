@@ -11,8 +11,10 @@ setup_intro = "Four steps. Connecting takes about a minute once your site is on 
 plan_note = """
 Payments is included with Archival Pro ($15/mo) and White Glove ($150/mo). Archival takes no fee on sales. Your provider's own processing fees apply. [See pricing](/pricing).
 """
-providers_note = """
-A site connects an account at Stripe or Square, and is built the same way on either. [What differs between them](/docs/payments#Payment%20providers).
+providers_title = "What differs between providers"
+providers_intro = "A site connects an account at Stripe or Square, and is built the same way on either. Checkout, your catalog and what Archival charges are the same. These are the differences."
+providers_more = """
+[The full comparison](/docs/payments#Payment%20providers) is in the docs, with what each difference means for the site you build.
 """
 closing_title = "Start selling from your site."
 closing_content = """
@@ -36,7 +38,7 @@ Put the site on Pro or White Glove. Payments is included with both, at no extra 
 [[steps]]
 title = "Choose your provider"
 content = """
-Open the site's Settings, then Payments, and choose the provider your account is with: Stripe or Square.
+Open the site's Settings, then Payments, and choose the provider your account is with: Stripe or Square. See [what differs between them](#providers).
 """
 
 [[steps]]
@@ -71,6 +73,41 @@ When a buyer checks out, your site starts a checkout in your payment account and
 
 Sell one thing with a buy button, or add the cart script and let buyers collect several first.
 """
+
+[[provider_rows]]
+label = "Subscriptions"
+stripe = "Sell recurring prices as subscriptions."
+stripe_mark = "yes"
+square = "One-off sales only."
+square_mark = "no"
+
+[[provider_rows]]
+label = "Stock tracking"
+stripe = "No stock counts, so nothing sells out."
+stripe_mark = "no"
+square = "Counts come from your Square location, and what has sold out cannot be bought."
+square_mark = "yes"
+
+[[provider_rows]]
+label = "Shipping countries"
+stripe = "Checkout takes addresses only in the countries you ship to."
+stripe_mark = "yes"
+square = "Checkout asks for an address, in any country."
+square_mark = "partly"
+
+[[provider_rows]]
+label = "Backing out of checkout"
+stripe = "The buyer returns to a page of your site that you choose."
+stripe_mark = "yes"
+square = "The checkout page has no way back to your site."
+square_mark = "no"
+
+[[provider_rows]]
+label = "Locations"
+stripe = "One catalog for the whole account."
+stripe_mark = ""
+square = "A site sells from one of your locations, which you choose."
+square_mark = ""
 
 [[benefits]]
 title = "You are the merchant"

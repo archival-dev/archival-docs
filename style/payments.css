@@ -110,7 +110,7 @@
 
 .pay-step-content a,
 .pay-plan-note a,
-.pay-providers-note a {
+.pay-providers-more a {
   color: var(--color-secondary-interactive);
 }
 
@@ -122,20 +122,45 @@
   color: var(--color-typography-primary);
 }
 
-.pay-providers-note {
-  margin: 0.75rem auto 0;
-  font-size: var(--typo-body-size);
-  line-height: 1.5;
-  color: var(--color-typography-secondary);
-}
-
 .pay-plan-note p,
-.pay-providers-note p {
+.pay-providers-more p {
   margin: 0;
 }
 
 .pay-setup .sw-cta-row {
   margin-top: 2rem;
+}
+
+/* ============ Provider comparison ============ */
+
+/* The landing pages' comparison table, with neither column picked out. */
+.pay-providers {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+  scroll-margin-top: 100px;
+}
+
+.pay-providers .lp-table {
+  margin-top: 3rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.pay-providers .lp-table thead td,
+.pay-providers .lp-table tbody th {
+  width: 24%;
+}
+
+.pay-providers-more {
+  margin-top: 1.5rem;
+  font-size: var(--typo-body-size);
+  line-height: 1.5;
+  color: var(--color-typography-secondary);
 }
 
 /* ============ Frames ============ */
@@ -461,6 +486,18 @@
 }
 
 @media (max-width: 640px) {
+  .pay-providers {
+    padding: 0 1rem;
+  }
+
+  .pay-providers .lp-table tbody th {
+    width: auto;
+  }
+
+  .pay-providers .lp-table td {
+    grid-template-columns: 3.5rem 1fr;
+  }
+
   .pay-steps {
     grid-template-columns: minmax(0, 1fr);
     max-width: 32rem;

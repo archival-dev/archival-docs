@@ -131,8 +131,10 @@ setup_title = "string"
 setup_intro = "string"
 # Under the setup steps: which plans include Payments, and what a sale costs.
 plan_note = "markdown"
-# One line naming the providers a site can connect. Empty leaves it out.
-providers_note = "markdown"
+providers_title = "string"
+providers_intro = "string"
+# Under the provider comparison: where the detail is.
+providers_more = "markdown"
 closing_title = "string"
 closing_content = "markdown"
 
@@ -146,6 +148,15 @@ content = "markdown"
 key = "string"
 title = "string"
 content = "markdown"
+
+# The provider comparison's rows, in order.
+[payments.provider_rows]
+label = "string"
+stripe = "string"
+square = "string"
+# Optional icon before each cell's text: yes, no or partly, or empty for none.
+stripe_mark = "string"
+square_mark = "string"
 
 [payments.benefits]
 title = "string"

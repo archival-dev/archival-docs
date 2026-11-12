@@ -29,7 +29,7 @@ A site uses this in one of two ways:
 
 Checkout is the same call in both: `site.payments.checkout.create` answers a url, the buyer pays on the provider's page, and the provider sends them back to your site.
 
-Build against what this page describes, not against what your provider happens to do. Every provider is answered in the same shapes, and [Payment providers](#Payment%20providers) lists the few places where one has less to say than another.
+Build against what this page describes, not against what your provider happens to do. Every provider is answered in the same shapes, and [Payment providers](#Payment%20providers) compares them, feature by feature.
 
 `site.payments` is part of [carrier API version 2](/docs/carriers#Carrier%20API%20versions), on the `site` argument beside `site.sql` and `site.email`. Every example on this page is a carrier.
 """
@@ -119,7 +119,7 @@ The price is always the provider's. The carrier names a variant, never an amount
 
 An option a provider's checkout page has no way to honor is left out, and the checkout still starts. A carrier never has to ask which provider it is talking to.
 
-The same carrier can sell a subscription. A variant whose `recurring` is set bills on that interval, and a checkout that holds one starts a subscription.
+The same carrier can sell a subscription, on a [provider that sells them](#Payment%20providers). A variant whose `recurring` is set bills on that interval, and a checkout that holds one starts a subscription.
 """
 
 [[sections]]
@@ -276,7 +276,7 @@ The thanks page reads its own query string, asks the carrier, and shows the resu
 | `status` | `open`, `paid`, `expired` or `canceled`. It is `paid` once the payment has gone through. |
 | `amountTotal` | The total in the currency's smallest unit, tax and shipping included, or `null`. |
 | `currency` | The currency paid in, or `null`. |
-| `customerEmail` | The buyer's email, or `null`. |
+| `customerEmail` | The buyer's email, or `null`. [Not every provider](#Payment%20providers) answers it. |
 
 **That return is the only way your site learns of a payment.** Archival does not notify your site when a payment is made. A buyer who pays and then closes the tab before landing on `successUrl` has still paid: the payment is in your provider's dashboard, and your site never hears about it. Treat your provider as the record of your orders, and the thanks page as a courtesy to the buyer.
 
@@ -444,31 +444,42 @@ The catalog is read from the provider every few minutes, so a price you change o
 [[sections]]
 title = "Payment providers"
 content = """
-`site.payments` answers the same shapes for every provider. Where a provider keeps nothing for a field, the field is `null` or empty. Where its checkout page cannot honor an option, the option is left out and the checkout still starts. Nothing is refused for being on one provider and not another, so a carrier written against this page runs on any of them.
+A site is built the same way on either provider. `site.payments` answers the same shapes for both, so a carrier written against this page runs on either. What differs is what each provider's account can sell and what its checkout page can do, and that is worth knowing before you design a shop around something only one of them has.
 
-That comes down to a few habits:
+Where a provider keeps nothing for a field, the field is `null` or empty. Where its checkout page cannot honor an option, the option is left out and the checkout still starts.
+
+| | Stripe | Square |
+| --- | --- | --- |
+| **Subscriptions** | Sold. A recurring price is a variant with `recurring` set, and a checkout holding one starts a subscription. | Not sold. `recurring` is always `null`. |
+| **Stock counts** | None. `stock` is always `null`. | Counted. `stock` is the count at the site's location for a variation Square tracks, and `null` for one it does not. |
+| **Selling out** | Nothing sells out, and a checkout is never refused for stock. To stop selling something, archive it. | A variation with none left, or marked sold out, is not `available`. A checkout that is short is refused with `outOfStock`, and a paid order comes off the count. |
+| **Shipping address** | Asked for when a checkout has `shipping`, in the `shipping.countries` it names. With none named, anywhere Stripe Checkout ships. | Asked for when a checkout has `shipping`. The country cannot be limited, so `shipping.countries` is left out. |
+| **A buyer who backs out** | Is sent to `cancelUrl`. | Has no way back from the checkout page, so `cancelUrl` is left out. |
+| **Reading the buyer's email** | `checkout.get` answers it as `customerEmail`. | `customerEmail` is always `null`. |
+| **SKUs** | None. `sku` is always `null`. | `sku` is the variation's SKU. |
+| **Product metadata** | A product's `metadata` is what is set on it in Stripe. | None. A product's `metadata` is always empty. |
+| **Locations** | An account has one catalog. | A connection sells from one location, chosen in the site's settings. The catalog, the stock and the currency are that location's. |
+| **Items with no fixed price** | Listed with `amount` `null`, and not `available`. | Left out of the catalog. |
+| **Catalog freshness** | Read again every five minutes. | Read again every minute. |
+
+The same on both:
+
+- Checkout is a page the provider hosts. The buyer pays the site's owner there, and Archival takes no fee.
+- An item can be [priced where it is sold](#Donations%20and%20deposits), for a donation or a deposit.
+- `customerEmail` fills in the buyer's email on the checkout page.
+- A checkout's `metadata` is kept with the payment at the provider.
+- A payment is confirmed when the buyer returns, with [`checkout.get`](#Confirming%20a%20payment). Neither provider notifies your site.
+
+A carrier that keeps a few habits never has to ask which provider it is talking to:
 
 - Read `available` to decide what can be bought. Do not infer it from `stock`.
 - Read `recurring` to tell a subscription from a one-off. Do not infer it from the id.
 - Handle `outOfStock` from `checkout.create`.
 - Treat `cancelUrl` and `shipping.countries` as requests. A buyer may come back another way, and an address may be anywhere. Always name the countries you ship to.
+- Expect `customerEmail` from `checkout.get` to be `null`.
 - Keep ids as the strings they are. Do not parse them.
 
-What each provider calls things, and where it has less to say:
-
-| | Stripe | Square |
-| --- | --- | --- |
-| A product is | a product | an item |
-| A variant is | a price | an item variation |
-| `stock` | always `null` | the count at the site's location, for a tracked variation |
-| `sku` | always `null` | the variation's SKU |
-| `recurring` | set for a recurring price | always `null` |
-| A product's `metadata` | the product's metadata | always empty |
-| `cancelUrl` | used | left out |
-| `shipping.countries` | used | left out |
-| The catalog is read | every five minutes | every minute |
-
-`account()` answers which provider is connected as `provider`, for a page that wants to say so. A carrier has no need to branch on it.
+`account()` answers which provider is connected as `provider`, for a page that wants to say so.
 """
 
 [[sections]]
@@ -476,13 +487,13 @@ title = "Stripe"
 content = """
 **Connecting** installs the Archival Payments app in your Stripe account. It can read products, read prices, create Checkout Sessions and read Checkout Sessions. To remove it from Stripe's side, uninstall the app in your Stripe Dashboard.
 
-**A variant is a price.** A product is a Stripe product and each of its active prices is a variant, so a variant's `id` is a price id, which starts `price_`. The Dashboard shows it on the product's page, beside each price.
+**A variant is a price.** A product is a Stripe product and each of its active prices is a variant, so a variant's `id` is a price id, which starts `price_`. The Dashboard shows it on the product's page, beside each price. A price with no fixed amount, such as a tiered price or one the buyer chooses, has `amount` `null` and cannot be put in a checkout.
 
-**Stock is not counted.** Stripe keeps no stock, so `stock` is `null` and every variant with a fixed price is `available`. To stop selling something, archive its price or its product.
+**To stop selling something,** archive its price or its product. Stripe keeps no stock, so nothing else takes a variant off sale.
 
-**Subscriptions.** A recurring price is a variant with `recurring` set, and a checkout holding one is a Stripe subscription.
+**A subscription** is a checkout that holds a recurring price.
 
-**Checkout** is a Stripe Checkout Session. It asks for a shipping address only in the `countries` a checkout names, or anywhere Stripe Checkout ships to when it names none. `metadata` is set on the session, and refunds, disputes and receipts are in your Stripe Dashboard.
+**Checkout** is a Stripe Checkout Session. With `shipping` and no `countries`, it takes an address anywhere Stripe Checkout ships, which is everywhere but `AS`, `CX`, `CC`, `CU`, `HM`, `IR`, `KP`, `MH`, `FM`, `NF`, `MP`, `PW`, `SD`, `SY`, `UM` and `VI`. `metadata` is set on the session. A checkout's `status` is `open`, `paid` or `expired`. Refunds, disputes and receipts are in your Stripe Dashboard.
 """
 
 [[sections]]
@@ -490,15 +501,13 @@ title = "Square"
 content = """
 **Connecting** asks Square for access to your business's details and locations, its items and stock counts, and to create orders and take payment for them. Disconnecting in Archival revokes that access at Square.
 
-**A variant is an item variation.** A product is a Square item and each of its variations is a variant, so a variant's `id` is the variation's id. The quickest way to read them is from [`catalog()`](#Listing%20products%20from%20the%20catalog). A variation with variable pricing has no fixed price and is left out.
+**A variant is an item variation.** A product is a Square item and each of its variations is a variant, so a variant's `id` is the variation's id. The quickest way to read them is from [`catalog()`](#Listing%20products%20from%20the%20catalog).
 
-**A connection sells from one location.** Square keeps its catalog, stock and orders per location. The connection uses the account's main location, and when the account has more than one, the Payments panel lets you choose which the site sells from. The catalog, the stock and the currency are that location's.
+**A connection sells from one location.** Square keeps its catalog, stock and orders per location. The connection uses the account's main location, and when the account has more than one, the Payments panel lets you choose which the site sells from. Only items sold at that location are in the catalog, at that location's prices.
 
-**Stock is counted.** For a variation Square tracks, `stock` is the count at that location, and a variation marked sold out is not `available`. Square takes a sale off its count once it is paid.
+**Stock is that location's.** A variation Square tracks answers the location's count as `stock`, and `0` when Square has no count for it. A variation marked sold out there is not `available`, whatever its count. Square takes a sale off its count once it is paid.
 
-**Checkout** is a Square payment link for an order. Its page has no way back for a buyer who changes their mind, so `cancelUrl` is left out, and it asks for a shipping address without limiting the country. `metadata` is kept on the order, and refunds and receipts are in your Square Dashboard.
-
-**No subscriptions.** `recurring` is `null` for every variant.
+**Checkout** is a Square payment link for an order. `metadata` is kept on the order. A checkout's `status` is `open`, `paid` or `canceled`. Refunds and receipts are in your Square Dashboard.
 """
 
 [[sections]]
