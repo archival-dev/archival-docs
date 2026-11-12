@@ -214,7 +214,7 @@ Each variant is:
 | `amount` | Its price in the currency's smallest unit. `null` for a variant with no fixed price, which cannot be put in a checkout. |
 | `currency` | Lowercase ISO 4217, such as `usd`. |
 | `recurring` | `{ interval }` for a variant sold as a subscription, otherwise `null`. |
-| `stock` | How many are left, or `null` when the provider does not track it. |
+| `stock` | How many are left, or `null` when the provider doesn't support inventory. |
 | `available` | Whether it can be bought: priced, and in stock or untracked. |
 
 To look up things you already know the ids of, `products(ids)` and `variants(ids)` take up to 100 ids and answer one entry per id, in the order given. An id that is not for sale answers `null`. This is how a page whose objects hold variant ids shows the current price beside each one:
@@ -228,7 +228,7 @@ const variants = await site.payments.variants(ids);
 
 `account()` answers the connected account, or `null` when there is none: its `provider`, its `name`, its `currency`, and `livemode`, which is false for a provider's test or sandbox account.
 
-Names and descriptions are text someone typed in at the provider. Put them in the page as text, as the example does, not as HTML.
+Names and descriptions are text someone typed in at the provider.
 """
 
 [[sections]]
@@ -408,7 +408,7 @@ title = "Stripe"
 content = """
 **Connecting** installs the Archival Payments app in your Stripe account. It can read products, read prices, create Checkout Sessions and read Checkout Sessions. To remove it from Stripe's side, uninstall the app in your Stripe Dashboard.
 
-**The test account** is a Stripe sandbox, or your account's test mode. The app is installed there too.
+**The test account** is a Stripe sandbox, which will be used in site previews.
 
 **A variant is a price.** A product is a Stripe product and each of its active prices is a variant, so a variant's `id` is a price id, which starts `price_`. The Dashboard shows it on the product's page, beside each price. A price with no fixed amount, such as a tiered price or one the buyer chooses, has `amount` `null` and cannot be put in a checkout.
 
@@ -424,7 +424,7 @@ title = "Square"
 content = """
 **Connecting** asks Square for access to your business's details and locations, its items and stock counts, and to create orders and take payment for them. Disconnecting in Archival revokes that access at Square.
 
-**The test account** is a Square sandbox.
+**The test account** is a Square sandbox. Its location has to use the same currency as the live location the site sells from, because each item in a test checkout is copied from the live variant, currency included.
 
 **A variant is an item variation.** A product is a Square item and each of its variations is a variant, so a variant's `id` is the variation's id. The quickest way to read them is from [`catalog()`](#Listing%20products%20from%20the%20catalog).
 
@@ -502,7 +502,8 @@ The preview of a site you are editing takes real checkouts, in the site's test a
 - **A checkout is made in the test account.** `checkout.create` starts the checkout at your provider's test account, on the same hosted checkout page a buyer sees. A test account's catalog is separate from the live one, with ids of its own, so each item is copied from the live variant: its name, its amount and its currency.
 - **Nothing is charged.** A test account takes your provider's test payment methods.
 - **Stock is read from the live account**, and a checkout that is short is refused with `outOfStock`, as it is once deployed. A test checkout takes nothing off your live stock.
-- **The buyer returns to the preview** they started from, with the `checkout` parameter, so a thanks page and `checkout.get` behave as they will once deployed.
+- **The checkout page opens in a new tab on the web**, because a provider's checkout page cannot be shown inside the preview. In the apps and in a Claude editing session's preview, it opens in place.
+- **The buyer returns to the preview** they started from, with the `checkout` parameter, so a thanks page and `checkout.get` behave as they will once deployed. On the web, the checkout's tab closes and the preview shows that page.
 
 The cart and the site's own checkout work the same way in the preview. See [Cart and checkout](/docs/cart#Previews%20and%20local%20runs).
 """

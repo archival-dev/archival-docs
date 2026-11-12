@@ -296,10 +296,11 @@ A cart can be tried from end to end before the site is live, and without a real 
 
 **In the editor's preview.** The preview of a site you are editing checks out in the site's [test account](/docs/payments#Connecting%20an%20account). That is the editor's preview on the web and in the iOS and Mac apps, and the preview of a [Claude editing session](/docs/building-with-claude).
 
-- `archivalCart.checkout()` opens your provider's hosted checkout page, in the test account. Nothing is charged: a test account takes your provider's test payment methods.
+- `archivalCart.checkout()` opens your provider's hosted checkout page, in the test account.
+- On the web, that page opens in a new tab, because a provider's checkout page cannot be shown inside the preview. In the apps and in a Claude editing session's preview, it opens in place.
 - The cart holds your live account's variant ids, and the checkout sells them at their live prices.
-- Paying returns the buyer to the preview page they left with its `checkout` parameter, and the cart empties itself, as it does on the deployed site.
-- A checkout through a carrier of yours is made in the test account too.
+- Paying returns the buyer to the preview page they left with its `checkout` parameter, and the cart empties itself, as it does on the deployed site. On the web, the checkout's tab closes and the preview shows that page.
+- A checkout through a carrier of yours is made in the test account too. A Claude editing session's preview runs no carriers, so there only the cart's own checkout applies.
 
 [Previews](/docs/payments#Previews) says how the test account is used.
 
