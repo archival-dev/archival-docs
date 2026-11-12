@@ -424,7 +424,7 @@ title = "Square"
 content = """
 **Connecting** asks Square for access to your business's details and locations, its items and stock counts, and to create orders and take payment for them. Disconnecting in Archival revokes that access at Square.
 
-**The test account is Archival's.** There is no Square test account to connect. Once your live account is connected, the editor's preview checks out in Archival's own Square sandbox. Its checkout page shows Archival's test business rather than yours, and test orders are not in your Square Dashboard. Your site reads them with `checkout.get`, as it does a live checkout.
+**The test account is Archival's.** There is no Square test account to connect. Once your live account is connected, the editor's preview checks out in Archival's own Square sandbox. Its checkout page shows Archival's test business rather than yours, and test orders are not in your Square Dashboard. Your site reads them with `checkout.get`, as it does a live checkout. Archival's sandbox is in the US, so if your live location sells in another currency, a test checkout charges the same amounts in US dollars, and the checkout page says so.
 
 **A variant is an item variation.** A product is a Square item and each of its variations is a variant, so a variant's `id` is the variation's id. The quickest way to read them is from [`catalog()`](#Listing%20products%20from%20the%20catalog).
 
