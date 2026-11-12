@@ -1,0 +1,316 @@
+order = 22
+title = "Cart and checkout"
+include_in_llm_docs = true
+description = """
+A site with a [connected payment account](/docs/payments#Connecting%20an%20account) is served a cart script, and answers a checkout for it. A shop that sells its account's variants at the account's prices needs nothing written on the server: a page adds variants to the cart, and `archivalCart.checkout()` sends the buyer to pay.
+
+This page covers the cart, the checkout every such site answers, and the [carrier](/docs/carriers) to write when a checkout needs to do more. [Payments](/docs/payments) covers what comes before it: connecting an account, and the products and variants a cart holds.
+"""
+
+[[sections]]
+title = "Adding the cart to a page"
+content = """
+Include the script on every page that shows the cart, adds to it or checks out:
+
+```html
+<script src="/_archival/cart.js"></script>
+```
+
+It defines `window.archivalCart`. This is a whole shop page: a button that adds a variant, a count, and a checkout button.
+
+```html
+<button data-add="{{ print.variant_id }}">Add to cart</button>
+<p>In your cart: <span id="cart-count">0</span></p>
+<button id="checkout">Checkout</button>
+
+<script src="/_archival/cart.js"></script>
+<script>
+  const cart = window.archivalCart;
+  const count = document.querySelector("#cart-count");
+
+  if (cart) {
+    count.textContent = cart.count();
+    window.addEventListener("archival:cart", () => {
+      count.textContent = cart.count();
+    });
+
+    document.querySelectorAll("[data-add]").forEach((button) => {
+      button.addEventListener("click", () => cart.add(button.dataset.add));
+    });
+
+    document.querySelector("#checkout").addEventListener("click", async () => {
+      try {
+        await cart.checkout();
+      } catch (error) {
+        alert(
+          error.outOfStock
+            ? "Something in your cart has sold out."
+            : error.message,
+        );
+      }
+    });
+  }
+</script>
+```
+
+The script is only served on a site with a connected payment account, and that is decided when the site deploys. Connecting an account takes effect at the site's next deploy, and so does disconnecting one. Anywhere the script is not served, `window.archivalCart` is undefined, which is why the example checks for it.
+
+The editor's preview serves the script as well, and so does a local run that names a payments file. See [Previews and local runs](#Previews%20and%20local%20runs).
+"""
+
+[[sections]]
+title = "The cart"
+content = """
+A cart is a list of lines, each `{ variant, quantity }`. A variant's id is your payment provider's own, such as a Stripe price id, so an object on your site can hold the id of what it sells. See [Selling a product from an object](/docs/payments#Selling%20a%20product%20from%20an%20object).
+
+| Method | |
+| --- | --- |
+| `items()` | A copy of the cart's lines, in the order they were added. |
+| `count()` | The cart's quantities, summed. |
+| `add(variant, quantity = 1)` | Adds to the variant's line, or starts one for it. |
+| `setQuantity(variant, quantity)` | Sets a variant's quantity. `0` removes its line. |
+| `remove(variant)` | Removes a variant's line. |
+| `clear()` | Empties the cart. |
+| `checkout(options?)` | Sends the buyer to pay, through [the site's own checkout](#Checking%20out). |
+| `checkout(carrierPath, extra?)` | Sends the buyer to pay, through [a carrier of yours](#Writing%20your%20own%20checkout%20carrier). |
+
+The lines are kept in the browser's `localStorage`, so the cart survives a reload and is shared between the site's tabs.
+
+Every change dispatches an `archival:cart` event on `window`, a `CustomEvent` with the lines as its `detail`. It fires for a change made in another tab too, so one listener keeps every open page's cart count right.
+
+A variant that is empty or not a string throws a `TypeError`. A quantity that is not a whole number throws a `RangeError`, as does one below 1 for `add`, or below 0 for `setQuantity`.
+
+The cart holds ids and quantities, and nothing else. To show names and prices beside them, ask a carrier that calls [`site.payments.variants()`](/docs/payments#Listing%20products%20from%20the%20catalog) with the ids.
+"""
+
+[[sections]]
+title = "Checking out"
+content = """
+`archivalCart.checkout()` posts the cart's lines to `POST /_archival/checkout`, which every site with a connected payment account answers. There is no carrier to write. The buyer is sent to a checkout page your payment provider hosts, and pays for the lines there.
+
+It sells only your payment account's own variants, at the prices the account gives them. Nothing in the request can name a price.
+
+The buyer comes back to the page they left. Once they have paid, that page's url carries a `checkout` query parameter, and the cart empties itself. A buyer who backs out, on a checkout page that offers a way back, returns to the same page with the cart as they left it.
+
+`checkout` takes three options:
+
+| Option | |
+| --- | --- |
+| `successUrl` | The path the buyer returns to once paid, in place of the page they left. |
+| `cancelUrl` | The path the buyer returns to without paying, in place of the page they left. |
+| `shipping` | Collects a shipping address. `{ countries }` names the countries you ship to by their two-letter codes, as it does for [`checkout.create`](/docs/payments#Selling%20a%20product%20from%20an%20object). |
+
+```js
+await archivalCart.checkout({
+  successUrl: "/thanks",
+  cancelUrl: "/cart",
+  shipping: { countries: ["US", "CA"] },
+});
+```
+
+`successUrl` and `cancelUrl` are paths on your site, starting with `/`. Anything else is refused.
+
+The cart empties itself when a page that includes the script loads with the `checkout` parameter of the checkout it started. Include the script on the page `successUrl` names. The parameter holds the checkout's id, which a carrier can turn into its status. See [Confirming a payment](/docs/payments#Confirming%20a%20payment).
+
+A checkout that is refused rejects with an `Error`:
+
+| Property | |
+| --- | --- |
+| `message` | Why it was refused. |
+| `status` | The response's status. |
+| `outOfStock` | The ids of the variants the checkout was short of, when it was refused for stock. |
+
+```js
+try {
+  await archivalCart.checkout();
+} catch (error) {
+  for (const variant of error.outOfStock ?? []) {
+    archivalCart.remove(variant);
+  }
+  showError(error.message);
+}
+```
+
+A few things to know about it:
+
+- **It takes variants and nothing else.** An item without a variant id is refused, so it cannot sell an item [priced where it is sold](/docs/payments#Donations%20and%20deposits). It does not fill in the buyer's email or keep metadata with the payment. For any of those, [write a carrier](#Writing%20your%20own%20checkout%20carrier).
+- **It has the limits of any checkout.** An empty cart is refused, as is one over the [limits](/docs/payments#Limits) on a checkout's items and quantities.
+- **On a deployed site it is rate-limited, and it asks the browser to prove itself.** The cart script does that on its own, so call the checkout through `archivalCart.checkout()` and not with a request of your own.
+"""
+
+[[sections]]
+title = "Types"
+content = """
+The cart's types are the npm package [`@archival/cart`](https://www.npmjs.com/package/@archival/cart). It has no runtime: the cart itself is always the script your site serves.
+
+```sh
+npm install --save-dev @archival/cart
+```
+
+Importing a type from it also types `window.archivalCart` and the `archival:cart` event:
+
+```ts
+import type { CartCheckoutError, CartLine } from "@archival/cart";
+
+const render = (lines: CartLine[]) => {
+  count.textContent = String(lines.reduce((n, line) => n + line.quantity, 0));
+};
+addEventListener("archival:cart", (event) => render(event.detail));
+render(window.archivalCart?.items() ?? []);
+
+checkoutButton.addEventListener("click", async () => {
+  try {
+    await window.archivalCart?.checkout();
+  } catch (error) {
+    const { message, outOfStock } = error as CartCheckoutError;
+    showError(message, outOfStock ?? []);
+  }
+});
+```
+
+| Type | |
+| --- | --- |
+| `Cart` | `window.archivalCart`. |
+| `CartLine` | One line: `{ variant, quantity }`. |
+| `CartEvent` | The `archival:cart` event, with the lines in `detail`. |
+| `CartCheckoutOptions` | What `checkout()` takes: `successUrl`, `cancelUrl` and `shipping`. |
+| `CartCheckoutError` | What `checkout` rejects with: an `Error` with `status` and `outOfStock`. |
+| `CartCheckoutBody` | What a checkout carrier is sent as its `body`: `items`, beside whatever the page passed. |
+| `CartCheckoutAnswer` | What a checkout carrier answers: `{ url, checkout? }`. |
+| `CartCheckoutRefusal` | What a checkout carrier answers to refuse: `{ error, outOfStock? }`. |
+
+`window.archivalCart` is typed as possibly undefined, because it is until the script has run, and on a site with no payment account connected.
+"""
+
+[[sections]]
+title = "Writing your own checkout carrier"
+content = """
+The site's own checkout sells variants at their prices and does nothing else. When a checkout has to do more, such as take a discount or a donation, record an order, or fill in the buyer's email, the cart checks out through one of your [carriers](/docs/carriers) instead:
+
+```js
+await archivalCart.checkout("/carriers/checkout", { coupon });
+```
+
+`checkout(carrierPath, extra)` posts JSON to a carrier on your own site: `{ ...extra, items }`, where `items` is always the cart's lines, whatever `extra` holds. A `carrierPath` that is not a path on your site throws a `TypeError`.
+
+The carrier answers one of two things:
+
+- **`{ url }`** to send the buyer on. `url` is where they go next: an http or https url, or a path on your site. Add **`checkout`**, the id [`site.payments.checkout.create`](/docs/payments#Selling%20a%20product%20from%20an%20object) answered, and the cart empties itself when the buyer returns paid, as it does for the site's own checkout. Without it the cart keeps its lines, and the page the buyer comes back to clears it.
+- **A status outside 2xx with `{ error, outOfStock? }`** to refuse. `checkout` rejects with an `Error` whose `message` is `error`, whose `status` is the response's status, and whose `outOfStock` is the list the carrier named.
+
+This carrier does what the site's own checkout does. Copy it to `carriers/checkout/index.ts` and change it:
+
+```ts
+// The site's default checkout (`POST /_archival/checkout`), written as a
+// carrier a site can copy to `carriers/checkout/` and change. Call it from a
+// page with `archivalCart.checkout("/carriers/checkout", { successUrl, cancelUrl })`.
+// Type-checked against @archival/carrier 1.8.0 and @archival/cart 1.0.0.
+import type { Carrier } from "@archival/carrier";
+import type {
+  CartCheckoutAnswer,
+  CartCheckoutBody,
+  CartCheckoutOptions,
+  CartCheckoutRefusal,
+} from "@archival/cart";
+
+const refuse = (status: number, error: string, outOfStock?: string[]) =>
+  Response.json(
+    {
+      error,
+      ...(outOfStock ? { outOfStock } : {}),
+    } satisfies CartCheckoutRefusal,
+    { status },
+  );
+
+/** A path on this site as a full url, or null for anything else. */
+const onSite = (path: unknown, site: string): string | null => {
+  if (typeof path !== "string" || !path.startsWith("/")) return null;
+  const url = new URL(path, site);
+  return url.origin === new URL(site).origin ? url.href : null;
+};
+
+const carrier: Carrier = async (params, body, objects, site) => {
+  const { items, successUrl, cancelUrl, shipping } = (body ??
+    {}) as Partial<CartCheckoutBody> & CartCheckoutOptions;
+  if (!Array.isArray(items) || items.length === 0) {
+    return refuse(400, "The cart is empty");
+  }
+  const paid = onSite(successUrl ?? "/", site.url);
+  const back = onSite(cancelUrl ?? "/", site.url);
+  if (!paid || !back) {
+    return refuse(400, "successUrl and cancelUrl are paths on this site");
+  }
+  try {
+    const { id, url } = await site.payments.checkout.create({
+      // Only what the cart holds: a variant's price is the payment account's.
+      items: items.map(({ variant, quantity }) => ({ variant, quantity })),
+      successUrl: paid,
+      cancelUrl: back,
+      ...(shipping ? { shipping } : {}),
+    });
+    return { url, checkout: id } satisfies CartCheckoutAnswer;
+  } catch (error) {
+    const { message, outOfStock } = error as Error & { outOfStock?: string[] };
+    return refuse(outOfStock ? 409 : 400, message, outOfStock);
+  }
+};
+
+export default carrier;
+```
+
+Its `package.json` names [carrier API version 2](/docs/carriers#Carrier%20API%20versions), which `site.payments` is part of, and both type packages:
+
+```json
+{
+  "type": "module",
+  "archival": { "carrier": 2 },
+  "devDependencies": {
+    "@archival/carrier": "^1.8.0",
+    "@archival/cart": "^1.0.0"
+  }
+}
+```
+
+**It differs from the site's own checkout in one way.** A carrier cannot read the request's `Referer`, so it does not know which page the buyer left. The page passes the return paths, and a checkout that names none returns the buyer to `/`:
+
+```js
+await archivalCart.checkout("/carriers/checkout", {
+  successUrl: location.pathname,
+  cancelUrl: location.pathname,
+});
+```
+
+From there, the carrier is yours to change:
+
+- **Sell something with no variant behind it.** Add an item [priced where it is sold](/docs/payments#Donations%20and%20deposits), for a donation or a deposit. Check any amount that comes from the request.
+- **Fill in the buyer's email, or keep metadata with the payment.** Pass `customerEmail` or `metadata` to [`checkout.create`](/docs/payments#Selling%20a%20product%20from%20an%20object).
+- **Record an order.** Keep the checkout's id and its lines in [`site.sql`](/docs/carriers#Storing%20data) before answering.
+
+Keep copying only `variant` and `quantity` from each line, as the carrier does. The body comes from the browser, and passing a line through whole would let a request add an item with a price of its own.
+"""
+
+[[sections]]
+title = "Previews and local runs"
+content = """
+A cart can be tried from end to end before the site is live, and without a real payment.
+
+**In the editor's preview.** The preview of a site you are editing checks out in the site's [test account](/docs/payments#Connecting%20an%20account). That is the editor's preview on the web and in the iOS and Mac apps, and the preview of a [Claude editing session](/docs/building-with-claude).
+
+- `archivalCart.checkout()` opens your provider's hosted checkout page, in the test account. Nothing is charged: a test account takes your provider's test payment methods, not a real card.
+- The cart holds your live account's variant ids, and the checkout sells them at their live prices.
+- Paying returns the buyer to the preview page they left with its `checkout` parameter, and the cart empties itself, as it does on the deployed site.
+- A checkout through a carrier of yours is made in the test account too.
+
+[Previews](/docs/payments#Previews) says how the test account is used.
+
+**Under [`archival run`](/cli/run).** A local run reaches no payment provider. Name a file of what the site sells in `ARCHIVAL_PAYMENTS`, and the local server serves the script and answers the checkout from it. It is the same file your carriers' `site.payments` reads, described under [Running locally](/docs/payments#Running%20locally).
+
+```sh
+ARCHIVAL_PAYMENTS=payments.json archival run
+```
+
+- The checkout opens a stand-in page on the local server, with Pay and Cancel buttons. Pay returns the buyer to the page they left, and the cart empties itself.
+- It sells only the variants in the file, so give them the ids your objects hold. A variant the file is short of is refused with `outOfStock`, as it is once deployed.
+- Without `ARCHIVAL_PAYMENTS`, the local server answers neither path, as a deployed site with no payment account does.
+- It needs Node 22.13 or later, as [carriers](/docs/carriers#Running%20carriers%20locally) do. `--no-carriers` turns the cart off too.
+"""
