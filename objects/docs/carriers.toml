@@ -810,12 +810,10 @@ To run your site without its carriers, pass `--no-carriers`. To debug a carrier,
 [[sections]]
 title = "Carriers in a preview"
 content = """
-A preview runs your carriers, so a form, a cart or a checkout can be tried before it is live. What a carrier does there has no effect outside the preview:
+The preview of a site you are editing runs its carriers, so a form, a cart or a checkout can be tried before it is live. A carrier there does nothing that reaches your visitors or your money:
 
-- **`site.payments`** is answered by a stand-in provider with a sample catalog. A checkout opens a page of the preview with Pay and Cancel buttons, and nothing is charged. See [Previews](/docs/payments#Previews).
+- **`site.payments`** reads your live account's catalog and makes its checkouts in your site's test account, so nothing is charged. See [Previews](/docs/payments#Previews).
 - **`site.email.send`** sends nothing. The message is shown to you instead.
-- **Requests to other sites are not sent**, in the editor's preview on the web and on a preview link. A carrier's `fetch` to another site is answered `200` with an empty JSON object and an `x-archival-preview: simulated` header, and the preview tells you which request it held. A carrier that only checks the answer is `ok` carries on. One that reads data from the answer gets an empty object.
+- **Requests to other sites are not sent** in the editor's preview on the web. A carrier's `fetch` to another site is answered `200` with an empty JSON object and an `x-archival-preview: simulated` header, and the editor tells you which request it held. A carrier that only checks the answer is `ok` carries on. One that reads data from the answer gets an empty object.
 - **Schedules** never run.
-
-The preview of a Claude editing session runs no carriers. A page there can still use the [cart](/docs/cart) and its checkout.
 """
