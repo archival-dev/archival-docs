@@ -6,7 +6,7 @@ A site hosted by archival.dev can sell from its owner's own payment account. The
 
 The owner is the merchant of record. Buyers pay them directly, on a checkout page the provider hosts, and the money settles to the owner's own account there. Archival takes no fee on a sale and never holds the funds. The provider's own processing fees apply.
 
-`site.payments` is the same whichever provider is connected. A site connects to one provider, [Stripe](#Stripe) or [Square](#Square): the live account it sells from, and a test account the editor's preview checks out in.
+`site.payments` is the same whichever provider is connected. A site connects to one provider, [Stripe](#Stripe) or [Square](#Square): the live account it sells from, and a test account the editor's preview checks out in. At Square, Archival provides the test account.
 
 Payments is included with the Pro plan, including Pro on an Archival subdomain, and with White Glove. See [pricing](/pricing).
 """
@@ -47,13 +47,13 @@ Connecting is done once per site, by someone who can edit the site and has acces
 
 **4. Connect your live account.** The provider opens and asks which account to connect. Approve access, and you are returned to your site's settings. This is the account your site sells from.
 
-**5. Connect a test account.** Connect a test account at the same provider in the same way: a sandbox at [Stripe](#Stripe) or at [Square](#Square). The editor's preview checks out in it, so a shop can be tried from end to end without a real payment. See [Previews](#Previews).
+**5. Connect a test account, at Stripe.** Connect a [Stripe](#Stripe) sandbox the same way. The editor's preview checks out in it, so a shop can be tried from end to end without a real payment. At [Square](#Square) there is nothing to connect: the preview checks out in Archival's own Square sandbox. See [Previews](#Previews).
 
-Payments is on once both accounts are connected. A site sells from one provider: one live account, with one test account beside it.
+Payments is on once both accounts are connected, or at Square once the live account is. A site sells from one provider: one live account, with one test account beside it.
 
 A connection lets Archival read the account's catalog, start checkouts and read those checkouts, and nothing else. What that is in each provider's own terms is under [Stripe](#Stripe) and [Square](#Square).
 
-To stop selling, choose **Disconnect** in the same panel. Checkout on the site stops working until both accounts are connected again. You can also remove Archival's access from your provider's own dashboard. The site finds out the next time it uses the connection, and the panel then offers to reconnect.
+To stop selling, choose **Disconnect** in the same panel. Checkout on the site stops working until both accounts are connected again. You can also remove Archival's access from your provider's own dashboard. The site finds out the next time it uses the connection: checkout stops, and the Payments panel says which account is no longer accepted and offers to reconnect it.
 
 To move a site to another provider, disconnect and connect the other. Variant ids are each provider's own, so the ids your objects hold have to be replaced. Nothing else in a site built the way this page describes has to change.
 """
@@ -424,7 +424,7 @@ title = "Square"
 content = """
 **Connecting** asks Square for access to your business's details and locations, its items and stock counts, and to create orders and take payment for them. Disconnecting in Archival revokes that access at Square.
 
-**The test account** is a Square sandbox. Its location has to use the same currency as the live location the site sells from, because each item in a test checkout is copied from the live variant, currency included.
+**The test account is Archival's.** There is no Square test account to connect. Once your live account is connected, the editor's preview checks out in Archival's own Square sandbox. Its checkout page shows Archival's test business rather than yours, and test orders are not in your Square Dashboard. Your site reads them with `checkout.get`, as it does a live checkout. Archival's sandbox is in the US, so if your live location sells in another currency, a test checkout charges the same amounts in US dollars, and the checkout page says so.
 
 **A variant is an item variation.** A product is a Square item and each of its variations is a variant, so a variant's `id` is the variation's id. The quickest way to read them is from [`catalog()`](#Listing%20products%20from%20the%20catalog).
 
@@ -496,7 +496,7 @@ The editor's preview uses no file. It checks out in your test account. See [Prev
 [[sections]]
 title = "Previews"
 content = """
-The preview of a site you are editing takes real checkouts, in the site's test account. That is the editor's preview on the web and in the iOS and Mac apps, and the preview of a [Claude editing session](/docs/building-with-claude). A shop behaves there as it will once deployed, and no money moves.
+The preview of a site you are editing takes real checkouts, in the site's test account: your Stripe sandbox, or Archival's Square sandbox. That is the editor's preview on the web and in the iOS and Mac apps, and the preview of a [Claude editing session](/docs/building-with-claude). A shop behaves there as it will once deployed, and no money moves.
 
 - **The catalog is your live account's.** `catalog()`, `products()` and `variants()` read the live account, so the variant ids your objects hold are found, at their real prices.
 - **A checkout is made in the test account.** `checkout.create` starts the checkout at your provider's test account, on the same hosted checkout page a buyer sees. A test account's catalog is separate from the live one, with ids of its own, so each item is copied from the live variant: its name, its amount and its currency.

@@ -55,7 +55,7 @@ It defines `window.archivalCart`. This is a whole shop page: a button that adds 
 
 The script is only served on a site with a connected payment account, and that is decided when the site deploys. Connecting an account takes effect at the site's next deploy, and so does disconnecting one. Anywhere the script is not served, `window.archivalCart` is undefined, which is why the example checks for it.
 
-The editor's preview serves the script as well, and so does a local run that names a payments file. See [Previews and local runs](#Previews%20and%20local%20runs).
+The editor's preview on the web serves the script as well. The iOS and Mac apps' preview and a Claude editing session's preview load your deployed site's copy, so they have it once the site has deployed with payments on. A local run that names a payments file serves it too. See [Previews and local runs](#Previews%20and%20local%20runs).
 """
 
 [[sections]]

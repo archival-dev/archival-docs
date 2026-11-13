@@ -44,7 +44,7 @@ Open the site's Settings, then Payments, and choose the provider your account is
 [[steps]]
 title = "Connect your accounts"
 content = """
-Your provider asks which account to connect. Approve access for the live account your site sells from, then connect a test account the same way. Payments is on once both are connected, and the editor's preview checks out in the test one.
+Your provider asks which account to connect. Approve access for the live account your site sells from. At Stripe, connect a sandbox the same way as your test account; at Square, Archival provides one. Payments is then on, and the editor's preview checks out in the test account.
 """
 
 [[sections]]
