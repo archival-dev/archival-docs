@@ -20,7 +20,7 @@ closing_title = "Start selling from your site."
 closing_content = """
 Build a site, put it on Pro, and connect your payment account from its settings.
 
-Already on Archival? Open your site's Settings, then Payments. The [docs](/docs/payments) have working examples of the buy button, the cart and the order confirmation.
+Already on Archival? Choose Connect beside Payments in your site's Overview. The [docs](/docs/payments) have working examples of the buy button, the cart and the order confirmation.
 """
 
 [[steps]]
@@ -38,22 +38,22 @@ Put the site on Pro or White Glove. Payments is included with both, at no extra 
 [[steps]]
 title = "Choose your provider"
 content = """
-Open the site's Settings, then Payments, and choose the provider your account is with: Stripe or Square. See [what differs between them](#providers).
+In the site's Overview, choose Connect beside Payments, then the provider your account is with: Stripe or Square. See [what differs between them](#providers).
 """
 
 [[steps]]
-title = "Connect your accounts"
+title = "Connect your account"
 content = """
-Your provider asks which account to connect. Approve access for the live account your site sells from. At Stripe, connect a sandbox the same way as your test account; at Square, Archival provides one. Payments is then on, and the editor's preview checks out in the test account.
+Your provider asks which account to connect. Approve access for the live account your site sells from, and Payments is on. The editor's preview checks out in a test account Archival provides, so there is nothing else to connect.
 """
 
 [[sections]]
 key = "connect"
 title = "Connect your own payment account"
 content = """
-In your site's settings, open Payments, choose your provider and connect two accounts: the live one your site sells from, and a test one the editor's preview checks out in. A connection is only used to read your catalog and to create and read checkouts.
+In your site's Overview, choose Connect beside Payments, pick your provider and connect the live account your site sells from. The editor's preview checks out in a test account Archival provides. A connection is only used to read your catalog and to create and read checkouts.
 
-You are the merchant of record. Disconnect from the same panel, or from your provider's dashboard, at any time.
+You are the merchant of record. Disconnect from the same row, or from your provider's dashboard, at any time.
 """
 
 [[sections]]

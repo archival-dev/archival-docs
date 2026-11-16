@@ -303,7 +303,7 @@ title = "Previews and local runs"
 content = """
 A cart can be tried from end to end before the site is live, and without a real payment.
 
-**In the editor's preview.** The preview of a site you are editing checks out in the site's [test account](/docs/payments#Connecting%20an%20account). That is the editor's preview on the web and in the iOS and Mac apps, and the preview of a [Claude editing session](/docs/building-with-claude).
+**In the editor's preview.** The preview of a site you are editing checks out in Archival's [test account](/docs/payments#Previews) at your provider. That is the editor's preview on the web and in the iOS and Mac apps, and the preview of a [Claude editing session](/docs/building-with-claude).
 
 - `archivalCart.checkout()` opens your provider's hosted checkout page, in the test account.
 - On the web, that page opens in a new tab, because a provider's checkout page cannot be shown inside the preview. In the apps and in a Claude editing session's preview, it opens in place.
