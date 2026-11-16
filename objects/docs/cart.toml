@@ -2,7 +2,7 @@ order = 22
 title = "Cart and checkout"
 include_in_llm_docs = true
 description = """
-A site with a [connected payment account](/docs/payments#Connecting%20an%20account) is served a cart script, and answers a checkout for it. A shop that sells its account's variants at the account's prices needs nothing written on the server: a page adds variants to the cart, and `archivalCart.checkout()` sends the buyer to pay.
+A site with a [connected payment account](/docs/payments#Connecting%20an%20account) can turn on a cart script, and answers a checkout for it. A shop that sells its account's variants at the account's prices needs nothing written on the server: a page adds variants to the cart, and `archivalCart.checkout()` sends the buyer to pay.
 
 This page covers the cart, the checkout every such site answers, and the [carrier](/docs/carriers) to write when a checkout needs to do more. [Payments](/docs/payments) covers what comes before it: connecting an account, and the products and variants a cart holds.
 """
@@ -10,7 +10,14 @@ This page covers the cart, the checkout every such site answers, and the [carrie
 [[sections]]
 title = "Adding the cart to a page"
 content = """
-Include the script on every page that shows the cart, adds to it or checks out:
+Turn the cart on in your site's [`archival_editor.toml`](/docs/editor-config#Payments):
+
+```toml
+[payments]
+cart = true
+```
+
+Then include the script on every page that shows the cart, adds to it or checks out:
 
 ```html
 <script src="/_archival/cart.js"></script>
@@ -53,9 +60,11 @@ It defines `window.archivalCart`. This is a whole shop page: a button that adds 
 </script>
 ```
 
-The script is only served on a site with a connected payment account, and that is decided when the site deploys. Connecting an account takes effect at the site's next deploy, and so does disconnecting one. Anywhere the script is not served, `window.archivalCart` is undefined, which is why the example checks for it.
+The script is served only when `archival_editor.toml` has `cart = true`. Without the line, or with `cart = false`, it is not, whether or not an account is connected. The line takes effect when the site deploys. Anywhere the script is not served, `window.archivalCart` is undefined, which is why the example checks for it.
 
-The editor's preview on the web serves the script as well. The iOS and Mac apps' preview and a Claude editing session's preview load your deployed site's copy, so they have it once the site has deployed with payments on. A local run that names a payments file serves it too. See [Previews and local runs](#Previews%20and%20local%20runs).
+On a site with the line and no connected account, the script is served, and its checkout is refused because the site takes no payments.
+
+Every preview of the site follows the same line: the editor's preview on the web and in the iOS and Mac apps, a Claude editing session's preview, and a published preview. A local run serves the script whenever it has a payments file. See [Previews and local runs](#Previews%20and%20local%20runs).
 """
 
 [[sections]]
@@ -86,7 +95,7 @@ The cart holds ids and quantities. To show names and prices beside them, ask a c
 [[sections]]
 title = "Checking out"
 content = """
-`archivalCart.checkout()` posts the cart's lines to `POST /_archival/checkout`, which every site with a connected payment account answers. The buyer is sent to a checkout page your payment provider hosts, and pays for the lines there.
+`archivalCart.checkout()` posts the cart's lines to `POST /_archival/checkout`, which every site with the cart turned on and a connected payment account answers. The buyer is sent to a checkout page your payment provider hosts, and pays for the lines there.
 
 It sells only your payment account's own variants, at the prices the account gives them. Nothing in the request can name a price.
 
@@ -179,7 +188,7 @@ checkoutButton.addEventListener("click", async () => {
 | `CartCheckoutAnswer` | What a checkout carrier answers: `{ url, checkout? }`. |
 | `CartCheckoutRefusal` | What a checkout carrier answers to refuse: `{ error, outOfStock? }`. |
 
-`window.archivalCart` is typed as possibly undefined, because it is until the script has run, and on a site with no payment account connected.
+`window.archivalCart` is typed as possibly undefined, because it is until the script has run, and on a site that has not turned the cart on.
 """
 
 [[sections]]
@@ -313,5 +322,6 @@ ARCHIVAL_PAYMENTS=payments.json archival run
 - The checkout opens a stand-in page on the local server, with Pay and Cancel buttons. Pay returns the buyer to the page they left, and the cart empties itself.
 - It sells only the variants in the file, so give them the ids your objects hold. A variant the file is short of is refused with `outOfStock`, as it is once deployed.
 - Without `ARCHIVAL_PAYMENTS`, or with `"account": null` in the file, the local server answers neither path, as a deployed site with no payment account does.
+- A local run does not read `archival_editor.toml`, so it serves the cart whenever it has a payments file, whatever `cart` says.
 - It needs Node 22.13 or later, as [carriers](/docs/carriers#Running%20carriers%20locally) do. `--no-carriers` turns the cart off too.
 """

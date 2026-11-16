@@ -371,7 +371,7 @@ When the amount comes from the request, as with a donation the visitor chooses, 
 [[sections]]
 title = "The cart"
 content = """
-A site with a connected account is served a small cart script at `/_archival/cart.js`. It keeps a list of variants and quantities in the visitor's browser as `window.archivalCart`, and checks out with no carrier at all:
+A site with a connected account can turn on a small cart script, served at `/_archival/cart.js`, with `cart = true` under `[payments]` in its [`archival_editor.toml`](/docs/editor-config#Payments). It keeps a list of variants and quantities in the visitor's browser as `window.archivalCart`, and checks out with no carrier at all:
 
 ```html
 <button data-add="{{ print.variant_id }}">Add to cart</button>
@@ -390,7 +390,7 @@ A site with a connected account is served a small cart script at `/_archival/car
 </script>
 ```
 
-`archivalCart.checkout()` sells the cart's variants at your account's prices through a checkout every such site answers, and returns the buyer to the page they left. A checkout that needs to do more goes through a carrier of yours, with the same call.
+`archivalCart.checkout()` sells the cart's variants at your account's prices through a checkout every site with the cart turned on answers, and returns the buyer to the page they left. A checkout that needs to do more goes through a carrier of yours, with the same call.
 
 [Cart and checkout](/docs/cart) covers all of it: the cart's methods and its change event, the checkout's options and refusals, its types, and a carrier to start your own checkout from.
 """
@@ -570,7 +570,7 @@ The preview of a site you are editing takes real checkouts, in the site's test a
 - **The checkout page opens in a new tab on the web**, because a provider's checkout page cannot be shown inside the preview. In the apps and in a Claude editing session's preview, it opens in place.
 - **The buyer returns to the preview** they started from, with the `checkout` parameter, so a thanks page and `checkout.get` behave as they will once deployed. On the web, the checkout's tab closes and the preview shows that page.
 
-The cart and the site's own checkout work the same way in the preview. See [Cart and checkout](/docs/cart#Previews%20and%20local%20runs).
+The cart and the site's own checkout work the same way in the preview, on a site that has [turned the cart on](/docs/editor-config#Payments). See [Cart and checkout](/docs/cart#Previews%20and%20local%20runs).
 """
 
 [[sections]]

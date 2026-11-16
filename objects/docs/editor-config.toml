@@ -8,7 +8,7 @@ This file is most useful when creating an archival template or for customizing t
 
 Place `archival_editor.toml` in the root of your repo, alongside `archival_objects.toml` and `archival.toml`. The editor reads it automatically when your site loads, and re-reads it whenever the file changes.
 
-It is also where you turn on [ActivityPub](#ActivityPub), which publishes your content to Mastodon and the rest of the fediverse whenever your site deploys and gives the people who work on the site accounts of their own there, [ATProto](#ATProto), which makes your site an account on Bluesky's network, and [Webmention](#Webmention), which lets your pages and pages on other sites tell each other when one links to the other.
+It is also where you turn on [ActivityPub](#ActivityPub), which publishes your content to Mastodon and the rest of the fediverse whenever your site deploys and gives the people who work on the site accounts of their own there, [ATProto](#ATProto), which makes your site an account on Bluesky's network, [Webmention](#Webmention), which lets your pages and pages on other sites tell each other when one links to the other, and the [cart](#Payments) for a site that takes payments.
 """
 
 [[sections]]
@@ -406,4 +406,21 @@ Removing the `webmention` section and deploying stops your site taking mentions.
 The pages Archival served for your objects stay up either way, so a mention already on another site can still be verified. If your site loses a domain it sent mentions from, those mentions can no longer be updated or taken back.
 
 Archival reserves the paths under `/_archival/webmention` on every site it hosts, whether or not the site uses it.
+"""
+
+[[sections]]
+title = "Payments"
+content = """
+A `payments` section turns on the [cart](/docs/cart) for a site with a [connected payment account](/docs/payments#Connecting%20an%20account):
+
+```toml
+[payments]
+cart = true
+```
+
+With `cart = true`, your site serves the cart script at `/_archival/cart.js` and answers the checkout it posts to. Without the line, or with `cart = false`, it serves neither, and your carriers can still sell through [`site.payments`](/docs/payments).
+
+The line takes effect when your site deploys. Every preview of the site follows it too.
+
+`payments` is reserved at the top level of this file, so an object type named `payments` cannot be configured here.
 """
