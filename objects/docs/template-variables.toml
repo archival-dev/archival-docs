@@ -30,7 +30,52 @@ These variables are available in every page and template:
 
 - **`page`** — the name of the page currently being rendered.
 
+- **`archival`** — what the social web has done with your site, and your payment account's catalog, when the build was given them. See [The archival global](#The%20archival%20global).
+
 These variables are also available inside partials rendered with `{% render %}`, which otherwise sees only the arguments passed to it (see [Partials](/docs/partials)).
+{% endraw %}
+"""
+
+[[sections]]
+title = "The archival global"
+content = """
+{% raw %}
+`archival` holds what Archival knows about your site that your objects don't: the follows, likes, replies and mentions your pages have had across the fediverse, Bluesky and other sites, and your payment account's catalog. Each part answers in the shape the matching [carrier](/docs/carriers) call does, with its keys in snake_case, so a page can show it as plain HTML with nothing to fetch.
+
+| In a template | What it holds | The carrier call it matches |
+| --- | --- | --- |
+| `archival.activitypub` | your fediverse `account` and `accounts`, your `followers`, and `posts[path]`, each with its `counts`, `likes`, `boosts` and `replies` | `site.activitypub` |
+| `archival.atproto` | your Bluesky `account`, your `followers`, and `posts[path]`, each with its `counts`, `likes`, `reposts` and `replies` | `site.atproto` |
+| `archival.webmentions` | `pages[path]`, each with its `counts` and its `list` of mentions | `site.webmentions` |
+| `archival.interactions` | `[path]`: an object's replies and reactions from every network merged, with combined `counts` | |
+| `archival.generated_at` | when the social snapshot was taken | |
+| `archival.payments` | your payment account and its catalog. See [The catalog in templates](/docs/payments#The%20catalog%20in%20templates). | `site.payments` |
+
+Posts and interactions are keyed by an object's [`path`](#Variables%20on%20a%20template%20page), and webmentions by the path of the page that was mentioned. A path nothing has reached reads as an empty answer, with counts of 0 and empty lists, so a template needs no `{% if %}` around it:
+
+```html
+{% assign social = archival.interactions[post.path] %}
+<p>{{ social.counts.likes }} likes, {{ social.counts.replies }} replies</p>
+{% for reply in social.replies.items %}
+  <blockquote>
+    <a href="{{ reply.author.url }}">{{ reply.author.name | default: reply.author.handle }}</a>
+    {{ reply.content | strip_html }}
+  </blockquote>
+{% endfor %}
+```
+
+In `archival.interactions`, each reply and reaction carries the `network` it came from (`activitypub`, `atproto` or `webmention`), and each reaction its `kind` (`like` or `repost`). A reply's `content` is HTML someone else wrote, so strip or escape it rather than output it as markup.
+
+Lists are pages shaped `{ items, total, next }`, as a carrier's are: `total` counts everything, while `items` holds only what the snapshot took. A page that wants all of a long list, or counts as of this minute, reads them from a carrier when it loads.
+
+**Where the values come from.** A build is handed them as snapshots, which are JSON files shaped like what the carrier calls answer:
+
+- **Social.** `archival build --social <file>`, from archival 0.27.2, renders `activitypub`, `atproto`, `webmentions`, `interactions` and `generated_at` from a file described by [archival_social.schema.json](https://archival.dev/schemas/archival_social.schema.json). Its keys are camelCase, as a carrier's response is, and templates read them in snake_case. Without one, every social value is the empty answer, which is also what [`archival run`](/cli/run) renders.
+- **Payments.** `archival build --payments <file>`, or a file named by the `ARCHIVAL_PAYMENTS` environment variable for `archival run`, renders `payments`, from archival 0.28.0. Without one, or with `"account": null` in the file, `archival.payments` reads as a site with no payment account. See [Running locally](/docs/payments#Running%20locally) for the file.
+
+**The build records what it rendered.** From archival 0.28.0, a build given either snapshot writes a hash of the whole `archival` global to `archival.toml` as `archival_global_hash`, and rewrites that one line only when the global changes. A new follower or a changed price then shows up as a change to your repository, which a deploy can rebuild on. `generated_at` is left out of the hash, since every snapshot has a new one. Leave the value to the build, and pass every snapshot your site uses to every build that can write it: a build given only one reads the other as empty, and the hash would flip between them.
+
+Because archival fills in `archival`, a top-level object may not be named `archival`. A field or child object may.
 {% endraw %}
 """
 

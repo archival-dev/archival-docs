@@ -17,6 +17,8 @@ const SCHEMAS = [
   "archival_objects.schema.json",
   "archival_editor.schema.json",
   "archival_template.schema.json",
+  "archival_payments.schema.json",
+  "archival_social.schema.json",
 ];
 
 // SchemaStore's catalog still fetches these two by their old names. The copies

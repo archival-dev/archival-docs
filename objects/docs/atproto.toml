@@ -164,7 +164,7 @@ Without the tag the document is still published, and its Bluesky post still link
 [[sections]]
 title = "Following accounts"
 content = """
-`follow` (optional) lists accounts your account follows, up to twenty, each a handle such as `alice.example.com` or a DID:
+`follow` (optional) lists accounts your account follows, up to ten thousand, each a handle such as `alice.example.com` or a DID:
 
 ```toml
 [atproto]
@@ -181,7 +181,9 @@ title = "Signing in as your site"
 content = """
 Apps that support ATProto sign-in can sign you in as your site's account. Where the app asks for your handle, enter your domain, such as `example.com`, and you are sent to Archival to approve it.
 
-Anyone who can edit the site can approve a sign-in, once they have signed in to Archival. The app learns which account you are, `did:web:example.com`, and nothing else. It cannot post, follow or change anything as the account, because the only way to change what the account says is to change the site and deploy.
+Anyone who can edit the site can approve a sign-in, once they have signed in to Archival. The app learns which account you are, `did:web:example.com`. If it asks to, and the approval page lists it, it can also follow, like, repost and block as the account, and undo them; anyone who stops being able to edit the site stops being able to do this through every app they signed in to.
+
+Following or unfollowing from an app changes the [`follow`](#Following%20accounts) list in `archival_editor.toml` for you, committed to the site's repository, so the list stays the one record of who the account follows. An app can never change the account's posts, documents or profile, which always come from the site. An app that reads its timeline through your account's server, rather than from the network directly, cannot show one.
 
 Each sign-in is listed under **Connected apps** on your account page, with the account it was for, and disconnecting it there signs the app out.
 """

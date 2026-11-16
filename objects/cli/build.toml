@@ -3,6 +3,8 @@ command = "archival build"
 description = "Build your archival site into static files, ready to deploy to any host."
 content = """
 Build an archival site - this will generate a static site inside a directory (dist unless you have overridden it in archival.toml). This copies `public/`, builds your [scripts](/docs/scripts) into `dist/js/`, and renders your pages.
+
+Given `--social` or `--payments`, the build also records a hash of the [`archival` global](/docs/template-variables#The%20archival%20global) in archival.toml as `archival_global_hash`, so a change to it shows up as a change to your repository.
 """
 
 [[options]]
@@ -11,6 +13,12 @@ description = "override the directory to build to. Defaults to the manifest's bu
 [[options]]
 flags = "-s, --skip-failures"
 description = "if a page or script fails to build, continue building everything else and skip the failing one, rather than erroring early. Useful in CI when you'd rather ship a partial build than nothing."
+[[options]]
+flags = "--social <file>"
+description = "render what the fediverse, Bluesky and other sites have done with your site under `archival.activitypub`, `archival.atproto`, `archival.webmentions` and `archival.interactions`, from a JSON file described by [archival_social.schema.json](https://archival.dev/schemas/archival_social.schema.json). See [The archival global](/docs/template-variables#The%20archival%20global)."
+[[options]]
+flags = "--payments <file>"
+description = "render your payment account's catalog under `archival.payments`, from a JSON file described by [archival_payments.schema.json](https://archival.dev/schemas/archival_payments.schema.json). See [The catalog in templates](/docs/payments#The%20catalog%20in%20templates)."
 [[options]]
 flags = "-u, --upload-prefix <prefix>"
 description = "override the upload prefix. If no archival.toml is present, this is required."

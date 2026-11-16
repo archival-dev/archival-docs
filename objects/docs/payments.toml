@@ -27,6 +27,8 @@ A site uses this in one of two ways:
 - **Your objects hold the variant id.** A print, a ticket or a menu item is an object like any other, with one more field naming the variant it is sold as. A carrier starts a checkout for it. See [Selling a product from an object](#Selling%20a%20product%20from%20an%20object).
 - **Your page lists the catalog.** A carrier answers what the account has for sale, and the page renders it in the browser. See [Listing products from the catalog](#Listing%20products%20from%20the%20catalog).
 
+Either way, your templates can show the catalog's names and prices as plain HTML, from a copy taken when the site builds. See [The catalog in templates](#The%20catalog%20in%20templates).
+
 Checkout is the same call in both: `site.payments.checkout.create` answers a url, the buyer pays on the provider's page, and the provider sends them back to your site.
 
 Build against what this page describes, not against what your provider happens to do. Every provider is answered in the same shapes, and [Payment providers](#Payment%20providers) compares them, feature by feature.
@@ -229,6 +231,65 @@ const variants = await site.payments.variants(ids);
 `account()` answers the connected account, or `null` when there is none: its `provider`, its `name`, its `currency`, and `livemode`, which is false for a provider's test or sandbox account.
 
 Names and descriptions are text someone typed in at the provider.
+"""
+
+[[sections]]
+title = "The catalog in templates"
+content = """
+{% raw %}
+A site with a connected account is given its catalog when it builds, under `archival.payments`, so a page can show what is for sale and what it costs with no carrier and nothing to fetch:
+
+```html
+{% assign variant = archival.payments.variants[print.variant_id] %}
+{% if variant %}
+  {% assign cents = variant.amount | modulo: 100 | prepend: "0" | slice: -2, 2 %}
+  <p>{{ archival.payments.products[variant.product].name }}, ${{ variant.amount | divided_by: 100 }}.{{ cents }}</p>
+  <button data-add="{{ variant.id }}">Add to cart</button>
+{% endif %}
+```
+
+Each part is what the matching carrier call answers, with the fields described under [Listing products from the catalog](#Listing%20products%20from%20the%20catalog):
+
+| In a template | What a carrier calls |
+| --- | --- |
+| `archival.payments.account` | `site.payments.account()` |
+| `archival.payments.catalog` | `site.payments.catalog()`, with every product in `items` and `next` always `nil` |
+| `archival.payments.products[id]` | `site.payments.products([id])[0]` |
+| `archival.payments.variants[id]` | `site.payments.variants([id])[0]` |
+
+An id the account does not sell reads as `nil`. With no account connected, `account` is `nil` and the catalog is empty. Wrap what reads them in `{% if %}`.
+
+**Stock is left out.** A variant here has no `stock` and no `available`. Both change with every sale, and a page built once would go on offering what sold out after it was built. Read them from a carrier when the page loads, starting from the ids the page already has:
+
+```ts
+// carriers/availability/index.ts
+const carrier: Carrier = async (params, body, objects, site) => {
+  const ids = (params.get("ids") ?? "").split(",").filter(Boolean);
+  const variants = await site.payments.variants(ids);
+  return Object.fromEntries(
+    variants.filter((v) => v !== null).map((v) => [v.id, v.available]),
+  );
+};
+export default carrier;
+```
+
+```html
+<script type="module">
+  const buttons = [...document.querySelectorAll("[data-add]")];
+  const ids = buttons.map((button) => button.dataset.add).join(",");
+  const available = await (await fetch(`/carriers/availability?ids=${ids}`)).json();
+  for (const button of buttons) {
+    button.disabled = !available[button.dataset.add];
+  }
+</script>
+```
+
+**Prices are as of the last deploy.** The catalog is copied each time your site deploys, so a price you change or a product you add at your provider reaches your pages on the next one. A checkout always charges the price your provider has now, whatever the page showed.
+
+**Building with a catalog yourself.** `archival build --payments payments.json` renders `archival.payments` from a file shaped like what `site.payments` answers, described by [archival_payments.schema.json](https://archival.dev/schemas/archival_payments.schema.json). It is the same file [`archival run`](#Running%20locally) reads. A file whose `account` is `null` renders as a site with nothing connected.
+
+Because the build fills in `archival`, a top-level object may not be named `archival`. A field or child object may.
+{% endraw %}
 """
 
 [[sections]]
@@ -438,7 +499,7 @@ content = """
 [[sections]]
 title = "Running locally"
 content = """
-[`archival run`](/cli/run), from archival 0.27.3, gives your carriers a local `site.payments`, so a shop can be built and tried without a payment account. Nothing is charged, and no provider is contacted.
+[`archival run`](/cli/run) will automatically read `ARCHIVAL_PAYMENTS` when provided, which gives your carriers and liquid objects a local `site.payments`/`archival.payments`, so a shop can be built and tested without a payment account.
 
 Name a JSON file of what the site sells in `ARCHIVAL_PAYMENTS`:
 
@@ -477,16 +538,20 @@ The file is shaped like what `site.payments` answers: an `account`, and a `catal
 }
 ```
 
-A product needs an `id`, a `name` and its `variants`, and a variant needs an `id`, an `amount` and a `currency`. Everything else is optional. A variant with no `stock` is uncounted. Use the same variant ids your objects hold, and the same carriers run locally and deployed.
+A product needs an `id`, a `name` and its `variants`, and a variant needs an `id`, an `amount` and a `currency`. An `amount` of `null` is a variant with no fixed price. Everything else is optional, and what the `account` leaves out is filled in. A file without those is refused, by your carriers and by the build. Use the same variant ids your objects hold, and the same carriers run locally and deployed.
 
-Without `ARCHIVAL_PAYMENTS`, a local run reads as a site with nothing connected.
+A variant is `available` as it would be at a provider: when it has an `amount`, and its `stock` is more than 0 or it has no `stock`, which leaves it uncounted. Set `"available": false` on a variant to try one marked sold out.
+
+Without `ARCHIVAL_PAYMENTS`, or with `"account": null` in the file, a local run reads as a site with nothing connected.
+
+Every `site.payments` call is checked as a deployed one is, against the same [limits](#Limits), and refused with the same errors. `successUrl` and `cancelUrl` must be urls on the local server or another address on your machine, so build them from `site.url`. A url on your live domain is refused here, as it would be in a [preview](#Previews).
 
 `checkout.create` answers a url on the local server, `/__payments/<id>`, which is a stand-in page listing what is being bought, with two buttons:
 
 - **Pay** marks the checkout paid, takes what was bought off any stock the file tracks, and returns to `successUrl` with its `checkout` parameter, so your thanks page and `checkout.get` behave as they will once deployed.
 - **Cancel** returns to `cancelUrl`. It is shown when the checkout was given one.
 
-The file is read again whenever it is saved, which also puts back any stock a test checkout took. Checkouts are kept only while `archival run` is running. `site.url` is the local server's address, so locally `successUrl` and `cancelUrl` are plain http urls on your machine.
+The file is read again whenever it is saved, which also puts back any stock a test checkout took and renders your pages again. Checkouts are kept only while `archival run` is running. `site.url` is the local server's address, so locally `successUrl` and `cancelUrl` are plain http urls on your machine.
 
 The same run serves the [cart script](/docs/cart) and answers its checkout from the file. See [Previews and local runs](/docs/cart#Previews%20and%20local%20runs).
 
