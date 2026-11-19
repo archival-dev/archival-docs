@@ -8,6 +8,9 @@
   anyway, carried so the link reads as that screen. The layout's script adds
   the ad click and campaign tags to the query, ahead of the hash.
 
+  cta_label is optional: a button under the cards to the full template
+  gallery, for pages whose hero leaves its button out.
+
   The images are the editor's own gallery thumbnails, resized: 400 and 640
   wide, 4:3 like the originals. The name under each says which template it
   is, so the image itself is decorative.
@@ -57,4 +60,18 @@
       {% endif %}
     {% endfor %}
   </ul>
+
+  {% if cta_label %}
+    <div class="lp-actions lp-templates-actions">
+      <a
+        class="primary-cta lp-cta"
+        href="https://editor.archival.dev/new"
+        data-rybbit-event="cta_click"
+        data-rybbit-prop-page="{{ lp_page }}"
+        data-rybbit-prop-cta_text="{{ cta_label | escape }}"
+      >
+        {{- cta_label -}}
+      </a>
+    </div>
+  {% endif %}
 </section>
