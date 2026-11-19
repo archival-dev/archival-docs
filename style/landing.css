@@ -114,6 +114,13 @@
   color: var(--color-typography-secondary);
 }
 
+/* The trade pages' subheads run to about 130 characters. At 34rem that left
+   one word on a third line; this width holds each of them to two. */
+.lp-subhead--wide {
+  max-width: 46rem;
+  text-wrap: balance;
+}
+
 .lp-actions {
   margin-top: 2rem;
   display: flex;
@@ -157,6 +164,10 @@
   padding: 2rem 1rem 0;
   /* With that padding, clears the fixed nav when the hero's link jumps here. */
   scroll-margin-top: 4rem;
+}
+
+.lp-templates-actions {
+  margin-top: 3rem;
 }
 
 .lp-template-grid {
