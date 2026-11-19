@@ -8,6 +8,10 @@ prices_checked = "Prices checked on October 13, 2026"
 trade_compare_title = "Compare us"
 trade_features_title = "What you get for $15/mo"
 trade_faq_title = "Questions"
+video_title = "What is Archival?"
+video_url = "https://uploads.archival.dev/archival-template-uploads/81f2dbc9a1c9fef2fa5f0feb9c11f527c6fab451949c9c5b9a44d7366b4b9ea8/archival-demo-web-av1.mp4"
+video_fallback_url = "https://uploads.archival.dev/archival-template-uploads/5cf9ad1132e8179042ec2511a399b0b476a66c10fec0ddd2aa07ec911c0f0176/archival-demo-web.mp4"
+video_poster_url = "https://uploads.archival.dev/archival-template-uploads/377c6b2ac0b142788cc011b95c2a4d14d1396f5c35ef39a16f9ed4b61f1fca2f/archival-demo-poster.jpg"
 
 [[templates]]
 name = "Small Business"

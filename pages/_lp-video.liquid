@@ -1,0 +1,108 @@
+{% comment %}
+  The "What is Archival?" video, from landing_shared. Takes lp_page, sent with
+  each event as "page" like every CTA's.
+
+  Absent while neither video URL is set. The AV1 source comes first; a browser
+  that cannot decode it skips to the H.264 one, which it can only do because
+  each type names its codecs. They match the current encodes (AV1 Main 8-bit
+  level 4.0, H.264 High 4.0, AAC-LC). preload="none" fetches nothing but the
+  poster until someone presses play.
+
+  The markup is a plain native player. The script takes the controls away until
+  the first play, so iOS and Chrome draw no play button of their own under the
+  big one, and marks the frame is-enhanced, which is what shows the dim and the
+  button whenever the video is paused.
+
+  Each event is sent once per page view: video_play on the first play,
+  video_50 at the halfway mark and video_complete within half a second of the
+  end, since the last timeupdate can land just short of duration.
+{% endcomment %}
+{% assign shared = objects.landing_shared %}
+{% assign has_av1 = false %}
+{% assign has_fallback = false %}
+{% assign has_poster = false %}
+{% unless shared.video_url == blank %}
+  {% assign has_av1 = true %}
+{% endunless %}
+{% unless shared.video_fallback_url == blank %}
+  {% assign has_fallback = true %}
+{% endunless %}
+{% unless shared.video_poster_url == blank %}
+  {% assign has_poster = true %}
+{% endunless %}
+
+{% if has_av1 or has_fallback %}
+  <section class="lp-video" id="video" aria-labelledby="video-title">
+    <h2 class="section-title lp-section-title" id="video-title">{{ shared.video_title }}</h2>
+    <div class="lp-video-stage">
+      <div class="demo-video-frame lp-video-frame" data-lp-video-frame>
+        <video
+          class="demo-video-player"
+          data-lp-video
+          data-lp-page="{{ lp_page }}"
+          controls
+          playsinline
+          preload="none"
+          width="1920"
+          height="1080"
+          {% if has_poster %}
+            poster="{{ shared.video_poster_url }}"
+          {% endif %}
+        >
+          {% if has_av1 %}
+            <source src="{{ shared.video_url }}" type='video/mp4; codecs="av01.0.08M.08, mp4a.40.2"'>
+          {% endif %}
+          {% if has_fallback %}
+            <source src="{{ shared.video_fallback_url }}" type='video/mp4; codecs="avc1.640028, mp4a.40.2"'>
+          {% endif %}
+        </video>
+        <button class="lp-video-play" type="button" data-lp-video-play aria-label="Play video"></button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      var frame = document.querySelector('[data-lp-video-frame]');
+      if (!frame) return;
+      var video = frame.querySelector('[data-lp-video]');
+      var button = frame.querySelector('[data-lp-video-play]');
+      var props = { page: video.dataset.lpPage };
+      var sent = {};
+      function send(name) {
+        if (sent[name]) return;
+        sent[name] = true;
+        if (window.rybbit) window.rybbit.event(name, props);
+      }
+
+      video.controls = false;
+      frame.classList.add('is-enhanced');
+
+      button.addEventListener('click', function () {
+        video.controls = true;
+        video.play();
+        video.focus();
+      });
+      video.addEventListener('click', function () {
+        if (!video.controls && video.paused) video.play();
+      });
+      video.addEventListener('play', function () {
+        video.controls = true;
+        frame.classList.add('is-playing');
+        send('video_play');
+      });
+      video.addEventListener('pause', function () {
+        frame.classList.remove('is-playing');
+      });
+      video.addEventListener('ended', function () {
+        frame.classList.remove('is-playing');
+      });
+      video.addEventListener('timeupdate', function () {
+        var duration = video.duration;
+        if (!duration || !isFinite(duration)) return;
+        if (video.currentTime >= duration / 2) send('video_50');
+        if (video.currentTime >= duration - 0.5) send('video_complete');
+      });
+    })();
+  </script>
+{% endif %}
