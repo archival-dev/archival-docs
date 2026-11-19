@@ -218,6 +218,16 @@ prices_checked = "string"
 trade_compare_title = "string"
 trade_features_title = "string"
 trade_faq_title = "string"
+# The video between the template cards and the comparison on the trade pages.
+# Full URLs of files uploaded through Archival Admin, which stores them under
+# archival-template-uploads rather than this site's upload_prefix, so they
+# cannot be upload fields. video_url is the AV1 encode and video_fallback_url
+# the H.264 one; _lp-video.liquid names each one's codecs, so a re-encode has
+# to update them there.
+video_title = "string"
+video_url = "string"
+video_fallback_url = "string"
+video_poster_url = "string"
 
 # Every template a landing page can show. All three fields must match the
 # editor's catalog (editor.archival.dev/templates.json).

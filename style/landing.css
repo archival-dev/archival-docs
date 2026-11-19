@@ -53,6 +53,8 @@
 .lp-main {
   flex: 1;
   width: 100%;
+  /* The video's glow spills past the viewport on a phone. */
+  overflow-x: clip;
 }
 
 /* Hero. Sized so the headline, subhead and CTA fit a phone's first screen,
@@ -284,6 +286,169 @@
    marks, so the eye lands on the one column that is filled in and reads
    straight down it. Orange, the CTA color, sat too close to the red and yellow
    of the worse verdicts beside it. */
+
+/* The frame and player are the homepage demo video's (main.css). */
+.lp-video {
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 7rem 1rem 0;
+}
+
+/* Bias lighting: the pricing tier's glow colors (main.css .glow-container),
+   blurred behind the frame. Only transforms animate, so each blurred layer is
+   painted once and then moved by the compositor. */
+.lp-video-stage {
+  position: relative;
+  isolation: isolate;
+}
+
+.lp-video-stage::before,
+.lp-video-stage::after {
+  content: "";
+  position: absolute;
+  inset: -1.5rem;
+  border-radius: 2rem;
+  filter: blur(40px);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: -1;
+  will-change: transform;
+}
+
+.lp-video-stage::before {
+  background:
+    radial-gradient(circle at 15% 25%, rgba(255, 0, 150, 1), transparent 55%),
+    radial-gradient(circle at 85% 75%, rgba(0, 200, 255, 1), transparent 55%);
+  animation: lp-bias-a 14s ease-in-out infinite alternate;
+}
+
+.lp-video-stage::after {
+  background:
+    radial-gradient(circle at 80% 15%, rgba(0, 255, 100, 0.9), transparent 50%),
+    radial-gradient(circle at 20% 85%, rgba(0, 200, 255, 0.9), transparent 50%);
+  mix-blend-mode: screen;
+  animation: lp-bias-b 19s ease-in-out infinite alternate;
+}
+
+@keyframes lp-bias-a {
+  from {
+    transform: translate(-3%, -2%) scale(1);
+  }
+  to {
+    transform: translate(3%, 2%) scale(1.04);
+  }
+}
+
+@keyframes lp-bias-b {
+  from {
+    transform: translate(3%, 2%) scale(1.04);
+  }
+  to {
+    transform: translate(-3%, -2%) scale(1);
+  }
+}
+
+/* The comparison table's outline on these pages (.lp-table under
+   .lp-compare--card): one hairline, no double ring. */
+.lp-body .lp-video-frame {
+  border: 1px solid var(--color-transparent-border);
+  box-shadow: none;
+}
+
+/* The dim and the button exist only once the script has taken over the
+   player (is-enhanced), and only while it is paused. The dim lets clicks
+   through, so the native control bar under it still works after a pause. */
+.lp-video-frame.is-enhanced::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease-out,
+    visibility 0.2s;
+}
+
+.lp-video-play {
+  display: none;
+}
+
+.lp-video-frame.is-enhanced .lp-video-play {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  margin: auto;
+  width: clamp(4rem, 12vw, 6.5rem);
+  height: clamp(4rem, 12vw, 6.5rem);
+  display: block;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease-out,
+    visibility 0.2s,
+    transform 0.1s ease-in-out;
+}
+
+/* The glyph and its ring are one moving gradient (the headings' in main.css
+   .hero-message), each layer on the button's whole box so their colors line up:
+   ::before is masked to a ring, ::after to the play glyph. */
+.lp-video-frame.is-enhanced .lp-video-play::before,
+.lp-video-frame.is-enhanced .lp-video-play::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(45deg, #ef476f, #ffd166, #06d6a0, #118ab2);
+  background-size: 300% 300%;
+  animation: moveColors 10s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.lp-video-frame.is-enhanced .lp-video-play::before {
+  padding: 3px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+.lp-video-frame.is-enhanced .lp-video-play::after {
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 984 984'%3E%3Cpath d='M771.584 422.539C823.774 453.91 824.182 529.36 772.808 561.42L771.584 562.169L771.538 562.197L771.491 562.224L770.446 562.841L770.391 562.875L416.301 767.638C361.967 799.058 294.001 759.849 294.001 697.085L294.001 287.623C294.001 224.859 361.967 185.649 416.301 217.069L770.335 421.801L770.438 421.862L771.483 422.478L771.534 422.508L771.584 422.539ZM670.686 436.254C672.663 419.684 669.31 403.312 664.318 392.838L402.284 241.308C366.618 220.683 322.001 246.422 322.001 287.623L322.001 354.638C329.049 349.352 336.943 344.672 345.369 341.056C367.734 331.459 395.557 328.701 422.002 343.969L422.01 343.974L650.079 475.862C662.588 465.981 668.843 451.696 670.686 436.254ZM458.066 711.141C450.99 708.511 443.946 705.05 437.324 700.585C416.72 686.69 401.001 663.512 401.001 628.614L401.001 364.82C386.19 358.925 370.698 360.657 356.41 366.788C341.081 373.366 328.581 384.463 322.001 394.03L322.001 697.085C322.001 738.286 366.618 764.024 402.284 743.399L458.066 711.141ZM429.001 380.362L429.001 604.345L622.664 492.353L429.001 380.362ZM757.197 538.148C791.66 517.395 791.648 467.268 757.159 446.537L756.275 446.015L698.427 412.562C699.475 421.304 699.574 430.474 698.488 439.572C695.605 463.737 684.073 489.208 657.639 504.473L429.374 636.474C431.367 656.86 441.135 669.384 452.978 677.371C465.762 685.991 481.623 689.661 494.195 690.249L756.318 538.668L757.197 538.148Z'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 984 984'%3E%3Cpath d='M771.584 422.539C823.774 453.91 824.182 529.36 772.808 561.42L771.584 562.169L771.538 562.197L771.491 562.224L770.446 562.841L770.391 562.875L416.301 767.638C361.967 799.058 294.001 759.849 294.001 697.085L294.001 287.623C294.001 224.859 361.967 185.649 416.301 217.069L770.335 421.801L770.438 421.862L771.483 422.478L771.534 422.508L771.584 422.539ZM670.686 436.254C672.663 419.684 669.31 403.312 664.318 392.838L402.284 241.308C366.618 220.683 322.001 246.422 322.001 287.623L322.001 354.638C329.049 349.352 336.943 344.672 345.369 341.056C367.734 331.459 395.557 328.701 422.002 343.969L422.01 343.974L650.079 475.862C662.588 465.981 668.843 451.696 670.686 436.254ZM458.066 711.141C450.99 708.511 443.946 705.05 437.324 700.585C416.72 686.69 401.001 663.512 401.001 628.614L401.001 364.82C386.19 358.925 370.698 360.657 356.41 366.788C341.081 373.366 328.581 384.463 322.001 394.03L322.001 697.085C322.001 738.286 366.618 764.024 402.284 743.399L458.066 711.141ZM429.001 380.362L429.001 604.345L622.664 492.353L429.001 380.362ZM757.197 538.148C791.66 517.395 791.648 467.268 757.159 446.537L756.275 446.015L698.427 412.562C699.475 421.304 699.574 430.474 698.488 439.572C695.605 463.737 684.073 489.208 657.639 504.473L429.374 636.474C431.367 656.86 441.135 669.384 452.978 677.371C465.762 685.991 481.623 689.661 494.195 690.249L756.318 538.668L757.197 538.148Z'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+}
+
+.lp-video-frame.is-playing .lp-video-play::before,
+.lp-video-frame.is-playing .lp-video-play::after {
+  animation-play-state: paused;
+}
+
+.lp-video-frame.is-enhanced .lp-video-play:hover {
+  transform: scale(1.05);
+}
+
+.lp-video-frame.is-enhanced .lp-video-play:active {
+  transform: scale(0.97);
+}
+
+.lp-video-play:focus-visible {
+  outline: 2px solid var(--color-primary-cta-highlight);
+  outline-offset: 8px;
+}
+
+.lp-video-frame.is-playing::after,
+.lp-video-frame.is-enhanced.is-playing .lp-video-play {
+  opacity: 0;
+  visibility: hidden;
+}
 
 .lp-compare {
   width: 100%;
@@ -650,6 +815,23 @@
 
   /* The ring still marks what is hovered; the growing does not. */
   .lp-template:hover .lp-template-shot {
+    transform: none;
+  }
+
+  .lp-video-frame.is-enhanced::after,
+  .lp-video-frame.is-enhanced .lp-video-play {
+    transition: none;
+  }
+
+  .lp-video-stage::before,
+  .lp-video-stage::after,
+  .lp-video-frame.is-enhanced .lp-video-play::before,
+  .lp-video-frame.is-enhanced .lp-video-play::after {
+    animation: none;
+  }
+
+  .lp-video-frame.is-enhanced .lp-video-play:hover,
+  .lp-video-frame.is-enhanced .lp-video-play:active {
     transform: none;
   }
 }
