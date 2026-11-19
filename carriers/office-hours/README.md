@@ -5,6 +5,10 @@ It is an archival [carrier](https://archival.dev/docs/carriers), deployed with
 the site and served at `/carriers/office-hours`, so the browser talks to it on
 the same origin.
 
+It's `"access": "public"`, so calendar apps can fetch the `ics` feed
+without the browser verification carriers otherwise ask for. The RSVP form is
+bounded by its hourly limit instead.
+
 The sessions themselves live in the team's Notion calendar, the "Archival
 Office Hours" database. Each row is one session: its `Name`, `Date`, `Type`
 (Discord, In-Person, or both), `Link`, `Place` and `Hosts`. The carrier reads
@@ -33,12 +37,13 @@ archival.dev. It needs a plan that includes email.
 Every request is `/carriers/office-hours?action=<name>`. Reads are GETs,
 writes are POSTs with a JSON body.
 
-| Action   | Kind  | What it does                                                                                                                                                       |
-| -------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `events` | read  | Every session that hasn't ended, oldest first, with its hosts (name and Notion avatar), its type and the name of its place. The link and the address are left out. |
-| `rsvp`   | read  | `token`: the RSVP a cancel link points at, for the cancel page.                                                                                                    |
-| `rsvp`   | write | `event`, `name`, `email`, `plan`: adds the person to the session, puts a line in the **RSVPs** section of the session's Notion page, and emails them the details.  |
-| `cancel` | write | `token`: cancels the RSVP and strikes its line through on the Notion page.                                                                                         |
+| Action   | Kind  | What it does                                                                                                                                                                                                                        |
+| -------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `events` | read  | Every session that hasn't ended, oldest first, with its hosts (name and Notion avatar), its type and the name of its place. The link and the address are left out.                                                                  |
+| `ics`    | read  | The sessions as an iCalendar feed to subscribe to (`text/calendar`): every session that hasn't ended or ended in the last 30 days, with its hosts and the name of its place. Like `events`, it leaves out the link and the address. |
+| `rsvp`   | read  | `token`: the RSVP a cancel link points at, for the cancel page.                                                                                                                                                                     |
+| `rsvp`   | write | `event`, `name`, `email`, `plan`: adds the person to the session, puts a line in the **RSVPs** section of the session's Notion page, and emails them the details.                                                                   |
+| `cancel` | write | `token`: cancels the RSVP and strikes its line through on the Notion page.                                                                                                                                                          |
 
 An RSVP is one row in `site.sql` per person per session. RSVPing again for the
 same session with the same email revives a cancelled RSVP (its line on the page

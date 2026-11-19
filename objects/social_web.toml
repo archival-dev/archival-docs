@@ -1,13 +1,13 @@
 order = -1
 title = "Websites for The Social Web"
 description = "Archival sites speak ActivityPub, the AT Protocol and Webmention out of the box. Publish once, get followed from Mastodon, Threads and Bluesky, and bring every reply home to a site you own."
-tagline = "Followed from Mastodon, Threads and Bluesky. Replies and mentions from anywhere, kept on a site you own. No plugins, no platform, nothing to run."
+tagline = "Followed from Mastodon, Threads and Bluesky, with replies and mentions kept alongside your site. Archival's hosting handles the protocols."
 cta_label = "Build your site"
 cta_url = "https://editor.archival.dev/new"
 docs_label = "Read the docs"
 docs_url = "/docs/editor-config#ActivityPub"
 standards_title = "Built on open standards"
-standards_intro = "The social web is a set of open protocols, not a product. Archival implements the ones people use, so a site we host takes part without a plugin, a bridge or a line of code."
+standards_intro = "The social web is a set of open protocols. Archival implements ActivityPub, the AT Protocol and Webmention as part of its hosting."
 closing_title = "Join the social web."
 closing_content = """
 Start from a template, map your posts, and publish. Your site is followable in minutes.
@@ -29,7 +29,7 @@ kicker = "Open protocol"
 name = "AT Protocol"
 url = "https://atproto.com"
 link_label = "Read the spec"
-blurb = "The network Bluesky runs on. An Archival site hosts its own account there: its handle is its domain, its posts are its content, and nothing is cross-posted through anyone else's server."
+blurb = "The network Bluesky runs on. An Archival site hosts its own account there: its handle is its domain and its posts are its content."
 extra_label = "Set it up"
 extra_url = "/docs/atproto"
 
@@ -57,14 +57,14 @@ title = "Your site is an account"
 content = """
 Add an `activitypub` section to your site and it becomes something people can follow: `@blog@example.com`, from Mastodon, Threads, Misskey, Micro.blog and [hundreds of other apps](/update/activitypub).
 
-There is nothing to run. Archival answers WebFinger and serves your actor, inbox and outbox. Every time your site deploys, the people following it get what you added, changed or removed. Pin a post with a single boolean field.
+Archival answers WebFinger and serves your actor, inbox and outbox. Every time your site deploys, the people following it get what you added, changed or removed. Pin a post with a single boolean field.
 """
 
 [[sections]]
 key = "atproto"
 title = "Your domain is your Bluesky handle"
 content = """
-Add an `atproto` section and your site is an account on the [AT Protocol](/docs/atproto), the network Bluesky runs on. People follow `@example.com`, with no bridge in between and no account on anyone else's server. The site hosts the account itself.
+Add an `atproto` section and your site is an account on the [AT Protocol](/docs/atproto), the network Bluesky runs on. People follow `@example.com`. The site hosts the account itself.
 
 Every deploy publishes what your content says. A short post goes out as a Bluesky post with its images. Long-form writing goes out as a [standard.site](https://standard.site) document and a post with a link card back to your page. Edit the file and the post updates. Delete it and the post is gone.
 """
@@ -73,7 +73,7 @@ Every deploy publishes what your content says. A short post goes out as a Bluesk
 key = "apps"
 title = "Sign in from any Mastodon app"
 content = """
-Turn on `allow_mastodon_clients` and your site is a server Mastodon apps can sign in to. In Ivory, Tusky, Elk, Phanpy or most others, add a server and give it your domain. The app opens the Archival editor, you choose which of the site's accounts it acts as, and you approve. There is no password to make and nothing else to set up.
+Turn on `allow_mastodon_clients` and your site is a server Mastodon apps can sign in to. In Ivory, Tusky, Elk, Phanpy or most others, add a server and give it your domain. The app opens the Archival editor, you choose which of the site's accounts it acts as, and you approve.
 
 The app shows the account's home timeline: every post and boost from the accounts it follows, kept by Archival as they arrive. Star, boost and reply from wherever you read. A reply is published as a post of your account, and a follow is added to your site's configuration and sent on its next deploy. Your posts are still your site's content, written in the site.
 """
@@ -91,16 +91,16 @@ It works in both directions. Map a post type and every link in your posts sends 
 key = "conversation"
 title = "Bring the conversation home"
 content = """
-Replies, likes and boosts from the fediverse, replies, likes and reposts from Bluesky, and mentions from other sites are kept with your site rather than on someone else's server. A small [carrier](/docs/carriers) reads them when a visitor asks, so a post's page can show the whole thread under it: a comment from Mastodon beside a reply from Bluesky and another from a blog, with no database to run.
+Replies, likes and boosts from the fediverse, replies, likes and reposts from Bluesky, and mentions from other sites are kept with your site. A small [carrier](/docs/carriers) reads them when a visitor asks, so a post's page can show the whole thread under it: a comment from Mastodon beside a reply from Bluesky and another from a blog.
 
-What you show is up to you. A carrier is a filter you write, not a queue you work. Your site stays static, fast and yours, and the conversation comes to it.
+The carrier decides which of them to show and in what order. Your pages stay static HTML, and the thread is read at request time.
 """
 
 [[sections]]
 key = "config"
 title = "Turned on in one file"
 content = """
-Every protocol is configured the same way: name the fields of your objects that make up a post, and Archival does the rest. Everything it publishes is your content, read from the files already in your repo. Nothing in the section is itself sent anywhere.
+Every protocol is configured the same way: name the fields of your objects that make up a post, and Archival does the rest. Everything it publishes is your content, read from the files already in your repo.
 
 One more line, `allow_mastodon_clients = true`, lets Mastodon apps sign in to your accounts. Write it by hand, or ask the editor's task mode to add it for you. Remove the section and your site stops federating. Add it back and it picks up where it left off, followers and all.
 """
@@ -112,19 +112,19 @@ Followers follow your domain. Redesign, rename your objects or go quiet for a ye
 """
 
 [[benefits]]
-title = "No plugins to maintain"
+title = "Part of the hosting"
 content = """
-ActivityPub, the AT Protocol and Webmention are part of Archival's hosting, not an add-on. There is nothing to install, update or keep patched, and every site we host gets all three.
+ActivityPub, the AT Protocol and Webmention are part of Archival's hosting, and every site we host gets all three.
 """
 
 [[benefits]]
-title = "Standards, not platforms"
+title = "Implemented as specified"
 content = """
-We implement the protocols as written, so your site works with every app that does the same, including the ones that have not been built yet.
+We implement the protocols as written, so your site works with any app that follows them.
 """
 
 [[benefits]]
 title = "Still just a website"
 content = """
-Your pages build to static HTML and your content lives in plain files in a git repo. The social web is a layer on top, and it never gets in the way.
+Your pages build to static HTML and your content lives in plain files in a git repo. The protocols publish from those same files.
 """

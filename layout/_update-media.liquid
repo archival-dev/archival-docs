@@ -1,11 +1,10 @@
 {% comment %}
   Media for an update. Each entry's `file` is a oneof holding either an image or
-  a video; entries with nothing attached yet are skipped, so a row added in the
-  editor but not filled in leaves no hole.
+  a video; entries with nothing attached yet, such as a row added in the editor
+  but not filled in, are skipped.
 
   Every optional field is checked for existence before it is indexed: a field
-  left out of the object file is nil, and indexing nil is a build error rather
-  than an empty value.
+  left out of the object file is nil, and indexing nil is a build error.
 
   Two or more entries render as a stack: one item in flow, the rest hidden, with
   the offset cards behind drawn by CSS. Only the active item is in flow so the
@@ -220,7 +219,7 @@
           class="update-media-step"
           type="button"
           data-media-prev
-          aria-label="Previous photo"
+          aria-label="Previous"
         >
           ‹
         </button>
@@ -229,7 +228,7 @@
           class="update-media-step"
           type="button"
           data-media-next
-          aria-label="Next photo"
+          aria-label="Next"
         >
           ›
         </button>

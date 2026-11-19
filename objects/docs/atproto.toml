@@ -4,7 +4,7 @@ include_in_llm_docs = true
 description = """
 An Archival site hosted by archival.dev can be an account on the [AT Protocol](https://atproto.com), the network Bluesky runs on. The site is the account: its handle is its domain, and people follow `@example.com` from Bluesky or any other ATProto app.
 
-Nothing is posted to someone else's server on the site's behalf. The site hosts its own account, and every deploy publishes what the site's content says. This page covers turning it on, what is published, and the one line your templates need for long-form writing to be verified.
+The site hosts its own account, and every deploy publishes what the site's content says. This page covers turning it on, what is published, and the one line your templates need for long-form writing to be verified.
 
 This is separate from [ActivityPub](/docs/editor-config#ActivityPub), which reaches Mastodon and the rest of the fediverse. A site can do both.
 """
@@ -28,7 +28,7 @@ content = "text"
 published = "date"
 ```
 
-Past `domain`, `follow`, the `object` of `actor` and `publication`, and each object's `type`, every value names a field of the object it reads from. Nothing in the section is content.
+Past `domain`, `follow`, the `object` of `actor` and `publication`, and each object's `type`, every value names a field of the object it reads from.
 
 The account appears on the network after the next deploy. It can take a few minutes for Bluesky to show a new account.
 
@@ -47,9 +47,11 @@ domain = "example.com"
 
 Give a bare hostname with no `https://`, port or path. It must be one of your site's own domains.
 
-**Settle on a domain before you turn this on.** The domain is not just the account's name, it is the account. A different domain is a different account, which starts empty: the followers, likes and replies you had stay with the old one, and the old one stops existing. There is no way to move them.
+**Settle on a domain before you turn this on.** The domain is not just the account's name, it is the account. A different domain is a different account, which starts empty: the followers, likes and replies you had stay with the old one, and the old one stops existing. There is no way to move them to another domain.
 
-The same is true of the domain itself. If you let it lapse, whoever registers it next holds the account.
+Changing where the domain is hosted is different. Whoever serves the domain controls the account, so you can take it, followers and all, to any other host that serves ATProto accounts. See [Taking your account to another host](#Taking%20your%20account%20to%20another%20host).
+
+The flip side is that if you let the domain lapse, whoever registers it next holds the account.
 
 If your domain already verifies a handle for an existing Bluesky account with a `/.well-known/atproto-did` file, that keeps working until you add `[atproto]`. Once you do, the site answers that address itself, and the handle belongs to the site's own account.
 """
@@ -162,7 +164,7 @@ Without the tag the document is still published, and its Bluesky post still link
 [[sections]]
 title = "Following accounts"
 content = """
-`follow` (optional) lists accounts your account follows, up to twenty, each a handle such as `alice.example.com` or a DID:
+`follow` (optional) lists accounts your account follows, up to ten thousand, each a handle such as `alice.example.com` or a DID:
 
 ```toml
 [atproto]
@@ -172,6 +174,18 @@ follow = ["alice.example.com", "did:plc:ewvi7nxzyoun6zhxrhs64oiz"]
 Each deploy follows every account newly on the list and unfollows every one taken off it. A handle that cannot be found is tried again on the next deploy, and does not hold up publishing.
 
 Your site does not show posts from the accounts it follows.
+"""
+
+[[sections]]
+title = "Signing in as your site"
+content = """
+Apps that support ATProto sign-in can sign you in as your site's account. Where the app asks for your handle, enter your domain, such as `example.com`, and you are sent to Archival to approve it.
+
+Anyone who can edit the site can approve a sign-in, once they have signed in to Archival. The app learns which account you are, `did:web:example.com`. If it asks to, and the approval page lists it, it can also follow, like, repost and block as the account, and undo them; anyone who stops being able to edit the site stops being able to do this through every app they signed in to.
+
+Following or unfollowing from an app changes the [`follow`](#Following%20accounts) list in `archival_editor.toml` for you, committed to the site's repository, so the list stays the one record of who the account follows. An app can never change the account's posts, documents or profile, which always come from the site. An app that reads its timeline through your account's server, rather than from the network directly, cannot show one.
+
+Each sign-in is listed under **Connected apps** on your account page, with the account it was for, and disconnecting it there signs the app out.
 """
 
 [[sections]]
@@ -188,13 +202,42 @@ See [Reading Bluesky and the AT Protocol](/docs/carriers#Reading%20Bluesky%20and
 """
 
 [[sections]]
+title = "Taking your account to another host"
+content = """
+Your account belongs to your domain. You can move it to any host that serves ATProto accounts for a `did:web` and keep its followers, likes and replies, as long as the domain comes with you.
+
+This works because of where things are stored. A follow, like or reply is a record in the repository of whoever made it, pointing at `did:web:<your domain>`, so none of it has to be moved.
+
+**1. Download your repository.** It is one file in the standard CAR format, holding every record the account has published, under the same record keys:
+
+```sh
+curl -o repo.car "https://example.com/xrpc/com.atproto.sync.getRepo?did=did:web:example.com"
+```
+
+**2. Download its images.** `listBlobs` lists every blob your records refer to, and `getBlob` downloads each one:
+
+```sh
+curl "https://example.com/xrpc/com.atproto.sync.listBlobs?did=did:web:example.com"
+curl -o <cid> "https://example.com/xrpc/com.atproto.sync.getBlob?did=did:web:example.com&cid=<cid>"
+```
+
+**3. Import both on the new host**, then point the domain at it. The new host serves its own `https://<domain>/.well-known/did.json`, naming its own signing key and its own server. With a `did:web`, that document is the only record of which key and which server the account uses, so publishing a new one is the whole move. The network reads it again and carries on.
+
+Your posts keep their record keys, so likes and replies made to them stay attached. The content itself is in your site's repository on GitHub, so you can keep publishing from it with any tool you like.
+
+**Download before you cancel.** A cancelled or removed account refuses its repository, so `getRepo` answers `RepoSuspended` or `RepoDeactivated` from then on.
+"""
+
+[[sections]]
 title = "What the account is on the network"
 content = """
 For anyone connecting other software to a site, or hosting Archival sites themselves:
 
 - The account's DID is `did:web:<domain>`, and `https://<domain>/.well-known/did.json` is its DID document. `https://<domain>/.well-known/atproto-did` answers the same DID as plain text, which is how the handle is verified.
 - The site is the account's own Personal Data Server. It answers the read side of one under `https://<domain>/xrpc/`: `com.atproto.repo.describeRepo`, `getRecord` and `listRecords`, and `com.atproto.sync.getRepo`, `getRecord`, `getLatestCommit`, `getRepoStatus`, `listRepos`, `getBlob`, `listBlobs` and `subscribeRepos`.
-- It takes no writes. There is no sign-in, no app password and no OAuth: the only way to change what the account says is to change the site and deploy.
+- It takes no writes and has no app passwords: the only way to change what the account says is to change the site and deploy.
+- `https://<domain>/.well-known/oauth-protected-resource` names `https://api.archival.dev` as the account's authorization server. It is an ATProto OAuth server: it requires pushed authorization requests and DPoP, takes client metadata documents as `client_id`, and grants the `atproto` scope alone, with the account's DID as `sub`.
 - A site's other domains redirect `/xrpc/` requests to the account's domain.
+- `com.atproto.sync.getRepo` is the whole repository as a CAR file, which is how the account is moved to another host.
 - A suspended or removed account keeps answering its DID document and `getRepoStatus`, and refuses its repository.
 """

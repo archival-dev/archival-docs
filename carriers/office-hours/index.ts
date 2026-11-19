@@ -7,6 +7,7 @@
 // and reads are the ones without.
 
 import type { Carrier, CarrierScheduled } from "@archival/carrier";
+import { calendar } from "./calendar.ts";
 import { Database } from "./db.ts";
 import { type Context, fail, fields } from "./http.ts";
 import * as rsvps from "./rsvps.ts";
@@ -15,6 +16,7 @@ type Handler = (context: Context) => Promise<Response>;
 
 const READS: Record<string, Handler> = {
   events: rsvps.events,
+  ics: calendar,
   rsvp: rsvps.show,
 };
 

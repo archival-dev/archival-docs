@@ -89,6 +89,14 @@ export const whereLines = (event: Event): Where[] => {
   return lines;
 };
 
+const BRAND = "Archival Office Hours";
+
+const eventTitle = (name: string) => {
+  if (/archival office hours/i.test(name)) return name;
+  if (/^\s*office hours\s*$/i.test(name)) return BRAND;
+  return `${BRAND}: ${name}`;
+};
+
 const render = (
   event: Event,
   rsvp: Rsvp,
@@ -104,7 +112,7 @@ const render = (
     "",
     intro,
     "",
-    `What: ${event.name}`,
+    `What: ${eventTitle(event.name)}`,
     `When: ${when}`,
     ...where.map((line) =>
       line.url && line.url !== line.label
@@ -135,7 +143,7 @@ const render = (
   const html = `<!doctype html><html><body style="font-family:system-ui,sans-serif;font-size:16px;line-height:1.5;color:#111;max-width:560px;margin:0 auto;padding:24px">
 <p>Hi ${escape(rsvp.name)},</p>
 <p>${escape(intro)}</p>
-<p style="margin:0 0 6px"><strong>What:</strong> ${escape(event.name)}</p>
+<p style="margin:0 0 6px"><strong>What:</strong> ${escape(eventTitle(event.name))}</p>
 <p style="margin:0 0 6px"><strong>When:</strong> ${escape(when)}</p>
 ${whereHtml}
 <p style="margin:18px 0 6px"><strong>What you want to work on:</strong></p>
@@ -160,12 +168,12 @@ export const sendConfirmation = (
     rsvp,
     timeZone,
     cancelUrl,
-    "You're on the list for office hours. Here are the details:",
+    `You're on the list for ${BRAND}. Here are the details:`,
     "We'll email you again an hour before it starts. Bring your site, your questions, or just an idea.",
   );
   return site.email.send({
     to: rsvp.email,
-    subject: `You're in: ${event.name}`,
+    subject: `You're in: ${eventTitle(event.name)}`,
     text,
     html,
     ...(replyTo ? { replyTo } : {}),
@@ -185,12 +193,12 @@ export const sendReminder = (
     rsvp,
     timeZone,
     cancelUrl,
-    "Office hours start in about an hour. Here's a reminder of what you told us and where to find us:",
+    `${BRAND} starts in about an hour. Here's a reminder of what you told us and where to find us:`,
     "See you soon.",
   );
   return site.email.send({
     to: rsvp.email,
-    subject: `Starting soon: ${event.name}`,
+    subject: `Starting soon: ${eventTitle(event.name)}`,
     text,
     html,
     ...(replyTo ? { replyTo } : {}),

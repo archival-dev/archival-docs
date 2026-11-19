@@ -1,7 +1,6 @@
-// Accounts for commenting on updates. An account is a passkey: no password
-// and no email. Signing in goes straight to the browser's passkey prompt, so
-// a returning reader never sees a dialog; only someone without a passkey is
-// offered one. Sessions travel in request bodies, since the carrier can't
+// Accounts for commenting on updates. An account is a passkey and a name.
+// Signing in goes straight to the browser's passkey prompt; only someone
+// without a passkey is shown a dialog, to make one. Sessions travel in request bodies, since the carrier can't
 // read cookies, and live in local storage between visits.
 
 const SESSION_KEY = "archival-comment-session";
@@ -41,7 +40,7 @@ export const store = {
       if (value === null) localStorage.removeItem(key);
       else localStorage.setItem(key, value);
     } catch {
-      // Private browsing. Nothing is remembered.
+      // Private browsing.
     }
   },
 };
@@ -327,7 +326,7 @@ const buildDialog = (): Dialog => {
     <p class="account-error" data-account-error role="alert"></p>`;
   node.querySelector("[data-account-explain]")!.textContent =
     `A passkey signs you in to ${window.location.hostname} with your device's Face ID, Touch ID, fingerprint or PIN. ` +
-    "No password or email, and it follows you to your other devices.";
+    "All it needs is a name, and it follows you to your other devices.";
   document.body.append(node);
 
   const createStep = node.querySelector<HTMLFormElement>(

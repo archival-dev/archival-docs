@@ -110,7 +110,7 @@ const ALLOWED_TAGS = new Set([
 /**
  * Archival already reduces remote content to a handful of tags before it
  * keeps it. This keeps the page to the same list on the way in, so a reply
- * can carry text and links and nothing else.
+ * carries only text and links.
  */
 const sanitize = (html: string) => {
   const doc = new DOMParser().parseFromString(html, "text/html");

@@ -21,7 +21,7 @@ content = "yourname.com, plus 5 email addresses on it, included in your plan."
 
 [[benefits]]
 title = "Website analytics."
-content = "See how many people visit and which pages they look at. Nothing to install."
+content = "See how many people visit and which pages they look at."
 
 [[benefits]]
 title = "Update from your phone."

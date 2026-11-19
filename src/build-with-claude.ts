@@ -38,8 +38,6 @@ type StartResponse = {
   expiresAt: string;
 };
 
-// One conversation, reached two ways: the scheme opens the Claude app wherever
-// it is registered, and the https link is the same chat for everyone else.
 const CLAUDE_APP = "claude://claude.ai/new";
 const CLAUDE_WEB = "https://claude.ai/new";
 
@@ -59,10 +57,9 @@ const buildPrompt = (start: StartResponse): string => {
   return prompt.length > MAX_PROMPT ? prompt.slice(0, MAX_PROMPT) : prompt;
 };
 
-// navigator.clipboard is undefined outside a secure context, so a plain call
-// throws rather than failing gracefully. The textarea goes inside the dialog:
-// showModal() makes everything outside it inert, and a selection there cannot
-// be copied.
+// navigator.clipboard is undefined outside a secure context. The textarea goes
+// inside the dialog: showModal() makes everything outside it inert, and a
+// selection there cannot be copied.
 const writeClipboard = async (text: string): Promise<void> => {
   if (navigator.clipboard?.writeText) {
     await navigator.clipboard.writeText(text);
@@ -90,9 +87,7 @@ const openModal = () => {
   modal.showModal();
 };
 
-// Whether this browser has been through the connector step. A convenience, not
-// a gate: we cannot see whether the account actually has the connector, only
-// whether someone here said they did.
+// Whether someone in this browser said they added the connector.
 const CONNECTOR_KEY = "archival-connector-added";
 
 const connectorDone = (): boolean => {
@@ -115,9 +110,8 @@ const rememberConnector = (done: boolean) => {
   }
 };
 
-// Turnstile can have defined window.turnstile before this module runs and still
-// call onloadTurnstileCallback afterwards, which would bind every listener
-// twice - and a doubled click on the launch button mints two sessions.
+// Turnstile can define window.turnstile before this module runs and still call
+// onloadTurnstileCallback afterwards, so setup runs at most once.
 let wired = false;
 
 const setup = () => {
@@ -188,8 +182,8 @@ const setup = () => {
     }
   };
 
-  // Rendered when the dialog first opens rather than at setup: the container is
-  // inside it, and a <dialog> is display:none until then.
+  // Rendered when the dialog first opens: the container is inside it, and a
+  // <dialog> is display:none until then.
   const renderWidget = () => {
     if (widgetId || !window.turnstile) {
       return;
@@ -234,9 +228,6 @@ const setup = () => {
       label.textContent = "Copied";
       status.textContent = "Prompt copied to your clipboard.";
     } catch {
-      // Never silent: the whole point of this button is to be the way out when
-      // the deep link did nothing. The prompt is held in a variable, never
-      // rendered, so there is nothing on the page to select instead.
       status.textContent =
         "Couldn't copy automatically — open Claude in your browser instead.";
       return;
@@ -278,8 +269,7 @@ const setup = () => {
     if (running) {
       return;
     }
-    // A second press reopens the session already minted rather than spending
-    // another one.
+    // A second press reopens the session already minted.
     if (promptText) {
       launchApp();
       return;

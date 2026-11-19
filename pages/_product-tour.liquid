@@ -200,12 +200,9 @@
           {% comment %}
             The flow this draws: choose a template, optionally say something
             about your site, generate. Built from the same .pf-* primitives the
-            other frames use rather than a vocabulary of its own: the optional
-            box IS .pf-prompt-card, unchanged.
+            other frames use: the optional box IS .pf-prompt-card, unchanged.
 
-            Every element in here carries a number. A detail view of the picked
-            template was drawn here once and was the only thing that did not,
-            which is what gave it away as decoration rather than a step.
+            Every element in here carries a number.
           {% endcomment %}
           <div class="product-frame product-frame--prompt">
             <div class="product-frame-glow" aria-hidden="true"></div>
@@ -386,7 +383,7 @@
                 </div>
                 <div class="pf-settings-row">
                   <span class="pf-settings-label">Plan</span>
-                  <span class="pf-settings-value">Editor &middot; $15/mo</span>
+                  <span class="pf-settings-value">Pro &middot; $15/mo</span>
                 </div>
                 <div class="pf-settings-row" data-callout-target="1">
                   <span class="pf-settings-label">GitHub</span>
@@ -635,7 +632,7 @@
       frames.forEach(function (f) {
         var cw = f.wrap.clientWidth;
         if (!cw) return;
-        // Never scale past the design size; only shrink to fit narrower columns.
+        // Only shrink to fit narrower columns.
         f.frame.style.zoom = Math.min(1, cw / f.dw);
       });
     }

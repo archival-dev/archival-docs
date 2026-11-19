@@ -2,7 +2,7 @@ order = 10
 title = "Scripts"
 include_in_llm_docs = true
 description = """
-Browser scripts live in a top-level `scripts/` directory, and archival builds them into `/js/` on your site. TypeScript files have their types stripped and JavaScript files are copied as they are, so there is **no build step to set up**: no `prebuild`, no node, and no `package.json`.
+Browser scripts live in a top-level `scripts/` directory, and archival builds them into `/js/` on your site. TypeScript files have their types stripped and JavaScript files are copied as they are.
 
 Because this is part of archival itself, scripts build the same way in `archival build`, in `archival run` (which rebuilds a script as soon as you save it), and when archival builds and deploys your site.
 """
@@ -149,7 +149,7 @@ If your site already compiles TypeScript with a `prebuild` command (for instance
 
 1. Point `scripts_dir` at your source directory, and set `scripts_build_dir` so the URLs stay the same.
 2. Remove the build command from `prebuild`, and the script and any packages it needed from `package.json`.
-3. Delete the generated files from `public/`. A generated file left behind at a path a script now builds to stops the build with an error, rather than quietly serving the stale copy.
+3. Delete the generated files from `public/`. A generated file left behind at a path a script now builds to stops the build with an error.
 
 If your build bundles npm packages or uses TypeScript features that generate code, keep your existing build and set `scripts_dir = false` if it reads from `scripts/`.
 

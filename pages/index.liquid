@@ -11,8 +11,8 @@
 
 {% comment %}
   Demo video. Falls back to the poster as a plain still when no video has been
-  attached yet, so the slot holds its place instead of leaving a hole under the
-  hero — and the layout doesn't shift when the real video lands in the same frame.
+  attached yet, so the slot holds its place under the hero and the layout stays
+  put when the real video lands in the same frame.
   The still deliberately carries no play affordance: a play button that does
   nothing is worse than no button. Attaching a video to home.videos (editor or
   objects/home.toml) promotes it to a real player. With neither a video nor a
@@ -22,8 +22,7 @@
 {% comment %}
   TEMPORARY, while Jesse finishes the video: the poster placeholder stays hidden.
   Flip this to true to bring it back before the video itself is ready. Attaching a
-  real video turns the section on regardless of this flag, so nothing here needs
-  remembering when the video lands.
+  real video turns the section on regardless of this flag.
 {% endcomment %}
 {% assign show_poster_placeholder = false %}
 
@@ -131,9 +130,8 @@
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Scroll-spy the nav's Product item: lit while the tour is the thing you're
-    // looking at, dark otherwise. The rootMargin collapses the viewport to a thin
-    // band at its middle, so the state flips as the tour crosses the centre line
-    // rather than the moment its first pixel appears.
+    // looking at. The rootMargin collapses the viewport to a thin band at its
+    // middle, so the state flips as the tour crosses the centre line.
     var navProduct = document.querySelectorAll('[data-nav-product]');
     var tour = document.getElementById('product');
     if (navProduct.length && tour && 'IntersectionObserver' in window) {
@@ -149,10 +147,9 @@
       ).observe(tour);
     }
 
-    // In-page nav: the tour anchor and the logo both move within this document
-    // rather than loading one. Without taking these over, "/#product" and "/" are
-    // each a *different* document from "/index.html", so the browser reloads the
-    // whole page and only then lands — which reads as a stall followed by a snap.
+    // In-page nav: the tour anchor and the logo both scroll within this document,
+    // since the browser treats "/#product" and "/" as different documents from
+    // "/index.html".
     var navOffset = tour ? parseFloat(getComputedStyle(tour).scrollMarginTop) || 0 : 0;
     var mobileMenu = document.getElementById('mobile-menu');
     var menuClose = document.getElementById('menu-open');
@@ -225,9 +222,7 @@
 
     if (reduce) return;
 
-    // Benefit cards track the pointer to place their hover glow, but do not tilt:
-    // at a quarter of their former size the tilt read as jitter, and the row's job
-    // this late in the page is to sit still.
+    // Benefit cards track the pointer to place their hover glow.
     document.querySelectorAll('[data-glow]').forEach(function (card) {
       var bounds;
       card.addEventListener('mouseenter', function () {
@@ -244,9 +239,7 @@
       });
     });
 
-    // Hero tilt, bound once. Both source pages registered their own mousemove
-    // handler for [data-tilt-hero]; merged naively that was two handlers writing
-    // conflicting transforms to the same element.
+    // Hero tilt, bound once for every [data-tilt-hero].
     var heroMaxTilt = 12,
       heroPerspective = 1200;
     var heroes = document.querySelectorAll('[data-tilt-hero]');

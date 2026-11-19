@@ -1,5 +1,5 @@
-# Feed readers reject a feed served as text/plain or application/octet-stream,
-# which is what a host that doesn't know the .rss extension will guess.
+# Feed readers need an RSS content type, and the static host can't infer one
+# from the .rss extension.
 /updates.rss
     Content-Type: application/rss+xml; charset=utf-8
     Cache-Control: public, max-age=3600
@@ -15,11 +15,9 @@
 /.well-known/apple-app-site-association
     Content-Type: application/json
 
-# These are the URLs SchemaStore's catalog points at, so they are fetched by
-# editors and language servers rather than by this site. Browser-based ones
-# (Monaco in the archival editor, anything running in a page) are subject to
-# CORS, and a schema that fails to load just leaves the user with no
-# autocompletion and no error - so allow any origin.
+# SchemaStore's catalog points at these URLs, so editors and language servers
+# fetch them, including browser-based ones (Monaco in the archival editor) that
+# are subject to CORS.
 /schemas/*
     Access-Control-Allow-Origin: *
     Cache-Control: public, max-age=3600

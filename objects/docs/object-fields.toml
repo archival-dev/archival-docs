@@ -121,7 +121,7 @@ This filter uses the same formatting strings as [strftime](http://strftime.net/)
 [[sections]]
 title = "markdown"
 content = """
-Values will be parsed as markdown before rendering, and output as HTML. Only fields declared as `markdown` are parsed this way — markdown written into a `string` field is emitted as-is, without being converted.
+Values will be parsed as markdown before rendering, and output as HTML. Only fields declared as `markdown` are parsed this way.
 
 Markdown is a simple formatting language that is intended to allow you to write formatting into a human-readable text that can then be translated into actual formatting code later. For more info on markdown, check out the [Markdown Guide](https://www.markdownguide.org/getting-started/) or the [Syntax page](https://daringfireball.net/projects/markdown/syntax).
 
@@ -163,7 +163,7 @@ archival renders markdown with raw/unsafe HTML *enabled* — any HTML you write 
 
 **A note on liquid**
 
-Liquid you write inside a markdown field is *rendered*, not printed — as it is in every other field type. See [liquid in field values](#liquid%20in%20field%20values) below for how that works, how to escape it, and the one markdown-specific gotcha (use single quotes for liquid string literals here).
+Liquid you write inside a markdown field is *rendered*, as it is in every other field type. See [liquid in field values](#liquid%20in%20field%20values) below for how that works, how to escape it, and the one markdown-specific gotcha (use single quotes for liquid string literals here).
 """
 
 
@@ -340,7 +340,7 @@ content = """
 {% raw %}
 For complex cases, field values may contain liquid, which may reference the site's archival content.
 
-Wherever a template outputs a value, archival checks the value for liquid and, if it finds any, renders it right there — in the middle of rendering your page. That is what evaluates liquid you wrote inside your *content*, so a `{{ site_url }}` typed into a field is rendered, not printed.
+Wherever a template outputs a value, archival checks the value for liquid and, if it finds any, renders it right there — in the middle of rendering your page. That is what evaluates liquid you wrote inside your *content*, so a `{{ site_url }}` typed into a field is rendered.
 
 This applies to every field value that reaches your output as text — `string`, `markdown`, `enum` values, strings inside `meta`, and fields on [child objects](/docs/child-fields). Every value below renders the site url:
 

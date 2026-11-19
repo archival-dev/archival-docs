@@ -1,6 +1,6 @@
 /**
- * Keep a drag on the element it started on. Throws for a pointer the browser no
- * longer considers active, which must not take the drag itself down with it.
+ * Keep a drag on the element it started on. setPointerCapture throws for a
+ * pointer the browser no longer considers active.
  */
 export const capturePointer = (el: Element, pointerId: number) => {
   try {
@@ -12,9 +12,9 @@ export const capturePointer = (el: Element, pointerId: number) => {
 
 /**
  * The rail on the right. Dated dots sit where their date falls between the
- * oldest and newest item, so a quiet month reads as a gap rather than as one
- * more evenly spaced tick; undated dots are spaced evenly. The thumb follows
- * the reader down the list, and the rail can be dragged to scrub through it.
+ * oldest and newest item, so a quiet month reads as a gap; undated dots are
+ * spaced evenly. The thumb follows the reader down the list, and the rail can
+ * be dragged to scrub through it.
  */
 export const setupTimeline = () => {
   const timeline = document.querySelector<HTMLElement>("[data-timeline]");
@@ -108,8 +108,7 @@ export const setupTimeline = () => {
     });
   });
 
-  // Dragging the rail jumps to the item nearest the grabbed position, which
-  // is what makes it read as a slider rather than a list of anchors.
+  // Dragging the rail jumps to the item nearest the grabbed position.
   const scrubTo = (clientY: number) => {
     const { top, height } = rail.getBoundingClientRect();
     const ratio = Math.min(1, Math.max(0, (clientY - top) / height)) * 100;

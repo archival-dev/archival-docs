@@ -119,6 +119,9 @@
         {% if pricing.usage_summary %}
           <p class="pricing-usage-summary">{{ pricing.usage_summary }}</p>
         {% endif %}
+        {% if pricing.payments_note %}
+          <div class="pricing-usage-summary pricing-payments-note">{{ pricing.payments_note }}</div>
+        {% endif %}
         <button
           type="button"
           class="pricing-limits-trigger"

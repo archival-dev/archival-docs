@@ -42,6 +42,37 @@ content = "body"
 published = "publish_date"
 image = "screenshot"
 
+[atproto]
+domain = "archival.dev"
+
+[atproto.actor]
+object = "home"
+summary = "description"
+icon = "logo"
+
+[atproto.publication]
+object = "home"
+summary = "description"
+icon = "logo"
+
+# Each document's page carries its site.standard.document link from layout/theme.liquid.
+[atproto.objects.update]
+type = "Document"
+featured = "pinned"
+name = "title"
+summary = "summary"
+content = "body"
+published = "publish_date"
+
+[atproto.objects.showcase]
+type = "Document"
+featured = "pinned"
+name = "title"
+summary = "summary"
+content = "body"
+published = "publish_date"
+image = "screenshot"
+
 # Mentions of any page are received. Each update and case study also sends a
 # mention to every page it links to, authored as the site.
 [webmention]

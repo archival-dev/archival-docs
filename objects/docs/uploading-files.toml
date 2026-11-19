@@ -2,7 +2,7 @@ order = 15
 title = "Uploading Files"
 include_in_llm_docs = true
 description = """
-The `image`, `video`, `audio`, and `upload` field types don’t store a file directly in your object toml — they store a small reference (a content hash and some metadata) to a file hosted on a CDN. You can populate these fields in two ways: through the archival editor, or with the `archival upload` command. This guide covers the command-line flow.
+The `image`, `video`, `audio`, and `upload` field types store a small reference (a content hash and some metadata) to a file hosted on a CDN. You can populate these fields in two ways: through the archival editor, or with the `archival upload` command. This guide covers the command-line flow.
 """
 
 [[sections]]
@@ -72,7 +72,7 @@ The `url` you use in templates is generated automatically from two `archival.tom
 - `uploads_url` — the CDN host. Defaults to `https://uploads.archival.dev`.
 - `upload_prefix` — an optional path prefix added to every file URL, used to distinguish sites that share the same CDN host.
 
-The final URL is built as `<uploads_url>/<upload_prefix><sha>/<filename>`. In templates you don’t need to construct this yourself — just use the generated `url`:
+The final URL is built as `<uploads_url>/<upload_prefix><sha>/<filename>`. In templates, use the generated `url`:
 
 ```html
 <img src="{{ post.cover.url }}" alt="{{ post.title }}" />

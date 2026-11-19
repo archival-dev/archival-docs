@@ -1,7 +1,7 @@
 {% comment %}
   Author is stored on the update as an author object's `key`, since archival has
-  no relation type. An update whose key matches nothing renders without a byline
-  rather than failing the build.
+  no relation type. An update whose key matches nothing gets the team author's
+  byline.
 {% endcomment %}
 {% assign byline_author = authors | where: "key", update.author | first %}
 {% unless byline_author %}

@@ -6,9 +6,6 @@ import metaUrlPlugin from "@chialab/esbuild-plugin-meta-url";
 const dev = process.argv.includes("--dev");
 const staging = process.argv.includes("--staging");
 
-// Turnstile sitekeys are public. The dev value is Cloudflare's published
-// always-passes test key, so local work needs no widget of its own:
-// https://developers.cloudflare.com/turnstile/troubleshooting/testing/
 const API_URL = dev
   ? "http://localhost:8777"
   : staging
@@ -29,6 +26,9 @@ const COMMENTS_URL = process.env.COMMENTS_URL ?? "/carriers/comments";
 // OFFICE_HOURS_URL to point a build somewhere else.
 const OFFICE_HOURS_URL =
   process.env.OFFICE_HOURS_URL ?? "/carriers/office-hours";
+// Turnstile sitekeys are public. The dev value is Cloudflare's published
+// always-passes test key:
+// https://developers.cloudflare.com/turnstile/troubleshooting/testing/
 const TURNSTILE_SITE_KEY = dev
   ? "1x00000000000000000000AA"
   : staging

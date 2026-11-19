@@ -4,7 +4,7 @@ description = "Generate TypeScript definitions for a site's objects, describing 
 content = """
 Generates TypeScript definitions for this site's object definitions and prints them to stdout.
 
-The output is a self-contained module exporting a single `ArchivalObjects` interface, describing objects as a consumer of the *built* site sees them — the same shape a liquid template gets. It declares every type it references, so it can be dropped anywhere with no imports and no dependency on archival.
+The output is a self-contained module exporting a single `ArchivalObjects` interface, describing objects as a consumer of the *built* site sees them — the same shape a liquid template gets. It declares every type it references, so it can be dropped anywhere.
 
 ```sh
 archival types

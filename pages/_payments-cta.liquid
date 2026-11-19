@@ -1,0 +1,18 @@
+{% assign payments = objects.payments %}
+<div class="sw-cta-row">
+  <a
+    class="primary-cta sw-cta-primary"
+    href="{{ payments.cta_url }}"
+    data-rybbit-event="payments-cta-{{ placement }}"
+  >
+    {{- payments.cta_label -}}
+  </a>
+  <a
+    class="sw-cta-secondary"
+    href="{{ payments.docs_url }}"
+    data-rybbit-event="payments-docs-{{ placement }}"
+  >
+    <span>{{ payments.docs_label }}</span>
+    <span class="sw-cta-arrow" aria-hidden="true">&rarr;</span>
+  </a>
+</div>

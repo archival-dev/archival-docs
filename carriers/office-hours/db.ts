@@ -7,8 +7,7 @@ import type {
 
 const SCHEMA = [
   // One row per person per event. A cancelled row is kept, so an RSVP made
-  // again for the same event revives it rather than adding a second line to
-  // the Notion page.
+  // again for the same event revives it and its line on the Notion page.
   `CREATE TABLE IF NOT EXISTS rsvps (
     id INTEGER PRIMARY KEY,
     event_id TEXT NOT NULL,

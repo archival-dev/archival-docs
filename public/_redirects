@@ -4,8 +4,7 @@
 /product         /#product    301
 
 # The short address for the MCP server, which is served by the api worker. 308
-# rather than 301/302: MCP is a POST protocol and most clients rewrite a
-# redirected POST into a GET, which would break every install that typed this.
+# keeps the method, and MCP clients POST here.
 /mcp    https://api.archival.dev/mcp    308
 
 # Docs and CLI pages are rendered per object, so the section roots have no page
