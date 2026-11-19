@@ -65,13 +65,13 @@
     <link rel="stylesheet" href="/style/main.css">
 
     <script>
-      // Carry the ad click and campaign tags to the editor on the link itself.
+      // Carry the ad click and every utm_* tag to the editor on the link itself.
       // Read from this page's URL only and written nowhere else.
       document.addEventListener('DOMContentLoaded', function () {
-        var keys = ['gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
+        var clickIds = ['gclid', 'gbraid', 'wbraid'];
         var here = new URLSearchParams(location.search);
-        var carried = keys.filter(function (key) {
-          return here.get(key);
+        var carried = Array.from(here.keys()).filter(function (key, i, all) {
+          return all.indexOf(key) === i && here.get(key) && (clickIds.indexOf(key) !== -1 || key.indexOf('utm_') === 0);
         });
         if (!carried.length) return;
         document.querySelectorAll('a[href]').forEach(function (link) {
