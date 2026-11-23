@@ -14,6 +14,7 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
+import { fetchWithRetry } from "./fetch-retry.mjs";
 
 // Destination path -> path within the archival repo.
 const FILES = {
@@ -47,7 +48,7 @@ const read = async (repoPath) => {
     return await fs.readFile(path.join(SOURCE, repoPath), "utf8");
   }
   const url = `${SOURCE}/${repoPath}`;
-  const response = await fetch(url);
+  const response = await fetchWithRetry(url);
   if (!response.ok) {
     throw new Error(
       `fetching ${url}: ${response.status} ${response.statusText}. ` +

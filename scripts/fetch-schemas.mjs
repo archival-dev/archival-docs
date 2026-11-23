@@ -11,6 +11,7 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
+import { fetchWithRetry } from "./fetch-retry.mjs";
 
 const SCHEMAS = [
   "archival.schema.json",
@@ -49,7 +50,7 @@ await fs.mkdir(outDir, { recursive: true });
 await Promise.all(
   SCHEMAS.map(async (name) => {
     const url = `${SOURCE}/${name}`;
-    const response = await fetch(url);
+    const response = await fetchWithRetry(url);
     if (!response.ok) {
       throw new Error(`fetching ${url}: ${response.status} ${response.statusText}`);
     }
