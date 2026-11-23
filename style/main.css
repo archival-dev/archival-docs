@@ -1521,7 +1521,7 @@ h1.pricing-title {
 }
 
 /* Outlined icon CTA: an icon, a label, a hairline box that brightens on hover.
-   Shared by the manifesto link and the Claude Code launcher. */
+   Shared by the manifesto link and the build CTAs. */
 .manifesto-cta,
 .build-alt-cta {
   font-family: inherit;
@@ -2367,88 +2367,6 @@ h1.pricing-title {
   text-align: left;
 }
 
-/* Build with Claude launcher */
-
-.bwc-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  padding: 2rem;
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.04);
-  box-shadow: var(--style-double-border);
-}
-
-/* No min-height: the widget is rendered with appearance "interaction-only", so
-   it occupies nothing unless Turnstile decides to show a challenge, and a
-   reserved box would just be a gap under the button. */
-.bwc-turnstile {
-  display: flex;
-  justify-content: center;
-}
-
-.bwc-modal {
-  width: min(34rem, calc(100vw - 2rem));
-  max-height: calc(100vh - 4rem);
-  overflow-y: auto;
-  padding: 2rem;
-  border: none;
-  border-radius: 1rem;
-  text-align: left;
-  color: var(--color-typography-primary);
-  background: #111;
-  box-shadow: var(--style-double-border);
-}
-
-/* A dialog is display:none until opened, so this must not be a bare display
-   rule - it applies only while open. */
-.bwc-modal[open] {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.bwc-modal::backdrop {
-  background: rgba(0, 0, 0, 0.7);
-}
-
-.bwc-modal-title {
-  font-family: "Build", system-ui, sans-serif;
-  font-size: 1.75rem;
-  line-height: 1.1;
-  margin: 0;
-}
-
-.bwc-modal-subtitle {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.bwc-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 2rem;
-  height: 2rem;
-  font-size: 1.5rem;
-  line-height: 1;
-  border-radius: 50%;
-  color: var(--color-typography-secondary);
-  border: 1px solid var(--color-transparent-border);
-}
-
-.bwc-launch[disabled] {
-  opacity: 0.6;
-  cursor: progress;
-}
-
-.bwc-error {
-  margin-top: 1rem;
-  color: var(--color-primary-cta-highlight);
-}
-
 .bwc-note {
   color: var(--color-typography-secondary);
   font-size: 0.9rem;
@@ -2457,265 +2375,6 @@ h1.pricing-title {
 
 .bwc-note a {
   @apply font-bold text-purple hover:underline;
-}
-
-.bwc-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: bwc-step;
-}
-
-.bwc-step {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5rem;
-  counter-increment: bwc-step;
-}
-
-.bwc-button-cols {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.bwc-step-title {
-  margin: 0;
-  font-weight: 600;
-}
-
-.bwc-step-title::before {
-  content: counter(bwc-step) ". ";
-  color: var(--color-typography-secondary);
-}
-
-/* Stepped through already: still readable and still actionable, just no longer
-   the thing being asked for. */
-.bwc-step.done .bwc-step-title::before {
-  content: "\2713 ";
-  color: var(--color-secondary-interactive);
-}
-
-.bwc-step.done .bwc-note,
-.bwc-step.done .bwc-permission {
-  /* Room for the inline screenshot when the sentence wraps. */
-  line-height: 2;
-}
-
-.bwc-permission-shot {
-  display: inline-block;
-  vertical-align: middle;
-  height: 1.75rem;
-  width: auto;
-  margin-left: 0.25rem;
-  border-radius: 0.5rem;
-}
-
-.bwc-connector {
-  opacity: 0.6;
-}
-
-.bwc-connector {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.625rem 1rem;
-  border-radius: 0.5rem;
-  color: var(--color-typography-primary);
-  border: 1px solid var(--color-transparent-border);
-  transition: border-color 0.15s ease;
-}
-
-.bwc-connector:hover {
-  border-color: var(--color-typography-secondary);
-}
-
-.bwc-check {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  color: var(--color-typography-secondary);
-}
-
-.bwc-check label {
-  cursor: pointer;
-}
-
-/* Matches the toggles in the editor. */
-.switch {
-  display: inline-block;
-  position: relative;
-  width: 50px;
-  height: 28px;
-  flex-shrink: 0;
-}
-
-.switch input {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.slider {
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid var(--color-transparent-border);
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.slider::before {
-  content: "";
-  position: absolute;
-  bottom: 3px;
-  left: 3px;
-  width: 20px;
-  height: 20px;
-  background-color: var(--color-typography-secondary);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  transition: 0.2s ease;
-}
-
-input:checked + .slider {
-  background: rgba(167, 106, 207, 0.5);
-  border-color: rgba(167, 106, 207, 0.4);
-}
-
-input:checked + .slider::before {
-  transform: translateX(22px);
-  background-color: var(--color-typography-primary);
-}
-
-.switch input:focus-visible + .slider {
-  outline: 2px solid var(--color-typography-secondary);
-  outline-offset: 2px;
-}
-
-.slider.round {
-  border-radius: 28px;
-}
-
-.slider.round::before {
-  border-radius: 50%;
-}
-
-.bwc-open {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.625rem 1.25rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  color: var(--color-main-bg);
-  background: var(--color-primary-cta-highlight);
-}
-
-.bwc-open[disabled] {
-  opacity: 0.6;
-  cursor: progress;
-}
-
-.bwc-launched {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-transparent-border);
-}
-
-/* Beats .bwc-launched on specificity, so [hidden] still hides it. */
-.bwc-launched[hidden] {
-  display: none;
-}
-
-.bwc-code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.85rem;
-  /* A URL has no spaces to break at, and the dialog is narrow on a phone. */
-  overflow-wrap: anywhere;
-}
-
-.bwc-copy-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-/* A peer of the copy button, not a second CTA: same height, no border, so the
-   two read as ways out of the same dialog rather than a ranked pair. */
-.bwc-cloud {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.625rem 0.5rem;
-  color: var(--color-secondary-interactive);
-  font-size: 0.9rem;
-}
-
-.bwc-cloud:hover {
-  text-decoration: underline;
-}
-
-.bwc-copy {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1rem;
-  border-radius: 0.5rem;
-  color: var(--color-typography-primary);
-  border: 1px solid var(--color-transparent-border);
-  transition:
-    border-color 0.15s ease,
-    color 0.15s ease;
-}
-
-.bwc-copy:hover {
-  border-color: var(--color-typography-secondary);
-}
-
-.bwc-copy.copied {
-  color: var(--color-secondary-interactive);
-  border-color: var(--color-secondary-interactive);
-}
-
-/* One icon at a time: the check replaces the clipboard on success. */
-.bwc-copy-check,
-.bwc-copy.copied .bwc-copy-icon {
-  display: none;
-}
-
-.bwc-copy.copied .bwc-copy-check {
-  display: block;
-}
-
-.bwc-copy-status {
-  min-height: 1.25rem;
-  margin: 0;
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--color-typography-secondary);
-}
-
-.bwc-details {
-  text-align: left;
-  margin-top: 1rem;
-}
-
-.bwc-details summary {
-  cursor: pointer;
-  color: var(--color-secondary-interactive);
 }
 
 .build-alt {
@@ -2740,9 +2399,8 @@ input:checked + .slider::before {
   margin: 0;
 }
 
-/* A real <button> (it opens a dialog) wearing the outlined-CTA look. Flex with a
-   1rem gap reproduces the manifesto link's icon-to-label spacing, which its
-   background-image + padding-left achieves a different way. */
+/* Flex with a 1rem gap reproduces the manifesto link's icon-to-label spacing,
+   which its background-image + padding-left achieves a different way. */
 .build-alt-cta {
   display: flex;
   align-items: center;
@@ -2759,14 +2417,6 @@ a.build-alt-cta:hover {
   color: var(--color-primary-cta-highlight);
   font-weight: var(--typo-body-weight);
   text-decoration: none;
-}
-
-/* cursor: progress, matching what the button used to show: the disable lasts for
-   the Turnstile round-trip, so it means "working", not "unavailable". */
-.build-alt-cta[disabled] {
-  opacity: 0.6;
-  cursor: progress;
-  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .build-alt-mark {
@@ -2797,18 +2447,6 @@ a.build-alt-cta:hover {
   .build-with-claude {
     padding-top: 8rem;
   }
-}
-
-.link-code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 1.5rem;
-  letter-spacing: 0.25em;
-  word-break: break-all;
-  margin: 0.5rem 0 1.5rem;
-}
-
-.link-code-label {
-  margin: 0;
 }
 
 .link-fineprint {

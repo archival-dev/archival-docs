@@ -9,7 +9,7 @@ Archival is LLM-native, which means it can work with you like a designer to help
 [[sections]]
 title = "Starting from archival.dev"
 content = """
-The **Build it with Claude** button — on the [home page](/), and at the bottom of this page — is the shortest path. It sets up a preview session, then hands Claude a prompt that already carries everything the agent needs.
+The **Build it with Claude** button — on the [home page](/), and at the bottom of this page — is the shortest path. It takes you to the Archival editor, where you sign in — creating a free account if you don't have one — and choose **Build with Claude**. That sets up a preview session, then hands Claude a prompt that already carries everything the agent needs.
 
 If you have the Claude app, it opens with the prompt filled in. If you don't, hit **open Claude in your browser** for the same conversation. We'll use the Archival MCP connector to build your site directly to a preview that you can take live in a few clicks.
 

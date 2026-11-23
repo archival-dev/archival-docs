@@ -8,34 +8,14 @@
 
 <div class="build-with-claude">
   <h1 class="hero-message bwc-title mb-8">Link your session.</h1>
-  <p class="build-description mb-12">
-    An agent is waiting for a preview. Check the code matches the one it showed you, then approve it.
-  </p>
+  <p class="build-description mb-12">Taking you to Archival to sign in and approve your agent.</p>
 
-  <div class="bwc-panel">
-    <noscript>
-      <p class="bwc-note">This page needs JavaScript to approve a session.</p>
-    </noscript>
-
-    <p class="link-code-label bwc-note">Code from your agent</p>
-    <p id="link-code" class="link-code"></p>
-
-    <div id="link-turnstile" class="bwc-turnstile"></div>
-
-    <button id="link-approve" type="button" class="primary-cta">Approve</button>
-
-    <p id="link-status" class="bwc-note" role="status" aria-live="polite"></p>
-  </div>
-
-  <p class="bwc-note link-fineprint">
-    Only approve a code you started yourself. Approving creates a public preview site that the agent can publish to for
-    the next two hours.
-  </p>
+  <noscript>
+    <p class="bwc-note">
+      This page needs JavaScript. Open <code>editor.archival.dev/link?c=</code> followed by the code your agent showed
+      you.
+    </p>
+  </noscript>
 </div>
 
-<script
-  src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback&render=explicit"
-  async
-  defer
-></script>
 <script type="module" src="/scripts/link.js"></script>

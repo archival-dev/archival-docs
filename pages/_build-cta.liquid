@@ -2,9 +2,10 @@
 
 <div class="build-alt-row">
   {% comment %}
-    The href names the production editor, which is what a visitor with no JS
-    needs; src/build-with-claude.ts repoints it at the editor this build
-    targets.
+    Each href names the production editor, which is what a visitor with no JS
+    needs; src/build-with-claude.ts repoints them at the editor this build
+    targets. Build with Claude opens from the editor's gallery, where a person
+    is signed in.
   {% endcomment %}
   <a
     id="build-it-here"
@@ -24,7 +25,12 @@
     Build with Archival
   </a>
 
-  <button id="bwc-launch" type="button" class="build-alt-cta" data-rybbit-event="bwc-open-modal">
+  <a
+    id="build-with-claude"
+    class="build-alt-cta"
+    href="https://editor.archival.dev/new"
+    data-rybbit-event="build-with-claude"
+  >
     <svg
       class="build-alt-mark"
       data-cds="Spark"
@@ -38,132 +44,7 @@
       ></path>
     </svg>
     Build with Claude
-  </button>
+  </a>
 </div>
 
-{% comment %}
-  The connector has to be in place before Claude opens - one added partway
-  through a conversation does not appear in it - so the deep link waits behind
-  its own button. The session is minted
-  by that button too: leaving to set up a connector should not spend one.
-{% endcomment %}
-<dialog id="bwc-modal" class="bwc-modal">
-  <button id="bwc-close" type="button" class="bwc-close" aria-label="Close">&times;</button>
-
-  <h2 class="bwc-modal-title">Two steps and you're building</h2>
-
-  <ol class="bwc-steps">
-    <li id="bwc-step-connector" class="bwc-step">
-      <p class="bwc-step-title">Add the Archival connector</p>
-      <p class="bwc-note">
-        Once, for your Claude account — it's how Claude builds and publishes your site. The link fills in the name and
-        URL for you.
-      </p>
-      <p class="bwc-note bwc-permission">
-        When it asks about tool permissions, choose
-        <img
-          class="bwc-permission-shot"
-          src="/img/claude-always-allow.png"
-          alt="Always allow"
-          width="149"
-          height="28"
-        />
-      </p>
-      <div class="bwc-button-cols">
-        <a
-          id="bwc-connector"
-          class="bwc-connector"
-          href="https://claude.ai/customize/connectors?modal=add-custom-connector&amp;connectorName=Archival&amp;connectorUrl=https%3A%2F%2Fapi.archival.dev%2Fmcp"
-          target="_blank"
-          rel="noopener"
-          data-rybbit-event="bwc-add-connector"
-          >Add the connector</a
-        >
-        <div class="bwc-check">
-          <div class="switch">
-            <input id="bwc-connector-done" type="checkbox" />
-            <div class="slider round"></div>
-          </div>
-          <label for="bwc-connector-done">I've already got it</label>
-        </div>
-      </div>
-    </li>
-
-    <li class="bwc-step">
-      <p class="bwc-step-title">Open Claude</p>
-      <p class="bwc-note">We'll reserve a preview for you and hand Claude a prompt that carries everything it needs.</p>
-      <div class="bwc-button-cols">
-        <button id="bwc-open" type="button" class="bwc-open" data-rybbit-event="bwc-deeplink">
-          <span id="bwc-open-label">Open Claude App</span>
-        </button>
-        <a
-          id="bwc-cloud"
-          class="bwc-cloud"
-          href="https://claude.ai/new"
-          target="_blank"
-          rel="noopener"
-          data-rybbit-event="bwc-cloud-session"
-          >Open Claude in your browser</a
-        >
-      </div>
-      <div id="bwc-turnstile" class="bwc-turnstile"></div>
-      <p id="bwc-error" class="bwc-error" hidden></p>
-    </li>
-  </ol>
-
-  <div id="bwc-launched" class="bwc-launched" hidden>
-    <p class="bwc-note">
-      If you have the Claude app installed, this button will open it. If not, you can open it in your browser or click
-      "Copy Prompt" and paste into a Claude chat.
-    </p>
-    <p class="bwc-note">
-      Your preview code is <code id="bwc-name" class="bwc-code"></code>, and it will work for the next two hours.
-    </p>
-
-    <div class="bwc-copy-row">
-      <button id="bwc-copy" type="button" class="bwc-copy" data-rybbit-event="bwc-copy-command">
-        {% comment %} Swapped for the check by .copied on the button. {% endcomment %}
-        <svg
-          class="bwc-copy-icon"
-          viewBox="0 0 24 24"
-          width="18"
-          height="18"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <rect x="9" y="9" width="13" height="13" rx="2" />
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-        </svg>
-        <svg
-          class="bwc-copy-check"
-          viewBox="0 0 24 24"
-          width="18"
-          height="18"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M20 6 9 17l-5-5" />
-        </svg>
-        <span id="bwc-copy-label" class="bwc-copy-label">Copy prompt</span>
-      </button>
-    </div>
-
-    {% comment %} Announced to screen readers, since the icon change is visual. {% endcomment %}
-    <p id="bwc-copy-status" class="bwc-copy-status" role="status" aria-live="polite"></p>
-  </div>
-</dialog>
-
-<script
-  src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback&render=explicit"
-  async
-  defer
-></script>
 <script type="module" src="/scripts/build-with-claude.js"></script>
