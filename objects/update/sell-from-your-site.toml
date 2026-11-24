@@ -1,0 +1,53 @@
+title = "Sell from your Archival site"
+publish_date = 2026-11-24T00:00:00.0
+author = "jesse"
+summary = "Connect your own Stripe or Square account and sell from your site, with a cart that needs no server code. Archival takes no fee on sales."
+body = """
+Archival sites can now take payments. Connect your own Stripe or Square account to a site from its Overview in the editor, and your pages can sell what's in that account's catalog.
+
+I've been focused on shipping the features that I miss most or that are complex to set up or test on existing website hosts (email, DNS, functions), and we saved the biggest one for last, but I'm happy to announce that all Archival Pro sites can take payment and manage stores, using a minimal, static-friendly approach.
+
+This is a bit complex since things like stock and carts can't be managed directly in liquid, so there needs to be a live element and an API that makes sense for drawing things, and we don't want to inject into customer sites or do similar hacks.
+
+Here's where the design landed:
+
+- **You're the merchant.** Buyers pay you on your provider's own hosted checkout page, and the money settles to your account. Archival never holds it and takes no fee on sales. Your provider's processing fees are the only ones. It'd be cool to set up a bank in the distant future, and I suspect we could squeeze the margins more than existing providers, but for now we are happy to avoid the legal headache, chargebacks, credit risk, etc of setting up a managed payment flow, and this split is arguably the one that gives our customers the most control.
+- **Your catalog stays where you already manage it.** Products and prices live at Stripe or Square, and your site reads them. Change a price or take something off sale there and your site picks it up within minutes, without a deploy. Templates also get a copy of the catalog when the site builds, under `archival.payments`, so a name and price can be plain HTML.
+- **Simple first, carriers add more.** Your pages build to static HTML - your products are now available via an `archival.payments` object directly in liquid, and via `site.payments` in carriers. This means you can render html/rss/etc static product lists, but still manage dynamic stock quantities and other non-static information via small, edge-local endpoints.
+
+## Simple cart behavior
+
+In addition, we provide a simple cart javascript file that will work for most basic use cases, hosted under the _archival namespace on your site. This means for simple use cases, you need not write a single line of javascript and you can still have a fully featured store.
+
+Add this to your `archival_editor.toml`:
+
+```toml
+[payments]
+cart = true
+```
+
+and include `<script src="/_archival/cart.js"></script>` on your pages. That gives you `window.archivalCart`: add variants to it, show a count that stays in sync across tabs, and call `archivalCart.checkout()` to send the buyer to pay. A shop that sells its catalog at its catalog's prices needs nothing written on the server at all.
+
+When a checkout needs to do more, like take a discount or a donation, fill in the buyer's email, or record an order, point the cart at a [carrier](/docs/carriers) of your own:
+
+```js
+await archivalCart.checkout("/carriers/checkout", { coupon });
+```
+
+The [cart docs](/docs/cart#Writing%20your%20own%20checkout%20carrier) include a carrier that does exactly what the built-in checkout does, ready to copy and change. The cart's types are on npm as [`@archival/cart`](https://www.npmjs.com/package/@archival/cart).
+
+## Test environments
+
+The editor's preview takes real checkouts in a test account Archival runs at your provider, so you can click through the whole thing, from cart to hosted checkout to thanks page, with your live catalog at its real prices, and no money moves. This works in the iOS and Mac apps and in [Claude editing sessions](/docs/building-with-claude) too.
+
+Locally, `ARCHIVAL_PAYMENTS=payments.json archival run` reads a catalog from a JSON file and checks out on a stand-in page, so you can build a shop before you've connected anything. See [Running locally](/docs/payments#Running%20locally).
+
+## Stripe or Square
+
+A site is built the same way on either: `site.payments` answers the same shapes, so a carrier written for one runs on the other. What differs is what each can sell. Stripe sells subscriptions. Square tracks stock at your location, so what has sold out can't be bought. [The comparison](/docs/payments#Payment%20providers) has the rest.
+
+Payments is included with Pro ($15/mo) and White Glove. To start, choose **Connect** beside Payments in your site's Overview, or read [the Payments docs](/docs/payments) first.
+
+In the future, we will add more providers, and the beauty of this design is that the entire flow is processor-agnostic, keeping our promise to be as lock-in-free as possible across the stack. Let us know if we're missing one you'd like to use and we'll prioritize!
+"""
+media = []
