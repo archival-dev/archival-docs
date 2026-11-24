@@ -40,7 +40,7 @@ The [cart docs](/docs/cart#Writing%20your%20own%20checkout%20carrier) include a 
 
 The editor's preview takes real checkouts in a test account Archival runs at your provider, so you can click through the whole thing, from cart to hosted checkout to thanks page, with your live catalog at its real prices, and no money moves. This works in the iOS and Mac apps and in [Claude editing sessions](/docs/building-with-claude) too.
 
-Locally, `ARCHIVAL_PAYMENTS=payments.json archival run` reads a catalog from a JSON file and checks out on a stand-in page, so you can build a shop before you've connected anything. See [Running locally](/docs/payments#Running%20locally).
+Locally, `ARCHIVAL_PAYMENTS="$PWD/payments.local.json" archival run` reads a catalog from a JSON file and checks out on a stand-in page, so you can build a shop before you've connected anything. See [Running locally](/docs/payments#Running%20locally).
 
 ## Stripe or Square
 
