@@ -817,7 +817,7 @@ The editor's preview of a site you are editing, on the web and in the iOS and Ma
 - **Requests to other sites are sent**, as they are once deployed, so a carrier that calls another service reaches it from the preview too.
 - **Schedules** never run.
 
-A preview Claude publishes for a new site, the `preview.onarchival.dev` link you get before you claim it, deploys the carriers in its source too, up to five. A carrier there reaches nothing real:
+A preview Claude publishes for a new site, the `preview.onarchival.dev` link you get before you claim it, deploys the carriers in its source too, up to two. A carrier there reaches nothing real:
 
 - **`site.email.send`** sends nothing. The message is shown to the visitor whose request sent it.
 - **`site.payments`** is answered by a simulated provider, so a checkout can be completed and nothing is charged.
