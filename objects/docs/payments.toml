@@ -284,7 +284,7 @@ export default carrier;
 
 **Prices are as of the last deploy.** The catalog is copied each time your site deploys, so a price you change or a product you add at your provider reaches your pages on the next one. A checkout always charges the price your provider has now, whatever the page showed.
 
-**Building with a catalog yourself.** `archival build --payments payments.json` renders `archival.payments` from a file shaped like what `site.payments` answers, described by [archival_payments.schema.json](https://archival.dev/schemas/archival_payments.schema.json). It is the same file [`archival run`](#Running%20locally) reads. A file whose `account` is `null` renders as a site with nothing connected.
+**Building with a catalog yourself.** `archival build --payments payments.local.json` renders `archival.payments` from a file shaped like what `site.payments` answers, described by [archival_payments.schema.json](https://archival.dev/schemas/archival_payments.schema.json). It is the same file [`archival run`](#Running%20locally) reads. A file whose `account` is `null` renders as a site with nothing connected.
 
 Because the build fills in `archival`, a top-level object may not be named `archival`. A field or child object may.
 {% endraw %}
@@ -499,13 +499,21 @@ title = "Running locally"
 content = """
 [`archival run`](/cli/run) will automatically read `ARCHIVAL_PAYMENTS` when provided, which gives your carriers and liquid objects a local `site.payments`/`archival.payments`, so a shop can be built and tested without a payment account.
 
-Name a JSON file of what the site sells in `ARCHIVAL_PAYMENTS`:
+From the site's folder, name a JSON file of what the site sells in `ARCHIVAL_PAYMENTS`:
 
 ```sh
-ARCHIVAL_PAYMENTS=payments.json archival run
+ARCHIVAL_PAYMENTS="$PWD/payments.local.json" archival run
 ```
 
-The file is shaped like what `site.payments` answers: an `account`, and a `catalog` whose `items` are products with their variants.
+Keep it as `payments.local.json` at the root of the site and commit it, so anyone who clones the site can try a checkout. Nothing in it is secret, and neither a preview nor your deployed site reads it. It needs archival 0.27.3 or later.
+
+The file is shaped like what `site.payments` answers: an `account`, and a `catalog` whose `items` are products with their variants. A shop whose carriers check out items given as a `name`, an `amount` and a `quantity` needs only the account, and those items take its currency:
+
+```json
+{ "account": { "name": "Local test shop", "currency": "usd" }, "catalog": { "items": [] } }
+```
+
+A checkout that names variants needs each of them in the catalog:
 
 ```json
 {

@@ -316,7 +316,7 @@ A cart can be tried from end to end before the site is live, and without a real 
 **Under [`archival run`](/cli/run).** A local run reaches no payment provider. Name a file of what the site sells in `ARCHIVAL_PAYMENTS`, and the local server serves the script and answers the checkout from it. It is the same file your carriers' `site.payments` reads, described under [Running locally](/docs/payments#Running%20locally).
 
 ```sh
-ARCHIVAL_PAYMENTS=payments.json archival run
+ARCHIVAL_PAYMENTS="$PWD/payments.local.json" archival run
 ```
 
 - The checkout opens a stand-in page on the local server, with Pay and Cancel buttons. Pay returns the buyer to the page they left, and the cart empties itself.
