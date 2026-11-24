@@ -158,3 +158,37 @@ The `{% if item.file %}` around the branch is not decoration. A row added in the
 Reach for this over two sibling fields — an `image` field next to a `video` field — whenever an entry should hold exactly one of them. Siblings let an entry hold both, or neither, and every template that reads them has to decide what that means. A oneof puts the choice in the type, and `type` tells your template which branch to take.
 {% endraw %}
 """
+
+[[sections]]
+title = "The order of children"
+content = """
+{% raw %}
+Children have no `order` key. Their order is the order their tables appear in the object file, and `{% for section in post.section %}` iterates them in exactly that order. To reorder children by hand, move a whole `[[section]]` block — including any tables nested under it, like `[[section.video]]` — above or below its siblings.
+
+Programs that use [archival as a library](/docs/concepts) can reorder children with the `MoveChild` event, available from archival 0.29.0. It moves one child to a new position in its list and rewrites the object file:
+
+```rust
+use archival::events::{ArchivalEvent, MoveChildEvent};
+use archival::object::ValuePath;
+
+archival.send_event(
+    ArchivalEvent::MoveChild(MoveChildEvent {
+        object: "post".to_string(),
+        filename: "my-blog-post".to_string(),
+        // The child to move: the second section.
+        path: ValuePath::from_string("section.1"),
+        // Where it ends up: first.
+        index: 0,
+        source: None,
+    }),
+    None,
+)?;
+```
+
+- `path` names the child itself, so it ends in the child's current index. A child nested inside another child is addressed the same way: `section.1.links.0`.
+- `index` is the position the child holds once the move is done, so it runs from `0` to one less than the number of children. Moving a child to the index it already has changes nothing.
+- A `path` or `index` past the end of the list is an error, and the file is left as it was.
+
+Each event moves one child. To sort a whole list, send one `MoveChild` per child that needs to move.
+{% endraw %}
+"""
