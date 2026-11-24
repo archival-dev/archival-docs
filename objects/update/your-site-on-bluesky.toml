@@ -1,0 +1,24 @@
+title = "Your site on Bluesky"
+publish_date = 2026-11-09T00:00:00.0
+author = "jesse"
+summary = "Add an [atproto] section, and your site becomes its own account on Bluesky and the AT Protocol, with your domain as its handle."
+body = """
+Sites hosted on archival.dev can now be accounts on the AT Protocol, the network Bluesky runs on. The site hosts its own account, its handle is its domain, and people follow `@example.com` from Bluesky or any other ATProto app.
+
+We've long believed at Archival that a domain is a really nice abstraction for identity, that sidesteps two conflicting needs: one, legal and trust attribution for source, and freedom of speech and pseudononymity required for important journalism and opinion. On social platforms, since they own the identity layer, they effectively have to resort to state-level surveilance and identity (Facebook) or resign themselves to a nihilistic approach to trust (Reddit) that allows shitposters to run wild. If you have costs and identity associated with a domain, and your posts verifiably come from that domain, we can have the best of both worlds. Your registrar can still be subopena'd, but you retain maximally legal-friendly identity protection. And if you shitpost, people just distrust all the content from your domain instead of having to build content moderation stacks.
+
+In any case, if you want to start using it today, we handle everything and make it super easy to interface with the ATmosphere. The basic posting mechanism is just to map an object type in `archival_editor.toml`:
+
+```toml
+[atproto]
+
+[atproto.objects.note]
+content = "text"
+published = "date"
+```
+
+and every deploy publishes that content to the ATmosphere. Set `type = "Document"` for long-form writing, and add a `follow` list to follow up to ten thousand accounts.
+
+We also support comments and other live info, via carriers, so you can set up simple edge-local servers for handling rich interactive inbound from the ATmosphere. [The ATProto docs](/docs/atproto) has lots of additional context.
+"""
+media = []

@@ -1,0 +1,16 @@
+title = "Edit your sites from Claude"
+publish_date = 2026-11-11T00:00:00.0
+author = "jesse"
+summary = "The Archival connector now works on the sites you already have. Ask Claude for a change, check the preview, and publish when you're happy."
+body = """
+In August, Claude learned to build new Archival sites. Now it can edit the ones you already have. In any Claude chat with the Archival connector, ask for something like:
+
+> Add a post to example.com about this weekend's show.
+
+The first time, Claude shows a **Connect** button that signs you in to Archival. After that, it can reach every site you own or collaborate on.
+
+This is another great example of how building with WASM-first has enabled some really clean workflows. In this case, it's relevant because our MCP server is actually running an editor client on the edge, so it has all the same capabilities as our full featured editor client, just exposed as tools/endpoints rather than events.
+
+Setup is in [Building with Claude](/docs/building-with-claude#Editing%20your%20sites%20from%20Claude).
+"""
+media = []

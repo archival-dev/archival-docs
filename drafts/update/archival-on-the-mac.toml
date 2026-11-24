@@ -1,0 +1,12 @@
+title = "Archival on the Mac"
+publish_date = 2026-11-09T00:00:00.0
+author = "jesse"
+summary = "The Mac app now edits your sites in native windows, and can open a site folder from your disk and publish it over git."
+body = """
+The Mac app got two big changes this week.
+
+**Native windows.** Editing a site opens its preview in a window of its own. Content, History and Task each get their own window (⌘1, ⌘2, ⌘3). They can float, or dock to either side of the preview.
+
+**Sites in a folder.** **File → Open Site Folder…** (⌘O) opens an Archival site you've checked out locally. Edit it in the app, and publishing commits your changes and pushes them over git to any HTTPS remote. Edits you make in a terminal or another editor show up in the app too.
+"""
+media = []

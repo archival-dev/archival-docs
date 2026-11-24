@@ -1,0 +1,18 @@
+title = "Webmentions"
+publish_date = 2026-10-10T00:00:00.0
+author = "jesse"
+summary = "Your site can now tell other sites when it links to them, and keep the mentions they send back."
+body = """
+Add one line to `archival_editor.toml`:
+
+```toml
+[webmention]
+```
+
+and every page of your site accepts [Webmentions](/docs/editor-config#Webmention). When a blog on WordPress, Ghost or micro.blog links to one of your pages, its site tells yours. Archival checks the link and keeps the reply, like, repost or mention. [Bridgy](https://brid.gy) turns likes and replies on Mastodon and Bluesky into Webmentions too.
+
+It also works the other way. Map an object type under `[webmention.objects]` and every link in one of those posts sends a mention to the page it points at.
+
+Your pages are static, so a [carrier](/docs/carriers#Reading%20mentions%20from%20other%20sites) reads the mentions with `site.webmentions` and shows them when someone visits.
+"""
+media = []

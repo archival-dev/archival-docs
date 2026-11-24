@@ -1,0 +1,18 @@
+title = "Sign in to your site from Mastodon apps"
+publish_date = 2026-11-03T00:00:00.0
+author = "jesse"
+summary = "Turn on allow_mastodon_clients, and Ivory, Tusky, Elk, Phanpy and most other Mastodon apps can sign in to your site's accounts."
+body = """
+Your site's ActivityPub accounts already post to the fediverse. Now you can read and reply from them in the Mastodon app you already use.
+
+Add this to the top of `archival_editor.toml`:
+
+```toml
+allow_mastodon_clients = true
+```
+
+Then add a server in Ivory, Tusky, Elk, Phanpy or most other Mastodon apps, and give it your domain. The app sends you to Archival to sign in and pick an account. From there you can read the accounts you follow, and favourite, boost, reply, follow and search.
+
+Following someone from an app edits the `follow` list in your config, so your site's files stay the record of who it follows. The details are in [the federation docs](/docs/federation#Mastodon%20client%20API).
+"""
+media = []

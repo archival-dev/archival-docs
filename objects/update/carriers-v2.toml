@@ -1,0 +1,16 @@
+title = "Carriers v2: a database and schedules"
+publish_date = 2026-10-06T00:00:00.0
+author = "jesse"
+summary = "Carriers now get the site as an argument of its own, a SQLite database that keeps its data, and cron schedules."
+body = """
+[Carriers](/docs/carriers), Archival's serverless functions, have a new version. Add `"archival": { "carrier": 2 }` to a carrier's `package.json` and it gets a fourth argument, `site`, with interfaces for social, sql, and payments. This will be a place for platform-level APIs in general, so the API can stay stable in the future and we no longer augment the object namespace.
+
+Carriers can also run on their own now. Put a cron expression beside the version, export `scheduled`, and the carrier runs on that schedule:
+
+```json
+"archival": { "carrier": 2, "schedule": "0 * * * *" }
+```
+
+The carrier build toolchain is on npm now, so carriers build the same way in `archival run` as they do when deployed. [Carrier API versions](/docs/carriers#Carrier%20API%20versions) covers moving a v1 carrier over in three steps.
+"""
+media = []

@@ -1,0 +1,18 @@
+title = "A database for your site"
+publish_date = 2026-10-06T12:00:00.0
+author = "jesse"
+summary = "Carriers get site.sql, a SQLite database that every carrier on your site shares and that keeps its data between requests and deploys."
+body = """
+Every site now has its own SQLite database, `site.sql`. Every [carrier](/docs/carriers) on the site shares it, and it keeps its data between requests and deploys. It's good for sign-ups, counters, RSVPs, and anything else small and live.
+
+```ts
+await site.sql.exec(
+  "INSERT INTO signups (email, at) VALUES (?, ?)",
+  body.email,
+  new Date().toISOString(),
+);
+```
+
+It comes with [carriers v2](/docs/carriers#Carrier%20API%20versions) and is included with Pro. See [Storing data](/docs/carriers#Storing%20data) for the details.
+"""
+media = []

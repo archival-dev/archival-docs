@@ -7,6 +7,8 @@ summary = "Archival updates are now published via activitypub, available everywh
 body = '''
 Archival recently got the ability to really easily add activitypub to a site. As you can see on this site's [public github repo,](https://github.com/archival-dev/archival-docs/blob/main/archival_editor.toml) you can simply map an object type (or ask task mode to do it for you) to the activitypub fields, and we'll automatically detect this and set up the webfinger endpoint and the other activitypub endpoints needed to federate your posts to various platforms.
 
+When you enable it, your site is its own Mastodon-compatible instance: it answers WebFinger, NodeInfo and Mastodon's instance API on your own domain, so your handle is `@you@yourdomain.com` and every other server talks to your site directly.
+
 For instance, with just [this config](https://github.com/archival-dev/archival-docs/commit/3b633d7dbf680b7ad081e71ff12362b90bdd49b1), this post and the other updates can now be read via rss and on various federated social feeds. For instance:
 
 * **Threads:** <https://www.threads.com/fediverse_profile/@updates@archival.dev>
@@ -20,7 +22,10 @@ For instance, with just [this config](https://github.com/archival-dev/archival-d
 * **Sharkey:** <https://blahaj.zone/@updates@archival.dev>
 * **Micro.blog:** <https://micro.blog/updates@archival.dev>
 
-These all will now sync up with the updates on this site, along with hundreds more.\
+These all will now sync up with the updates on this site, along with hundreds more.
+
+It works in both directions, too. Your site accepts follows, and keeps the likes, boosts and replies your posts get, so you can set up [carriers](/docs/carriers#Reading%20the%20fediverse) that read them through `site.activitypub` and show live replies and like counts on your own pages. You can also like, boost and reply as your site from the editor, or turn on `allow_mastodon_clients` and do it from Ivory, Elk or any other Mastodon app. [The federation docs](/docs/federation) have the rest.
+
 Want to own your data and still have social links to follow and share? Now you can on Archival!
 '''
 media = []

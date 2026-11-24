@@ -1,0 +1,28 @@
+title = "Site analytics in the editor"
+publish_date = 2026-10-01T00:00:00.0
+author = "jesse"
+summary = "Pro sites now have cookieless analytics, right in the editor's dashboard."
+body = """
+Every site on Pro now has an analytics view in the editor. Click the sparkline beside a site, or **Open Analytics** in its settings, to see visitors, pageviews, bounce rate and time on site, each compared with the period before.
+
+Below that are your top pages, referrers and UTM campaigns, countries, devices and browsers, and your Core Web Vitals.
+
+Analytics, like email, is a feature that has historically been decoupled, isolated, and an additional expense to your site for something that feels like table stakes, so we include it and enable it automatically for free.
+
+This also solves for a long-standing problem with analytics and visibility, which is that running analytics from a domain owned by a third party means it gets blocked as if it were an ad, and you will need to show cookie banners to your customers so that google can steal their data. Running this stuff yourself means it's privacy friendly but still allows you the basic insights that our customers generally want, like "where are my visitors coming from" and "how many people are visiting".
+
+Once our iOS/Mac app is approved, you'll get a cool little analytics widget for your sites too, which I've really been enjoying testing.
+"""
+[[media]]
+alt = "The Archival analytics widget for nice-dream.com: 333 visitors, up 66%, and 5,379 pageviews over the last 30 days, above a line chart of daily visitors"
+width = 1260
+height = 655
+
+[media.file]
+type = "image"
+
+[media.file.value]
+sha = "8f1a62b9b3127b3d9e4e6705018869e61cf159b40b9f148620fbd4e0ac880c3a"
+display_type = "image"
+filename = "analytics-widget.webp"
+mime = "image/webp"

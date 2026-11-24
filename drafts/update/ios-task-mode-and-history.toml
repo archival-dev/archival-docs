@@ -1,0 +1,14 @@
+title = "Task mode and History in the iOS app"
+publish_date = 2026-10-05T00:00:00.0
+author = "jesse"
+summary = "The iOS editor now has four modes: Preview, Content, History and Task."
+body = """
+The iOS editor now has four modes: Preview, Content, History and Task.
+
+- **Task** is the web editor's task mode. Ask for a change, attach a photo, and follow the plan. A long run keeps going when you leave the app, shows as a Live Activity, and sends you a notification when it finishes or has a question.
+- **History** shows your unpublished changes and recent deploys.
+- **Preview** now runs your site's [carriers](/docs/carriers) on the phone, so forms and other carrier-backed pages work before you publish.
+
+Site analytics came to the app this week too: a 30-day sparkline on each site, with the full dashboard a tap away.
+"""
+media = []

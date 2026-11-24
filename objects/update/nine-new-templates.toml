@@ -1,0 +1,17 @@
+title = "Nine new templates"
+publish_date = 2026-11-18T00:00:00.0
+author = "jesse"
+summary = "Café, Food Truck, Sessions, Series, Liner Notes, Repertoire, Case Studies, Tech Product and Byline are in the template gallery."
+body = """
+The template gallery grew this month:
+
+- **Café** and **Food Truck**: hours, menus, and where the truck is parked this week.
+- **Sessions**, for wedding and portrait photographers with packages to book, and **Series**, for photographers who work in long projects.
+- **Liner Notes**, for a record release with its tracks and credits, and **Repertoire**, for ensembles that play weddings and events.
+- **Case Studies**, a project-led portfolio for designers.
+- **Tech Product**, a product site with features, how-it-works steps and an FAQ.
+- **Byline**, a magazine-style blog with authors and tags.
+
+Each one is a full site you can build on. [Pick one in the editor](https://editor.archival.dev/new) and make it yours.
+"""
+media = []
