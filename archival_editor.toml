@@ -11,7 +11,7 @@ path = "showcase"
 [[activitypub]]
 domain = "archival.dev"
 username = "updates"
-follow = ["@bsky.brid.gy@bsky.brid.gy", "@threads@threads.net"]
+follow = ["@threads@threads.net"]
 
 [activitypub.actor]
 object = "home"
@@ -27,7 +27,7 @@ published = "publish_date"
 [[activitypub]]
 domain = "archival.dev"
 username = "showcase"
-follow = ["@bsky.brid.gy@bsky.brid.gy", "@threads@threads.net"]
+follow = ["@threads@threads.net"]
 
 [activitypub.actor]
 object = "showcase_page"
