@@ -1,0 +1,16 @@
+order = 10
+title = ""
+site_name = "La Strada, mapped"
+site_url = "https://lastrada.jesseditson.com"
+built_by = ""
+publish_date = 2026-11-24T00:00:00.0
+author = ""
+summary = ""
+body = ""
+pinned = false
+
+[screenshot]
+display_type = "image"
+filename = "la-strada.jpg"
+sha = "d27de9865b1bfe959e2b9ca80076c13b657266114db1bb313c2779db0fc6cd23"
+mime = "image/jpeg"

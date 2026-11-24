@@ -1,0 +1,16 @@
+order = 9
+title = ""
+site_name = "3D Printable Bowling Stuff"
+site_url = "https://bowling.jesseditson.com"
+built_by = ""
+publish_date = 2026-11-24T00:00:00.0
+author = ""
+summary = ""
+body = ""
+pinned = false
+
+[screenshot]
+display_type = "image"
+filename = "bowling.jpg"
+sha = "5b4d620521f5959571b1ed6feaa0a58808dffcd0459865b410ceef8888ced2ae"
+mime = "image/jpeg"
